@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+      xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
+
+<url>
+  <loc>https://apexhotelmyanmar.com/</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>1.00</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/list?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/booking/retrieve</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/policies</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/about-us</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/contact-us</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/list?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;guest=1&amp;nationality=1&amp;room_qty=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/detail/7?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/booking/7?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/detail/3?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/booking/3?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/detail/2?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/booking/2?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;room_qty=1&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://apexhotelmyanmar.com/room/list?check_in_date=2020-03-22&amp;check_out_date=2020-03-23&amp;guest=1&amp;nationality=1</loc>
+  <lastmod>2020-03-22T05:54:39+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+
+
+</urlset>

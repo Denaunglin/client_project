@@ -1,0 +1,58 @@
+.apex {
+    color: red;
+}
+
+.hotel {
+    color: green;
+}
+
+.deluxe {
+    background-color: #da9694;
+}
+
+.e_suite {
+    background-color: #faff02;
+}
+
+.app-main .app-main__inner {
+    background-color: #f1f4f6;
+}
+
+.standard {
+    background-color: #f79646;
+}
+
+.superior {
+    background-color: #28a745;
+}
+
+.separate {
+    background-color: gray;
+}
+
+.suite {
+    background-color: #abbd87;
+}
+
+.ambassador {
+    background-color: skyblue;
+}
+
+.vrt {
+    transform: rotate(270deg);
+}
+
+.room-plan-table th,
+.room-plan-table td {
+    max-width: 100px !important;
+    font-size: 10px;
+}
+
+.room-plan-table td p {
+    font-weight: bold;
+    color: #000;
+}
+
+.ambassador td p {
+    color: white;
+}

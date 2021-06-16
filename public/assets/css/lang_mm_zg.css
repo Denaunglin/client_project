@@ -1,0 +1,28 @@
+@font-face {
+    font-family: "Unicode";
+    src: local("Noto Sans Myanmar"),
+        url(../../fonts/NotoSansMyanmar.woff) format("woff"),
+        url(../../fonts/TharLon.ttf) format("ttf");
+}
+
+@font-face {
+    font-family: "Zawgyi";
+    src: local("Noto Sans Zawgyi"),
+        url(../../fonts/NotoSansZawgyi.woff) format("woff"),
+        url(../../fonts/NotoSansZawgyi.ttf) format("ttf");
+}
+
+* {
+    font-family: "Zawgyi";
+}
+
+.mm_uni {
+    font-family: "Unicode" !important;
+}
+
+.mm_zg {
+    font-family: "Zawgyi" !important;
+}
+.select2-container--bootstrap .select2-results__option {
+    font-family: "Zawgyi" !important;
+}

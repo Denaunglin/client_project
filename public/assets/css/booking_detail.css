@@ -1,0 +1,55 @@
+.breadcrumb-content {
+    position: relative;
+    z-index: 1;
+}
+
+.breadcrumb-content h2 {
+    color:
+        #fff;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    margin: 0 0 15px;
+    line-height: 1.4;
+}
+
+.breadcrumb {
+    background:
+        transparent;
+    margin: 0;
+    padding: 0;
+
+}
+
+.breadcrumb li,
+.breadcrumb li.active {
+    margin-bottom: 0;
+    color:
+        #fff;
+}
+
+.breadcrumb>li {
+    display: inline-block;
+}
+
+.breadcrumb li,
+.breadcrumb li.active {
+    margin-bottom: 0;
+    color:
+        #fff;
+}
+
+.breadcrumb>li+li::before {
+    content: '|';
+    padding: 0 8px 0 5px;
+}
+
+.customer-booking ul li {
+    line-height: 3rem;
+    list-style: none
+}
+
+.order-booking ul li {
+    line-height: 3rem;
+    list-style: none
+}
