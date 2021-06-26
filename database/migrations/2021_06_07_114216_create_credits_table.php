@@ -15,14 +15,16 @@ class CreateCreditsTable extends Migration
     {
         Schema::create('credits', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('buyer_id');
+            $table->bigInteger('customer_id');
             $table->bigInteger('item_id');
+            $table->integer('qty')->default(0);
             $table->integer('origin_amount');
-            $table->integer('credit_amount');
             $table->integer('paid_amount');
-            $table->integer('remain_amount');
-            $table->itmestamp('paid_date');
+            $table->integer('credit_amount');
+            $table->timestamp('paid_date');
             $table->string('paid_times');
+            $table->bigInteger('late_id')->nullabel();
+            $table->tinyInteger('trash')->default(0);
             $table->timestamps();
         });
     }

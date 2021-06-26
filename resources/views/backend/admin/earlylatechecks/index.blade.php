@@ -68,7 +68,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/earlylatechecks?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/earlylatechecks?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
@@ -162,7 +165,8 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/earlylatechecks?trash=' + trash).load();
+            table.ajax.url(`{{url('/admin/earlylatechecks?trash=`+trash+`/')}}`).load();
+
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -175,7 +179,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/earlylatechecks/' + id + '/trash',
+                            url :`{{url('/admin/earlylatechecks/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -195,7 +199,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/earlylatechecks/' + id + '/restore',
+                            url :`{{url('/admin/earlylatechecks/`+id+`/restore')}}`,  
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -215,7 +219,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/earlylatechecks/' + id,
+                            url :`{{url('/admin/earlylatechecks/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

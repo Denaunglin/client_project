@@ -31,8 +31,8 @@ class ItemRequest extends FormRequest
             'item_sub_category_id' => 'required',
             'buying_price' => 'required',
             'retail_price' => 'required',
+            'minimun_qty' => 'required',
             'wholesale_price' => 'required',
-            'expire_status' => 'required',
 
         ];
     }
@@ -48,7 +48,6 @@ class ItemRequest extends FormRequest
             'buying_price.required' => 'Item Buying Price is required',
             'retail_price.required' => 'Item Retail Price is required',
             'wholesale_price.required' => 'Item WholeSale Pirce is required',
-            'expire_status.required' => 'Item Expire Status is required',
         ];
     }
 }

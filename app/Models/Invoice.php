@@ -10,9 +10,14 @@ class Invoice extends Model
     use Trash;
     protected $guarded = [];
 
-    public function booking()
+    public function item()
     {
-        return $this->belongsTo('App\Models\Booking', 'booking_id', 'id');
+        return $this->belongsTo('App\Models\Item', 'item_id', 'id');
+
+    }
+    public function service()
+    {
+        return $this->belongsTo('App\Models\Service', 'service_id', 'id');
 
     }
     public function pdf_path()

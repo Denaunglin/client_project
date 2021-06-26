@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Edit Bussiness Info')
-@section('page_title', 'Edit Bussiness Info')
+@section('page_title')
+@lang("message.header.edit_bussiness_info")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -18,36 +20,36 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Bussiness Name</label>
+                                <label>@lang("message.header.bussiness_name") </label>
                                 <input type="text" id="name" name="name"  value="{{$bussiness_infos->name}}" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Bussiness Type</label>
+                                <label>@lang("message.header.bussiness_type") </label>
                                 <input type="text" id="type" name="type"  value="{{$bussiness_infos->type}}" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Email</label>
-                                <input type="email" id="email" name="email" class="form-control">
+                                <label>@lang("message.email")</label>
+                            <input type="email" id="email" value="{{$bussiness_infos->email}}" name="email" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Phone</label>
-                                <input type="number" id="phone" name="phone" class="form-control">
+                                <label>@lang("message.phone")</label>
+                                <input type="number" id="phone" value="{{$bussiness_infos->phone}}" name="phone" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Address</label>
-                                <textarea  id="address" name="address" class="form-control"></textarea>
+                                <label>@lang("message.address")</label>
+                                <textarea  id="address" name="address"  class="form-control">{{$bussiness_infos->address}}</textarea>
                             </div>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="">Bussiness Logo</label>
+                            <label for="">@lang("message.header.bussiness_logo") </label>
                             <p><strong>Recommedation :</strong> Image size should be (1000 x 400 ) and under 2 MB </p>
                             <div class="input-group mb-1">
                                 <div class="input-group-prepend">
@@ -61,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="image_preview2">
-                                <img src="{{$items->image_path()}}" width="200px">
+                                <img src="{{$bussiness_infos->image_path()}}" width="200px">
                             </div>    
                         </div> 
                     </div>
@@ -69,7 +71,7 @@
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <a href="{{ route('admin.bussiness_infos.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Update" class="btn btn-success">
+                            <input type="submit" value="@lang("message.update")" class="btn btn-success">
                         </div>
                     </div>
                 </form>

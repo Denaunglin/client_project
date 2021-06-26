@@ -1,6 +1,6 @@
 <?php
 
-Route::name('admin.')
+Route::name('admin.')   
     ->prefix(config('app.prefix_admin_url') . '/admin')
     ->namespace('Backend\Admin')
     ->group(function () {
@@ -18,7 +18,6 @@ Route::name('admin.')
 
             /*-- Permission --*/
             Route::resource('permission', 'PermissionController');
-
 
             //Cart 
             Route::post('/transcation/addproduct/{id}', 'TransactionController@addProductCart');
@@ -47,25 +46,10 @@ Route::name('admin.')
           
             Route::resource('/daily_sales','DailySellReportController');
 
-            Route::resource('otherservicescategory', 'OtherServiceCategoryController');
-            Route::get('/otherservicescategory/{otherservicecategory}/trash', 'OtherServiceCategoryController@trash')->name('otherservicescategory.trash');
-            Route::get('/otherservicescategory/{otherservicecategory}/restore', 'OtherServiceCategoryController@restore')->name('otherservicescategory.restore');
-            Route::get('/otherservicescategory/{otherservicecategory}/', 'OtherServiceCategoryController@destroy')->name('otherservicescategory.destroy');
-
-            Route::resource('otherservicesitem', 'OtherServiceItemController');
-            Route::get('/otherservicesitem/{otherserviceitem}/trash', 'OtherServiceItemController@trash')->name('otherservicesitem.trash');
-            Route::get('/otherservicesitem/{otherserviceitem}/restore', 'OtherServiceItemController@restore')->name('otherservicesitem.restore');
-            Route::get('/otherservicesitem/{otherserviceitem}/', 'OtherServiceItemController@destroy')->name('otherservicesitem.destroy');
-
             Route::resource('accounttypes', 'AccountTypeController');
             Route::get('/accounttypes/{accounttype}/trash', 'AccountTypeController@trash')->name('accounttypes.trash');
             Route::get('/accounttypes/{accounttype}/restore', 'AccountTypeController@restore')->name('accounttypes.restore');
             Route::get('/accounttypes/{accounttype}/', 'AccountTypeController@destroy')->name('accounttypes.destroy');
-
-            Route::resource('cardtypes', 'CardTypeController');
-            Route::get('/cardtypes/{cardtype}/trash', 'CardTypeController@trash')->name('cardtypes.trash');
-            Route::get('/cardtypes/{cardtype}/restore', 'CardTypeController@restore')->name('cardtypes.restore');
-            Route::get('/cardtypes/{cardtype}/', 'CardTypeController@destroy')->name('cardtypes.destroy');
 
             Route::resource('expense_categories', 'ExpenseCategoryController');
             Route::get('/expense_categories/{expense_category}/trash', 'ExpenseCategoryController@trash')->name('expense_categories.trash');
@@ -78,8 +62,8 @@ Route::name('admin.')
             Route::get('/expense_types/{expense_type}/', 'ExpenseTypeController@destroy')->name('expense_types.destroy');
 
             Route::resource('expenses', 'ExpenseController');
-            Route::get('/expenses/{expense}/trash', 'ExpenseController@trash')->name('expenses.trash');
-            Route::get('/expenses/{expense}/restore', 'ExpenseController@restore')->name('expenses.restore');
+            Route::put('/expenses/{expense}/trash', 'ExpenseController@trash')->name('expenses.trash');
+            Route::put('/expenses/{expense}/restore', 'ExpenseController@restore')->name('expenses.restore');
             Route::get('/expenses/{expense}/', 'ExpenseController@destroy')->name('expenses.destroy');
 
             Route::resource('bussiness_infos', 'BussinessInfoController');
@@ -92,48 +76,54 @@ Route::name('admin.')
             Route::get('/item_sub_categories/{item_sub_category}/restore', 'ItemSubCategoryController@restore')->name('item_sub_categories.restore');
             Route::get('/item_sub_categories/{item_sub_category}/', 'ItemSubCategoryController@destroy')->name('item_sub_categories.destroy');
 
+            Route::resource('credit_reports', 'CreditController');
+            Route::get('/credit_reports/{credit_report}/trash', 'CreditController@trash')->name('credit_reports.trash');
+            Route::get('/credit_reports/{credit_report}/restore', 'CreditController@restore')->name('credit_reports.restore');
+            Route::get('/credit_reports/{credit_report}/', 'CreditController@destroy')->name('credit_reports.destroy');
+
             Route::resource('order_lists', 'OrderListController');
             Route::get('/order_lists/{order_list}/trash', 'OrderListController@trash')->name('order_lists.trash');
             Route::get('/order_lists/{order_list}/restore', 'OrderListController@restore')->name('order_lists.restore');
             Route::get('/order_lists/{order_list}/', 'OrderListController@destroy')->name('order_lists.destroy');
 
             Route::resource('item_ledgers', 'ItemLedgerController');
-            Route::get('/item_ledgers/{item_ledger}/trash', 'ItemLedgerController@trash')->name('item_ledgers.trash');
-            Route::get('/item_ledgers/{item_ledger}/restore', 'ItemLedgerController@restore')->name('item_ledgers.restore');
+            Route::put('/item_ledgers/{item_ledger}/trash', 'ItemLedgerController@trash')->name('item_ledgers.trash');
+            Route::put('/item_ledgers/{item_ledger}/restore', 'ItemLedgerController@restore')->name('item_ledgers.restore');
             Route::get('/item_ledgers/{item_ledger}/', 'ItemLedgerController@destroy')->name('item_ledgers.destroy');
 
             Route::resource('buying_items', 'BuyingItemController');
-            Route::get('/buying_items/{buying_item}/trash', 'BuyingItemController@trash')->name('buying_items.trash');
-            Route::get('/buying_items/{buying_item}/', 'BuyingItemController@destroy')->name('buying_items.destroy');
+            Route::put('/buying_items/{buying_item}/trash', 'BuyingItemController@trash')->name('buying_items.trash');
+            Route::put('/buying_items/{buying_item}/', 'BuyingItemController@destroy')->name('buying_items.destroy');
             Route::get('/buying_items/{buying_item}/restore', 'BuyingItemController@restore')->name('buying_items.restore');
             // Route::post('buying_items/{buying_item}/update', 'BuyingItemController@update')->name('buying_items.update');
 
             Route::resource('opening_items', 'OpeningItemController');
-            Route::put('/opening_items/{opening_item}/trash', 'OpeningItemController@trash')->name('opening_items.trash');
+            Route::get('/opening_items/{opening_item}/trash', 'OpeningItemController@trash')->name('opening_items.trash');
             Route::get('/opening_items/{opening_item}/', 'OpeningItemController@destroy')->name('opening_items.destroy');
-            Route::put('/opening_items/{opening_item}/restore', 'OpeningItemController@restore')->name('opening_items.restore');
+            Route::get('/opening_items/{opening_item}/restore', 'OpeningItemController@restore')->name('opening_items.restore');
             Route::post('opening_items/{opening_item}/update', 'OpeningItemController@update')->name('opening_items.update');
+
+            Route::resource('return_items', 'ReturnItemController');
+            Route::get('/return_items/{return_item}/trash', 'ReturnItemController@trash')->name('return_items.trash');
+            Route::get('/return_items/{return_item}/', 'ReturnItemController@destroy')->name('return_items.destroy');
+            Route::get('/return_items/{return_item}/restore', 'ReturnItemController@restore')->name('return_items.restore');
+            Route::post('return_items/{return_item}/update', 'ReturnItemController@update')->name('return_items.update');
 
 
             Route::resource('sell_items', 'sellItemController');
-            Route::get('/sell_items/{sell_item}/trash', 'sellItemController@trash')->name('sell_items.trash');
-            Route::get('/sell_items/{sell_item}/restore', 'sellItemController@restore')->name('sell_items.restore');
+            Route::put('/sell_items/{sell_item}/trash', 'sellItemController@trash')->name('sell_items.trash');
+            Route::put('/sell_items/{sell_item}/restore', 'sellItemController@restore')->name('sell_items.restore');
             Route::get('/sell_items/{sell_item}/', 'sellItemController@destroy')->name('sell_items.destroy');
             Route::get('index/sell_items/','sellItemController@indexSell');
+            Route::get('credit/sell_items/','sellItemController@creditSellView');
+
 
             Route::resource('services', 'ServiceController');
-            Route::get('/services/{service}/trash', 'ServiceController@trash')->name('services.trash');
-            Route::get('/services/{service}/restore', 'ServiceController@restore')->name('services.restore');
+            Route::put('/services/{service}/trash', 'ServiceController@trash')->name('services.trash');
+            Route::put('/services/{service}/restore', 'ServiceController@restore')->name('services.restore');
             Route::get('/services/{service}/', 'ServiceController@destroy')->name('services.destroy');
 
-            Route::resource('booking', 'BookingController');
-            Route::put('/booking/{booking}/trash', 'BookingController@trash')->name('booking.trash');
-            Route::put('/booking/{booking}/restore', 'BookingController@restore')->name('booking.restore');
-            Route::get('/booking/{booking}/status', 'BookingController@status')->name('booking.status');
-            Route::get('/booking/invoice-pdf/{id}', 'InvoiceController@printPdf')->name('admin_invoice_pdf');
-            Route::get('/booking/extra_invoice/{id}', 'InvoiceController@printExtraPdf')->name('admin_extra_invoice_pdf');
-            // Route::get('booking/select/room_qty/{id}','BookingController@BookingSelectRoomQty');
-
+        
             Route::resource('payslips', 'payslipController');
             Route::get('/payslips/{payslip}/trash', 'payslipController@trash')->name('payslips.trash');
             Route::get('/payslips/{payslip}/restore', 'payslipController@restore')->name('payslips.restore');
@@ -143,36 +133,17 @@ Route::name('admin.')
             Route::get('/payslips/{booking}/status_detail', 'BookingController@status');
             Route::get('/payslips/{payslip}/change_status', 'payslipController@change_status')->name('payslips.change_status');
 
-            Route::resource('slider_upload', 'SliderUploadController');
-            Route::get('/slider_upload/{slider_uploads}/trash', 'SliderUploadController@trash')->name('slider_upload.trash');
-            Route::get('/slider_upload/{slider_uploads}/restore', 'SliderUploadController@restore')->name('slider_upload.restore');
-            Route::get('/slider_upload/{slider_uploads}/', 'SliderUploadController@destroy')->name('slider_upload.destroy');
-
-            Route::resource('booking_calender', 'BookingCalendarController');
-            Route::get('/booking_calendar', 'BookingCalendarController@index')->name('booking_calendar.index');
-            Route::post('/booking_calendar/create', 'BookingCalendarController@create');
-            Route::post('/booking_calendar/update', 'BookingCalendarController@update');
-            Route::post('/booking_calendar/delete', 'BookingCalendarController@destroy');
-            Route::get('/available-room-qty', 'BookingCalendarController@available_room_qty');
-
             Route::get('/item/list/datatable/ssd', 'IndexController@itemSsd');
-
-            Route::resource('messages', 'MessageController');
-            Route::get('/messages/{message}/trash', 'MessageController@trash')->name('messages.trash');
-            Route::get('/messages/{message}/restore', 'MessageController@restore')->name('messages.restore');
-            Route::get('/messages/{message}/', 'MessageController@destroy')->name('messages.destroy');
-
+       
             Route::resource('invoices', 'InvoiceController');
             Route::get('/invoices/{invoice}/trash', 'InvoiceController@trash')->name('invoices.trash');
             Route::get('/invoices/{invoice}/restore', 'InvoiceController@restore')->name('invoices.restore');
             Route::get('/invoices/{invoice}/', 'InvoiceController@destroy')->name('invoices.destroy');
             Route::get('/invoices/{invoice}/detail', 'InvoiceController@detail')->name('invoices.detail');
 
-            Route::resource('extrainvoices', 'extraInvoiceController');
-            Route::get('/extrainvoices/{extrainvoice}/trash', 'extraInvoiceController@trash')->name('extrainvoices.trash');
-            Route::get('/extrainvoices/{extrainvoice}/restore', 'extraInvoiceController@restore')->name('extrainvoices.restore');
-            Route::get('/extrainvoices/{extrainvoice}/', 'extraInvoiceController@destroy')->name('extrainvoices.destroy');
-            Route::get('/extrainvoices/{extrainvoice}/detail', 'extraInvoiceController@detail')->name('extrainvoices.detail');
+            // Route::resource('/final_pays','IndexController');   
+            Route::get('/final_pays','IndexController@show');
+            Route::get('/final_pays/ssd','IndexController@finalPay');
 
             Route::resource('sendnotifications', 'sendNotificationController');
             Route::get('/sendnotifications/{sendnotification}/trash', 'sendNotificationController@trash')->name('sendnotifications.trash');
@@ -180,14 +151,12 @@ Route::name('admin.')
             Route::get('/sendnotifications/{sendnotification}/', 'sendNotificationController@destroy')->name('sendnotifications.destroy');
             Route::get('/sendnotifications/{sendnotification}/detail', 'sendNotificationController@detail')->name('sendnotifications.detail');
 
-            Route::resource('usercreditcards', 'UserCreditCardController');
-            Route::get('/usercreditcards/{usercreditcard}/trash', 'UserCreditCardController@trash')->name('usercreditcards.trash');
-            Route::get('/usercreditcards/{usercreditcard}/restore', 'UserCreditCardController@restore')->name('usercreditcards.restore');
-            Route::get('/usercreditcards/{usercreditcard}/', 'UserCreditCardController@destroy')->name('usercreditcards.destroy');
-
             Route::resource('usernrcimages', 'UserNrcPictureController');
             Route::get('/usernrcimages/{usernrcimage}/trash', 'UserNrcPictureController@trash')->name('usernrcimages.trash');
             Route::get('/usernrcimages/{usernrcimage}/restore', 'UserNrcPictureController@restore')->name('usernrcimages.restore');
+
+            Route::get('/service/invoices/{id}','InvoiceController@printServiceInvoice')->name('service_invoices');
+            Route::get('/sells/invoices/{id}','InvoiceController@printSalesInvoice')->name('sell_invoice');
 
             Route::resource('taxes', 'TaxController');
             Route::get('/taxes/{tax}/trash', 'TaxController@trash')->name('taxes.trash');
@@ -209,31 +178,9 @@ Route::name('admin.')
             Route::middleware('optimizeImages')->group(function () {
                 Route::resource('items', 'ItemController');
             });
-            Route::get('/items/{item}/trash', 'ItemController@trash')->name('items.trash');
-            Route::get('/items/{item}/restore', 'ItemController@restore')->name('items.restore');
+            Route::put('/items/{item}/trash', 'ItemController@trash')->name('items.trash');
+            Route::put('/items/{item}/restore', 'ItemController@restore')->name('items.restore');
             Route::get('/items/{item}/detail', 'ItemController@detail')->name('items.detail');
-
-
-            Route::resource('roomlayouts', 'RoomLayoutController');
-            Route::get('/roomlayouts/{roomlayout}/trash', 'RoomLayoutController@trash')->name('roomlayouts.trash');
-            Route::get('/roomlayouts/{roomlayout}/restore', 'RoomLayoutController@restore')->name('roomlayouts.restore');
-            Route::get('/roomlayouts/{roomlayout}/', 'RoomLayoutController@destroy')->name('roomlayouts.destroy');
-            Route::get('/plan/search', 'RoomLayoutController@planSearch')->name('plan_search');
-
-            Route::resource('roomschedules', 'RoomScheduleController');
-            Route::get('/roomschedules/{roomschedule}/trash', 'RoomScheduleController@trash')->name('roomschedules.trash');
-            Route::get('/roomschedules/{roomschedule}/restore', 'RoomScheduleController@restore')->name('roomschedules.restore');
-            Route::get('/roomschedules/{roomschedule}/', 'RoomScheduleController@destroy')->name('roomschedules.destroy');
-            Route::get('/roomschedules/addplan/{id}/{room_no}   ', 'RoomScheduleController@addPlan')->name('addplan');
-            Route::get('/roomschedules/addbook/{id}/{room_no}', 'RoomScheduleController@addBooking')->name('addbooking');
-            Route::get('/roomschedules/{roomschedule}/detail', 'RoomScheduleController@detail')->name('roomschedules.detail');
-            Route::post('/roomschedules/roomschedule/bookingpost/', 'RoomScheduleController@addBookingPost')->name('roomschedules_booking.store');
-
-            Route::get('/roomplan', 'RoomLayoutController@roomPlan')->name('roomplan');
-//        Route::get('/rooms/delete/{id}', 'RoomsController@delete')->name('rooms.delete');
-            Route::post('rooms/media', 'RoomsController@storeMedia')->name('rooms.storeMedia');
-            Route::get('/rooms/gallery/show/{id}', 'RoomsController@galleryShow');
-            Route::any('/center/files/{id}', 'RoomsController@galleryUpload')->name('admin.center.files');
 
             Route::resource('admin-users', 'AdminUsersController');
             Route::put('/admin-users/{admin_user}/trash', 'AdminUsersController@trash')->name('admin-users.trash');
@@ -258,9 +205,8 @@ Route::name('admin.')
             Route::get('/shop_storages/{shop_storage}/detail', 'ShopStorageController@detail')->name('shop_storages.detail');
             Route::post('shop_storages/{shop_storage}/update', 'ShopStorageController@update')->name('shop_storages.update');
 
-            Route::resource('categories', 'CategoriesController');
-            Route::put('/categories/{category}/trash', 'CategoriesController@trash')->name('categories.trash');
-            Route::put('/categories/{category}/restore', 'CategoriesController@restore')->name('categories.restore');
+            Route::resource('cash_books', 'CashbookController');
+            Route::resource('profit_lost', 'ProfitLostController');
 
             Route::get('/', 'IndexController@index')->name('index');
 

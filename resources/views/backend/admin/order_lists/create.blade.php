@@ -1,6 +1,8 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Add OrderList')
-@section('page_title', 'Add OrderList')
+@section('page_title')
+@lang("message.header.add_order_list")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -15,7 +17,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item Category</label>
+                                <label>@lang("message.header.item_category") </label>
                                 <select class="form-control select2" id="item_category" name="item_category_id" required>
                                     <option value="">Choose Item Category</option>
                                     @forelse($item_category as $data)
@@ -27,7 +29,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item Sub Category</label>
+                                <label>@lang("message.header.item_sub_category")</label>
                                 <select class="form-control select2" id="item_sub_category" name="item_sub_category_id" required>
                                     <option value="">Choose Item Sub Category</option>
                                     <option value="0">None</option>
@@ -40,7 +42,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item </label>
+                                <label>@lang("message.header.item") </label>
                                 <select class="form-control select2" id="item_sub_category" name="item_sub_category_id" required>
                                     <option value="">Choose Item </option>
                                     <option value="0">None</option>
@@ -53,7 +55,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label> Unit </label>
+                                <label> @lang("message.header.unit") </label>
                                 <input type="text" id="unit" name="unit" class="form-control  @error('unit') is-invalid @enderror" >
                                 @error('unit')
                                 <span class="invalid-feedback" role="alert">
@@ -64,7 +66,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Minimun Qty</label>
+                                <label>@lang("message.header.minimun_qty")</label>
                                 <input type="number" id="minimun_qty" name="minimun_qty" class="form-control  @error('minimun_qty') is-invalid @enderror" >
                                 @error('minimun_qty')
                                 <span class="invalid-feedback" role="alert">
@@ -75,7 +77,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Stock In Hand</label>
+                                <label>@lang("message.header.stock_in_hand")</label>
                                 <input type="number" id="stock_in_hand" name="stock_in_hand" class="form-control  @error('stock_in_hand') is-invalid @enderror" >
                                 @error('stock_in_hand')
                                 <span class="invalid-feedback" role="alert">
@@ -87,7 +89,7 @@
                        
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>To Reorder </label>
+                                <label>@lang("message.header.to_reorder") </label>
                                 <input type="number" id="to_reorder" step="any" name="to_reorder" class="form-control" required>
                             </div>
                         </div>
@@ -95,8 +97,8 @@
                     </div>
                         <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.items.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.items.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
                         </div>
                     </div>
                 </form>

@@ -10,6 +10,7 @@ use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
 use App\Http\Requests\CardTypeRequest;
+use App\Http\Requests\AccounttypeRequest;
 
 
 class ExpenseCategoryController extends Controller
@@ -60,7 +61,7 @@ class ExpenseCategoryController extends Controller
         return view(('backend.admin.expense_categories.create'));
     }
 
-    public function store(Request $request)
+    public function store(AccounttypeRequest $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_payment_card')) {
             abort(404);
@@ -93,7 +94,7 @@ class ExpenseCategoryController extends Controller
         return view('backend.admin.expense_categories.edit', compact('expense_category'));
     }
 
-    public function update(Request $request, $id)
+    public function update(AccounttypeRequest $request, $id)
     {
         // if (!$this->getCurrentAuthUser('admin')->can('update_payment_card')) {
         //     abort(404);

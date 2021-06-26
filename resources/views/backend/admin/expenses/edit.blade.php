@@ -1,62 +1,53 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Edit Item')
-@section('page_title', 'Edit Item')
+@section('page_title')
+@lang("message.header.edit_expense")
+@endsection
 @section('page_title_icon')
 
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
 @section('content')
-@include('layouts.errors_alert')
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <form action="{{ route('admin.items.update',$items->id) }}" method="post" id="edit"
+                <form action="{{ route('admin.expenses.update',$expense->id) }}" method="post" id="edit"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Name </label>
-                                <input type="text" value="{{$expenses->name}}" id="name" name="name" class="form-control  @error('name') is-invalid @enderror" >
-                                @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                      
                        
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Expense Category</label>
+                                <label>@lang("message.header.expense_category")</label>
                                 <select class="form-control select2" id="expense_category_id" name="expense_category_id" required>
-                                    <option value="">Choose Expense Category</option>
-                                    @forelse($expense_categories as $data)
-                                    <option @if($expenses->expense_category_id == $data->id) selected  @endif value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    <option value="">@lang("message.header.choose_expense_category")</option>
+                                    @forelse($expense_category as $data)
+                                    <option @if($expense->expense_category_id == $data->id) selected  @endif value="{{$data->id}}">{{$data->name }}</option>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Expense Type</label>
+                                <label>@lang("message.header.expense_type")</label>
                                 <select class="form-control select2" id="expense_type_id" name="expense_type_id" required>
-                                    <option value="">Choose Expense type</option>
-                                    <option value="0">None</option>
-                                    @forelse($expense_types as $data)
-                                    <option @if($expenses->expense_type_id == $data->id) selected  @endif  value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    <option value="">@lang("message.header.choose_expense_type")</option>
+                                    <option value="0">@lang("message.header.no_expense_type")</option>
+                                    @forelse($expense_type as $data)
+                                    <option @if($expense->expense_type_id == $data->id) selected  @endif  value="{{$data->id}}">{{$data->name }}</option>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label>About </label>
-                                <textarea type="text" id="about" value="{{$expenses->about}}" name="about" class="form-control  @error('about') is-invalid @enderror" ></textarea>
+                                <label>@lang("message.about") </label>
+                                <textarea type="text" id="about" value="{{$expense->about}}" name="about" class="form-control  @error('about') is-invalid @enderror" >{{$expense->about}}</textarea>
                                 @error('about')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -65,10 +56,10 @@
                             </div>
                         </div>
                      
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="form-group">
-                                <label> Price</label>
-                                <input type="number" id="price" value="{{$expenses->price}}" name="price" class="form-control  @error('price') is-invalid @enderror" >
+                                <label> @lang("message.price")</label>
+                                <input type="number" id="price" value="{{$expense->price}}" name="price" class="form-control  @error('price') is-invalid @enderror" >
                                 @error('price')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -80,8 +71,8 @@
 
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.expenses.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <button type="submit"  class="btn btn-success">Update</button>
+                            <a href="{{ route('admin.expenses.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <button type="submit"  class="btn btn-success">@lang("message.update")</button>
                         </div>
                     </div>
                 </form>
@@ -115,7 +106,7 @@
 
 </script>
 
-{!! JsValidator::formRequest('App\Http\Requests\ItemRequest', '#edit') !!}
+{!! JsValidator::formRequest('App\Http\Requests\ExpenseRequest', '#edit') !!}
 <script>
     $(function() {
 $('input[name="expire_date"]').daterangepicker({

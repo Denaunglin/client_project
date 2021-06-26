@@ -33,7 +33,6 @@ class AccounttypeRequest extends FormRequest
     {
         return [
             'name.required' => 'Name field is required.',
-
         ];
     }
 }

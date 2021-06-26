@@ -21,18 +21,8 @@ class RemainItemController extends Controller
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
 
         if ($request->ajax()) {
-
             if ($request->item != '') {
-                $shop_storages = $shop_storages->where('id', $request->item);
-            }
-
-            if ($request->item_category != '') {
-                $shop_storages = $shop_storages->where('item_category_id', $request->item_category);
-            }
-
-            if ($request->item_sub_category != '') {
-                $shop_storages = $shop_storages->where('item_sub_category_id', $request->item_sub_category);
-
+                $shop_storages = $shop_storages->where('item_id', $request->item);
             }
 
             return Datatables::of($shop_storages)

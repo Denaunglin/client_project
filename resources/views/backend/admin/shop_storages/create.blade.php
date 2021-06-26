@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Add Shop Storage')
-@section('page_title', 'Add Shop Storage')
+@section('page_title')
+@lang("message.header.add_shop_storage")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -17,18 +19,19 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
+                                <label for="">@lang("message.header.item") </label>
                                 <select class="form-control custom-select" id="item_id" name="item_id" required>
-                                    <option value="">Choose Item Category</option>
+                                    <option value="">@lang("message.header.choose_item")</option>
                                     @forelse($item as $data)
                                     <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>      
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Qty</label>
+                                <label>@lang("message.header.qty")</label>
                                 <input type="number" id="qty" name="qty" class="form-control">
                             </div>
                         </div>
@@ -36,8 +39,8 @@
 
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.shop_storages.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.shop_storages.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
                         </div>
                     </div>
                 </form>

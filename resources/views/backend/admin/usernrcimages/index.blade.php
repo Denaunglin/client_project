@@ -2,6 +2,8 @@
 
 @section('meta_title', 'User Nrc Images')
 @section('page_title', 'User Nrc Images')
+@section('user-nrc-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection

@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Services')
-@section('page_title', 'Items Order List')
+@section('page_title')
+@lang("message.services")
+@endsection
+@section('service-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,67 +14,24 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 </div>
 
 @can('add_item')
-<a href="{{route('admin.order_lists.create')}}" title="Add Category" class="btn btn-primary action-btn">Add OrderList</a>
+<a href="{{route('admin.services.create')}}" title="Add Service" class="btn btn-primary action-btn">@lang("message.header.add_service")</a>
 @endcan
 @endsection
 
 @section('content')
-<div class="pb-3">
-    <div class="row">
-      
-        <div class="col-md-6 col-sm-12 col-xl-3">
-                    <div class="d-inline-block mb-2 " style="width:100%">
-                    <div class="input-group" >
-                        <div class="input-group-prepend"><span class="input-group-text">Item Name : </span></div>
-                        <select class="custom-select item mr-1" >
-                            <option value="">All</option>
-                            @forelse($item as $data)
-                            <option value="{{$data->id}}">{{$data->name}}</option>
-                            @empty
-                            <option value="">There is no Item Data !</option>
-                            @endforelse
-                        </select>
-                    </div>
-                </div>
+<div class="d-inline-block mb-2">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> @lang("message.date") : </span>
         </div>
-        <div class="col-md-6 col-sm-12 col-xl-3">
-                <div class="d-inline-block mb-2"style="width:100%">
-                    <div class="input-group" >
-                        <div class="input-group-prepend"><span class="input-group-text">Item Category : </span></div>
-                        <select class="custom-select item_category mr-1">
-                            <option value="">All</option>
-                            @forelse($item_category as $data)
-                            <option value="{{$data->id}}">{{$data->name}}</option>
-                            @empty
-                            <option value="">There is no Item Data !</option>
-                            @endforelse
-                        </select>
-                    </div>
-            </div>
-        </div>
-        <div class="col-md-6 col-sm-12 col-xl-3">
-            <div class="d-inline-block mb-2"style="width:100%">
-                <div class="input-group" >
-                    <div class="input-group-prepend"><span class="input-group-text">Item Sub Category : </span></div>
-                    <select class="custom-select item_sub_category mr-1">
-                        <option value="">All</option>
-                            @forelse($item_sub_category as $data)
-                            <option value="{{$data->id}}">{{$data->name}}</option>
-                            @empty
-                            <option value="">There is no Item Data !</option>
-                            @endforelse
-                    </select>
-                </div>
-        </div>
+        <input type="text" class="form-control datepicker" placeholder="All">
     </div>
-       
-    </div>   
-    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
@@ -80,18 +41,26 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th >Group</th>
-                                <th>Sub Group</th>
-                                <th>Item Name</th>
-                                <th>Unit</th>
-                                <th>Minimun Qty <br></th>
-                                <th>Stock In Hand</th>
-                                <th>To Reorder</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th >@lang("message.header.service_name") </th>
+                                <th>@lang("message.description")</th>
+                                <th>@lang("message.header.service_charges") </th>
+                                <th>@lang("message.header.created_at") </th>
+                                <th class="no-sort action">@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>@lang("message.total")</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -103,7 +72,7 @@
 
 @section('script')
 <script>
-    var route_model_name = "order_lists";
+    var route_model_name = "services";
         var app_table;
         $(function() {
             app_table = $('.data-table').DataTable({
@@ -111,6 +80,7 @@
                 serverSide: true,
                 dom: 'Bfrtip',
                 buttons: [
+                    'excel',
                     {
                         extend: 'refresh'
                     },
@@ -122,21 +92,21 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/services?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'item_group', name: 'item_group', defaultContent: "-", class: ""},
-                    {data: 'item_sub_group', name: 'item_sub_group', defaultContent: "-", class: ""},
-                    {data: 'name', name: 'name', defaultContent: "-", class: ""},
-                    {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
-                    {data: 'minimum_qty', name: 'minimum_qty', defaultContent: "-", class: ""},
-                    {data: 'stock_in_hand', name: 'stock_in_hand', defaultContent: "-", class: ""},
-                    {data: 'to_re_order', name: 'to_re_order', defaultContent: "-", class: ""},
+                    {data: 'service_name', name: 'service_name', defaultContent: "-", class: ""},
+                    {data: 'description', name: 'description', defaultContent: "-", class: ""},
+                    {data: 'service_charges', name: 'service_charges', defaultContent: "-", class: ""},
+                    {data: 'created_at', name: 'created_at', defaultContent: "-", class: ""},
                     {data: 'action', name: 'action', orderable: false, searchable: false, class: "action"},
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
                     order: [
-                        [7, 'desc']
+                        [3, 'desc']
                     ],
                     responsive: {
                         details: {type: "column", target: 0}
@@ -153,19 +123,81 @@
                     <div class="spinner-border text-info" role="status">
                         <span class="sr-only">Loading...</span>
                     </div></div>`
-                    }
+                    },
+                    footerCallback: function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total
+                total3 = api.column(3).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                
+                // Update footer
+                $(api.column(3).footer()).html(total3.toLocaleString());
+              
+        }
             });
         });
 
+        $(".datepicker").daterangepicker({
+            opens: "right",
+            alwaysShowCalendars: true,
+            autoUpdateInput: false,
+            startDate: moment().startOf('month'),
+            endDate: moment().endOf('month'),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'YYYY-MM-DD',
+                separator: " , ",
+            }
+        });
 
-        $(document).on('change', '.item, .item_category , .item_sub_category', function() {
+        $('.datepicker').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' , ' + picker.endDate.format('YYYY-MM-DD'));
+            var daterange = $('.datepicker').val();
+            var trash = $('.trashswitch').prop('checked') ? 1 : 0;
+            app_table.ajax.url(`{{url('/admin/services?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
+        });
+
+        $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+
+            var daterange = $('.datepicker').val();
+            var trash = $('.trashswitch').prop('checked') ? 1 : 0;
+            app_table.ajax.url(`{{url('/admin/services?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
+        }); 
+
+        $(document).on('change', '.trashswitch', function () {
+            if ($(this).prop('checked') == true) {
+                var trash = 1;
+            } else {
+                var trash = 0;
+            }
+            app_table.ajax.url(`{{url('/admin/services?trash=`+trash+`/')}}`).load();
+
+        });
+
+
+        $(document).on('change', '.item', function() {
                  var booking_user_name = $('#booking_user_name').val();
                 var daterange = $('.datepicker').val();
                 var item = $('.item').val();
-                var item_category = $('.item_category').val();
-                var item_sub_category=$('.item_sub_category').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-                app_table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?item=${item}&item_category=${item_category}&item_sub_category=${item_sub_category}&trash=${trash}`).load();
+                app_table.ajax.url(`{{url('/admin/services?item=`+item+`&trash=`+trash+`/')}}`).load();
         });
 
 </script>

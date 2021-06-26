@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend\Admin;
 
 use App\Models\Item;
+use App\Models\Cashbook;
 use App\Models\Supplier;
 use App\Models\SellItems;
 use App\Models\BuyingItem;
@@ -15,6 +16,7 @@ use App\Models\ItemSubCategory;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
+use App\Http\Requests\BuyingItemRequest;
 
 class BuyingItemController extends Controller
 {
@@ -30,20 +32,14 @@ class BuyingItemController extends Controller
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
         if ($request->ajax()) {
+            $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
             $buying_items = BuyingItem::anyTrash($request->trash);
-
+            if ($daterange) {
+                $buying_items = BuyingItem::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
+            }
             if ($request->item != '') {
                 $buying_items = $buying_items->where('item_id', $request->item);
-            }
-
-            if ($request->item_category != '') {
-                $buying_items = $buying_items->where('item_category_id', $request->item_category);
-            }
-
-            if ($request->item_sub_category != '') {
-                $buying_items = $buying_items->where('item_sub_category_id', $request->item_sub_category);
-
             }
 
             return Datatables::of($buying_items)
@@ -61,7 +57,7 @@ class BuyingItemController extends Controller
 
                         if ($request->trash == 1) {
                             $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $buying_item->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
-                            $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $itbuying_itemem->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
+                            $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $buying_item->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
                         } else {
                             $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $buying_item->id . '"><i class="fas fa-trash fa-lg"></i></a>';
                         }
@@ -74,6 +70,22 @@ class BuyingItemController extends Controller
 
                     return $buying_items->item_id ? $buying_items->item->name : '-';
                 })
+                ->addColumn('supplier', function ($buying_items) {
+
+                    $supplier_name = $buying_items->supplier ? $buying_items->supplier->name : '-';
+                    $supplier_phone = $buying_items->supplier ? $buying_items->supplier->phone : '-';
+                    $supplier_address = $buying_items->supplier ? $buying_items->supplier->address : '-';
+                    if($buying_items->supplier){
+                        return '<ul class="list-group">
+                        <li class="list-group-item text-center">'.$supplier_name.'</li>
+                        <li class="list-group-item text-center">('.$supplier_phone.')</li>
+                        <li class="list-group-item text-center">('.$supplier_address.')</li>
+                    </ul>';
+                    }else{
+                        return 'No supplier';
+                    }
+                  
+                })
                 ->addColumn('item_category', function ($buying_items) {
 
                     return $buying_items->item_category ? $buying_items->item_category->name : '-';
@@ -84,7 +96,7 @@ class BuyingItemController extends Controller
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action','item_id','item_category','item_sub_category'])
+                ->rawColumns(['action','item_id','item_category','item_sub_category','supplier'])
                 ->make(true);
         }
         return view('backend.admin.buying_items.index',compact('item','item_category','item_sub_category'));
@@ -102,14 +114,14 @@ class BuyingItemController extends Controller
         return view('backend.admin.buying_items.create', compact('item_category','supplier','item', 'item_sub_category'));
     }
 
-    public function store(Request $request)
+    public function store(BuyingItemRequest $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
         }
 
         $item = Item::findOrFail($request->item_id);
-        $supplier = Supplier::where($request->supplier)->first();
+        $supplier = Supplier::where('id',$request->supplier)->first();
         $item_count = count($item);
         if($item_count == 1){
             $item = $item->first();
@@ -125,8 +137,21 @@ class BuyingItemController extends Controller
             $buying_item->discount = $request['discount'];
             $buying_item->net_price = $request['net_price'];
             $buying_item->save();
+
+            $cash_book = new Cashbook();
+            $cash_book->cashbook_income = 0;
+            $cash_book->cashbook_outgoing = $buying_item->net_price ;
+            $cash_book->buying_id = $buying_item->id;
+            $cash_book->selling_id = null;
+            $cash_book->expense_id = null;
+            $cash_book->service_id = null;
+            $cash_book->credit_id = null;
+            $cash_book->return_id = null;
+            $cash_book->save();
+
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
+            $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
             if($shop_storage){
                 $qty = ($shop_storage->qty) + ($buying_item->qty);
                 $shop_storage->qty = $qty;
@@ -140,15 +165,14 @@ class BuyingItemController extends Controller
                 
             $item_ledger= new ItemLedger();
             $item_ledger->item_id = $item->id;
-            $item_ledger->opening_qty = '0';
+            $item_ledger->opening_qty = $open_qty;
             $item_ledger->buying_buy = $request->qty;
             $item_ledger->buying_back = '0';
             $item_ledger->selling_sell = '0';
             $item_ledger->selling_back = '0';
             $item_ledger->adjust_in = '0';
             $item_ledger->adjust_out = '0';
-            $item_ledger->adjust_list = '0';
-            $item_ledger->closing_qty = $request->qty;
+            $item_ledger->closing_qty = $shop_storage->qty;
             $item_ledger->save();
 
            
@@ -168,7 +192,20 @@ class BuyingItemController extends Controller
                 $buying_item->net_price = $request['net_price'];
                 $buying_item->save();
 
+                $cash_book = new Cashbook();
+                $cash_book->cashbook_income =0;
+                $cash_book->cashbook_outgoing =  $buying_item->net_price ;
+                $cash_book->buying_id = $buying_item->id;
+                $cash_book->selling_id = null;
+                $cash_book->service_id = null;
+                $cash_book->expense_id = null;
+                $cash_book->credit_id = null;
+                $cash_book->return_id = null;
+                $cash_book->save();
+
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
+                $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+
                 if($shop_storage){
                     $qty = ($shop_storage->qty) + ($buying_item->qty);
                     $shop_storage->qty = $qty;
@@ -182,15 +219,14 @@ class BuyingItemController extends Controller
         
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
-                $item_ledger->opening_qty = '0';
+                $item_ledger->opening_qty = $open_qty;
                 $item_ledger->buying_buy = $request->qty;
                 $item_ledger->buying_back = '0';
                 $item_ledger->selling_sell = '0';
                 $item_ledger->selling_back = '0';
                 $item_ledger->adjust_in = '0';
                 $item_ledger->adjust_out = '0';
-                $item_ledger->adjust_list = '0';
-                $item_ledger->closing_qty = $request->qty;
+                $item_ledger->closing_qty = $shop_storage->qty;
                 $item_ledger->save();
                 $var++;
             }
@@ -226,16 +262,17 @@ class BuyingItemController extends Controller
         return view('backend.admin.buying_items.edit', compact('suppliers','item','items', 'item_category', 'item_sub_category'));
     }
 
-    public function update(Request $request, $id)
+    public function update(BuyingItemRequest $request, $id)
     {
         if (!$this->getCurrentAuthUser('admin')->can('edit_item')) {
             abort(404);
         }
 
-        $supplier = Supplier::where($request->supplier)->first();
+        $supplier = Supplier::where('id',$request->supplier)->first();
         $item=Item::where('id',$request->item_id)->first();
         $buying_item = BuyingItem::findOrFail($id);
         $shop_storage = ShopStorage::where('item_id',$item->id)->first();
+        $opening_qty = $shop_storage->qty;
 
         $qty1 = $buying_item->qty ;
         $qty2 = $request->qty;
@@ -258,6 +295,29 @@ class BuyingItemController extends Controller
         $buying_item->discount = $request['discount'];
         $buying_item->net_price = $request['net_price'];
         $buying_item->update();
+
+        $cash_book =  Cashbook::where('buying_id', $buying_item->id)->first();
+        $cash_book->cashbook_income = 0;
+        $cash_book->cashbook_outgoing =  $buying_item->net_price ;
+        $cash_book->buying_id = $buying_item->id;
+        $cash_book->selling_id = null;
+        $cash_book->service_id = null;
+        $cash_book->expense_id = null;
+        $cash_book->credit_id = null;
+        $cash_book->return_id = null;
+        $cash_book->update();
+
+        $item_ledger=ItemLedger::where('item_id',$request->item_id)->first();
+        $item_ledger->item_id = $request->item_id;
+        $item_ledger->opening_qty = $opening_qty;
+        $item_ledger->buying_buy = $request->qty;
+        $item_ledger->buying_back = $item_ledger->buying_back;
+        $item_ledger->selling_sell = $item_ledger->selling_sell;
+        $item_ledger->selling_back = $item_ledger->buying_back;
+        $item_ledger->adjust_in = $request->qty;
+        $item_ledger->adjust_out = $item_ledger->adjust_out;
+        $item_ledger->closing_qty = $shop_storage->qty;
+        $item_ledger->update();
 
         activity()
             ->performedOn($buying_item)
@@ -300,7 +360,7 @@ class BuyingItemController extends Controller
         return ResponseHelper::success();
     }
 
-    public function restore(ItemCategory $buying_item)
+    public function restore(BuyingItem $buying_item)
     {
         $buying_item->restore();
         activity()

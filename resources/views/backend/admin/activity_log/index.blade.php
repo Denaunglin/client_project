@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Activity Logs')
-@section('page_title', 'Activity Logs')
+@section('page_title')
+@lang("message.header.activity_log")
+@endsection
+@section('activity-log-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -15,7 +19,7 @@
 <div class="d-inline-block mb-2">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> Activity Date : </span>
+                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> @lang("message.header.activity_date") : </span>
             </div>
             <input type="text" class="form-control datepicker" placeholder="All">
         </div>
@@ -30,13 +34,13 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Source</th>
-                                <th>Causer</th>
-                                <th>Description</th>
-                                <th>Subject</th>
-                                <th> Date </th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th>@lang("message.header.source")</th>
+                                <th>@lang("message.header.causer")</th>
+                                <th>@lang("message.description")</th>
+                                <th>@lang("message.header.subject")</th>
+                                <th> @lang("message.date") </th>
+                                <th class="no-sort action">@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -69,7 +73,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/activity_log?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/activity_log?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
@@ -169,6 +176,7 @@
                     if (willDelete) {
                         $.ajax({
                             url: '/admin/activity_log/' + id ,
+                            url :`{{url('/admin/activity_log/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -201,13 +209,15 @@
         $('.datepicker').on('apply.daterangepicker', function(ev, picker) {
             $(this).val(picker.startDate.format('YYYY-MM-DD') + ' , ' + picker.endDate.format('YYYY-MM-DD'));
             var daterange = $('.datepicker').val();
-            table.ajax.url(`${PREFIX_URL}/admin/activity_log?daterange=${daterange}`).load();
+            table.ajax.url(`{{url('/admin/activity_log?daterange=`+daterange+`/')}}`).load();
+
         });
 
         $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
             var daterange = $('.datepicker').val();
-            table.ajax.url(`${PREFIX_URL}/admin/activity_log?daterange=${daterange}`).load();
+            table.ajax.url(`{{url('/admin/activity_log?daterange=`+daterange+`/')}}`).load();
+
         }); 
 
 

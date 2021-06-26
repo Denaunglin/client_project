@@ -101,7 +101,7 @@ class ClientUsersController extends Controller
             abort(404);
         }
         $roles = Role::where('guard_name', config('custom_guards.default.user'))->get();
-
+        
         return view('backend.admin.client_users.create', compact('roles'));
     }
 
@@ -114,36 +114,16 @@ class ClientUsersController extends Controller
         $created = ClientUser::create
             ([
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => $request->email ? $request->email : null,
             'phone' => $request->phone,
-            'nrc_passport' => $request->nrc_passport,
-            'date_of_birth' => $request->date_of_birth,
+            'nrc_passport' => $request->nrc_passport ?  $request->nrc_passport : null ,
+            'date_of_birth' => $request->date_of_birth ? $request->date_of_birth : null,
             'gender' => $request->gender,
             'address' => $request->address,
+            'password' => 0,
             'account_type' => '1',
-            'password' => Hash::make($request->password),
         ]);
         $created->syncRoles($request->roles);
-
-        if ($request->hasFile('image')) {
-            $image_file = $request->file('image');
-            $image_name = time() . '_' . uniqid() . '.' . $image_file->getClientOriginalExtension();
-            Storage::put(
-                'uploads/gallery/' . $image_name,
-                file_get_contents($image_file->getRealPath())
-            );
-
-            $file_path = public_path('storage/uploads/gallery/' . $image_name);
-            $optimizerChain = OptimizerChainFactory::create();
-            $optimizerChain->setTimeout(10)->optimize($file_path);
-        }
-
-        if ($request->hasFile('image')) {
-            $profiles = new UserProfile();
-            $profiles->user_id = $created->id;
-            $profiles->image = $image_name;
-            $profiles->save();
-        }
 
         activity()
             ->performedOn($created)
@@ -181,55 +161,15 @@ class ClientUsersController extends Controller
         }
 
         $client_user->name = $request->name;
-        $client_user->email = $request->email;
+        $client_user->email =$request->email ? $request->email : null;
         $client_user->phone = $request->phone;
-        $client_user->nrc_passport = $request->nrc_passport;
+        $client_user->nrc_passport = $request->nrc_passport ? $request->nrc_passport : null;
         $client_user->date_of_birth = $request->date_of_birth;
         $client_user->gender = $request->gender;
         $client_user->address = $request->address;
         $client_user->account_type = $request->account_type;
-
-        if (!empty($request->password)) {
-            $client_user->password = Hash::make($request->password);
-        }
-
+        $client_user->password = 0;
         $client_user->save();
-
-        if ($request->hasFile('image')) {
-            $image_file = $request->file('image');
-            $image_name = time() . '_' . uniqid() . '.' . $image_file->getClientOriginalExtension();
-            Storage::put(
-                'uploads/gallery/' . $image_name,
-                file_get_contents($image_file->getRealPath())
-            );
-
-            $file_path = public_path('storage/uploads/gallery/' . $image_name);
-            $optimizerChain = OptimizerChainFactory::create();
-            $optimizerChain->setTimeout(10)->optimize($file_path);
-
-        } else {
-            $profiles = UserProfile::where('user_id', $request['id'])->first();
-            if ($request['image']) {
-                $image_name = $profiles->image;
-            }
-        }
-
-        if ($client_user->userprofile) {
-            $profile = UserProfile::where('user_id', $client_user->id)->first();
-            $profile->user_id = $client_user->id;
-            if ($request['image']) {
-                $profile->image = $image_name;
-            }
-            $profile->update();
-
-        } else {
-            $profiles = new UserProfile();
-            $profiles->user_id = $client_user->id;
-            if ($request->hasFile('image')) {
-                $profiles->image = $image_name;
-            }
-            $profiles->save();
-        }
 
         $client_user->syncRoles($request->roles);
 
@@ -247,11 +187,7 @@ class ClientUsersController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('delete_user')) {
             abort(404);
         }
-        if ($client_user->userprofile) {
-            $image_file = $client_user->userprofile->image;
-            Storage::delete('uploads/gallery/' . $image_file);
-            $client_user->userprofile->delete();
-        }
+       
         if ($client_user->usernrcimage) {
             $front_file = $client_user->usernrcimage->front_pic;
             $back_file = $client_user->usernrcimage->back_pic;
@@ -295,10 +231,7 @@ class ClientUsersController extends Controller
 
     public function detail($id)
     {
-        $client = UserProfile::where('user_id', $id)->first();
         $client_detail = User::where('id', $id)->first();
-        $user_nrc = UserNrcPicture::where('trash', '0')->where('user_id', $id)->get();
-        $nrc_image = $user_nrc->last();
-        return view('backend.admin.client_users.detail', compact('client_detail', 'client', 'nrc_image'));
+        return view('backend.admin.client_users.detail', compact('client_detail'));
     }
 }

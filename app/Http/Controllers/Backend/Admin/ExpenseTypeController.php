@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
+use App\Http\Requests\AccounttypeRequest;
 
 
 class ExpenseTypeController extends Controller
@@ -57,7 +58,7 @@ class ExpenseTypeController extends Controller
         return view(('backend.admin.expense_types.create'));
     }
 
-    public function store(Request $request)
+    public function store(AccounttypeRequest $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_payment_card')) {
             abort(404);
@@ -87,7 +88,7 @@ class ExpenseTypeController extends Controller
         return view('backend.admin.expense_types.edit', compact('expense_type'));
     }
 
-    public function update(Request $request, $id)
+    public function update(AccounttypeRequest $request, $id)
     {
         $expense_type = ExpenseType::findOrFail($id);
         $expense_type->name = $request['name'];

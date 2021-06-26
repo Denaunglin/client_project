@@ -1,7 +1,10 @@
 @extends('backend.admin.layouts.app')
-
 @section('meta_title', 'Shop Storage')
-@section('page_title', 'Shop Storage')
+@section('page_title')
+@lang("message.header.shop_storage")
+@endsection
+@section('shop-storage-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,11 +13,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     @can('add_item_category')
-    <a href="{{route('admin.shop_storages.create')}}" title="Add Shop Storage" class="btn btn-primary action-btn">Add Shop Storage</a>
+    <a href="{{route('admin.shop_storages.create')}}" title="Add Shop Storage" class="btn btn-primary action-btn">@lang("message.header.add_shop_storage")</a>
     @endcan
 </div>
 @endsection
@@ -30,13 +33,20 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Item</th>
-                                <th>Qty</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th>@lang("message.header.item")</th>
+                                <th>@lang("message.header.qty")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
+                        <tfoot class="bg-light">
+                            <tr>
+                                <th></th>
+                                <th>@lang("message.total")</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -50,11 +60,12 @@
 <script>
     $(function() {
             var table = $('.data-table').DataTable({
-                processing: true,
-                serverSide: true,
-                dom: 'Bfrtip',
-                buttons: [
-                    {
+            processing: true,
+            serverSide: true,
+            dom: 'Bfrtip',
+            buttons: [
+                'excel',
+                {
               text: '<i class="fas fa-file-pdf"></i> PDF',
               extend: 'pdfHtml5',
               filename: 'Shop Storage Report',
@@ -146,7 +157,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/shop_storages?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/shop_storages?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
@@ -164,12 +178,7 @@
                         defaultContent: "-",
                         class: ""
                     },
-                    {
-                        data: 'action',
-                        name: 'action',
-                        orderable: false,
-                        searchable: false
-                    },
+                  
                     {
                         data: 'updated_at',
                         name: 'updated_at',
@@ -199,6 +208,7 @@
                         visible: false
                     }
                 ],
+
                 pagingType: "simple_numbers",
                 language: {
                     paginate: {
@@ -209,8 +219,30 @@
                         <div class="spinner-border text-info" role="status">
                             <span class="sr-only">Loading...</span>
                         </div></div>`
-                }
-            });
+                },
+                footerCallback: function(row, data, start, end, display) {
+                var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total
+                total2 = api.column(2).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+              
+                // Update footer
+                $(api.column(2).footer()).html(total2.toLocaleString());
+              
+        }
+
+       
+        });
+            
 
         $(document).on('change', '.trashswitch', function () {
             if ($(this).prop('checked') == true) {
@@ -218,7 +250,7 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/shop_storages?trash=' + trash).load();
+            app_table.ajax.url(`{{url('/admin/shop_storages?trash=`+trash+`/')}}`).load();
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -231,7 +263,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/shop_storages/' + id + '/trash',
+                            url :`{{url('/admin/shop_storages/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -251,7 +283,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/shop_storages/' + id + '/restore',
+                            url :`{{url('/admin/shop_storages/`+id+`/restore')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -271,7 +303,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/shop_storages/' + id,
+                            url :`{{url('/admin/shop_storages/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

@@ -17,6 +17,7 @@ class CreateSellItemsTable extends Migration
             $table->bigIncrements('id');
             $table->string('barcode');
             $table->string('item_id');
+            $table->string('customer_id');
             $table->string('unit');
             $table->bigInteger('item_category_id');
             $table->bigInteger('item_sub_category_id')->nullable()->default(0);;

@@ -3,9 +3,14 @@ namespace App\Http\Controllers\Backend\Admin;
 
 
 use App\Models\Service;
+use App\Models\Cashbook;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
+use App\Http\Requests\ServiceRequest;
+
 
 class ServiceController extends Controller
 {
@@ -18,9 +23,12 @@ class ServiceController extends Controller
             abort(404);
         }      
         if ($request->ajax()) {
+            $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
             $services = Service::anyTrash($request->trash);
-
+            if ($daterange) {
+                $services = Service::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
+            }
             return Datatables::of($services)
                 ->addColumn('action', function ($service) use ($request) {
                     $detail_btn = '';
@@ -28,28 +36,27 @@ class ServiceController extends Controller
                     $edit_btn = ' ';
                     $trash_or_delete_btn = ' ';
 
-                    if ($this->getCurrentAuthUser('admin')->can('edit_item_category')) {
-                        $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.services.edit', ['service' => $service->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
+                    $invoice_btn = '<a class="edit text text-primary" href="' . route('admin.service_invoices', $service->id) . '"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>';
+
+                    $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.services.edit', ['service' => $service->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
+                    
+                    if ($request->trash == 1) {
+                        $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $service->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
+                        $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $service->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
+                    } else {
+                        $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $service->id . '"><i class="fas fa-trash fa-lg"></i></a>';
                     }
 
-                    if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
-
-                        if ($request->trash == 1) {
-                            $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $service->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
-                            $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $service->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
-                        } else {
-                            $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $service->id . '"><i class="fas fa-trash fa-lg"></i></a>';
-                        }
-
-                    }
-
-                    return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
+                    return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn} ${invoice_btn}";
                 })
               
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action'])
+                ->addColumn('description', function ($services) {
+                    return '<p style="white-space:pre-wrap;">'.$services->description.'</p>';
+                })
+                ->rawColumns(['action','description'])
                 ->make(true);
         }
         return view('backend.admin.services.index');
@@ -61,10 +68,10 @@ class ServiceController extends Controller
             abort(404);
         }
       
-        return view('backend.admin.buying_items.create');
+        return view('backend.admin.services.create');
     }
 
-    public function store(ItemRequest $request)
+    public function store(ServiceRequest $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
@@ -73,14 +80,21 @@ class ServiceController extends Controller
       
         $services = new Service();
         $services->service_name = $request['service_name'];
-        $services->retail_price = $request['retail_price'];
-        $services->retail_discount = $request['retail_discountunit'];
-        $services->retail_tax = $request['retail_tax'];
-        $services->item_sub_category_id = $request['item_sub_category_id'];
-        $services->wholesale_price = $request['wholesale_price'];
-        $services->wholesale_discount = $request['wholesale_discount'];
-        $services->wholesale_tax = $request['wholesale_tax'];
+        $services->service_charges = $request['service_charges'];
+        $services->description = $request['description'];
         $services->save();
+
+        
+        $cash_book = new Cashbook();
+        $cash_book->cashbook_income = $services->service_charges ;
+        $cash_book->cashbook_outgoing = 0 ;
+        $cash_book->buying_id = null;
+        $cash_book->service_id= $services->id;
+        $cash_book->selling_id = null;
+        $cash_book->expense_id = null;
+        $cash_book->credit_id = null;
+        $cash_book->return_id = null;
+        $cash_book->save();
 
         activity()
             ->performedOn($services)
@@ -105,10 +119,10 @@ class ServiceController extends Controller
         $services = Service::findOrFail($id);
 
 
-        return view('backend.admin.buying_items.edit', compact('services'));
+        return view('backend.admin.services.edit', compact('services'));
     }
 
-    public function update(ItemRequest $request, $id)
+    public function update(ServiceRequest $request, $id)
     {
         if (!$this->getCurrentAuthUser('admin')->can('edit_item')) {
             abort(404);
@@ -116,14 +130,20 @@ class ServiceController extends Controller
         $services = Service::findOrFail($id);
 
         $services->service_name = $request['service_name'];
-        $services->retail_price = $request['retail_price'];
-        $services->retail_discount = $request['retail_discountunit'];
-        $services->retail_tax = $request['retail_tax'];
-        $services->item_sub_category_id = $request['item_sub_category_id'];
-        $services->wholesale_price = $request['wholesale_price'];
-        $services->wholesale_discount = $request['wholesale_discount'];
-        $services->wholesale_tax = $request['wholesale_tax'];
+        $services->service_charges = $request['service_charges'];
+        $services->description = $request['description'];
         $services->update();
+
+        $cash_book = Cashbook::where('service_id',$services->id)->first();
+        $cash_book->cashbook_income = $services->service_charges ;
+        $cash_book->cashbook_outgoing = 0 ;
+        $cash_book->buying_id = null;
+        $cash_book->service_id= $services->id;
+        $cash_book->selling_id = null;
+        $cash_book->expense_id = null;
+        $cash_book->credit_id = null;
+        $cash_book->return_id = null;
+        $cash_book->save();
 
         activity()
             ->performedOn($services)
@@ -177,6 +197,5 @@ class ServiceController extends Controller
 
         return ResponseHelper::success();
     }
-
     
 }

@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
-use App\Helper\ResponseHelper;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\DiscountsRequest;
-use App\Http\Traits\AuthorizePerson;
-use App\Models\AccountType;
-use App\Models\Discounts;
+use App\Models\Item;
 use App\Models\Rooms;
+use App\Models\Discounts;
+use App\Models\AccountType;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
 use Yajra\DataTables\DataTables;
+use App\Http\Controllers\Controller;
+use App\Http\Traits\AuthorizePerson;
+use App\Http\Requests\DiscountsRequest;
 
 class DiscountController extends Controller
 {
@@ -23,7 +24,7 @@ class DiscountController extends Controller
         }
 
         if ($request->ajax()) {
-            $discounts = Discounts::anyTrash($request->trash)->with('accounttype', 'roomtype', 'room')->orderBy('id', 'desc');
+            $discounts = Discounts::anyTrash($request->trash)->with('accounttype','item')->orderBy('id', 'desc');
             return Datatables::of($discounts)
                 ->addColumn('action', function ($discount) use ($request) {
                     $detail_btn = '';
@@ -49,58 +50,51 @@ class DiscountController extends Controller
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->addColumn('roomtype', function ($discount) {
-                    $roomtype = $discount->room->roomtype->name;
-                    return $roomtype;
+                ->addColumn('customer', function ($discount) {
+                    $customer = $discount->accounttype ? $discount->accounttype->name : '-';
+                    return '<ul class="list-group">
+                        <li class="list-group-item"> '. $customer. '</li>
+                        </ul>';
+
+                })
+                ->addColumn('item', function ($discount) {
+                    $item = $discount->item ? $discount->item->name : '-';
+                    return '<ul class="list-group">
+                        <li class="list-group-item"> '. $item. '</li>
+                        </ul>';
+
                 })
                 ->addColumn('discount_percentage', function ($discount) {
                     $discount_percentage_mm = $discount->discount_percentage_mm ?? "-";
-                    $discount_percentage_foreign = $discount->discount_percentage_foreign ?? "-";
 
                     return '<ul class="list-group">
-                        <li class="list-group-item">MM - ' . $discount_percentage_mm . '</li>
-                        <li class="list-group-item">Foreign - ' . $discount_percentage_foreign . '</li>
+                        <li class="list-group-item"> % - ' . $discount_percentage_mm . '</li>
                         </ul>';
 
                 })
                 ->addColumn('discount_amount', function ($discount) {
                     $discount_amount_mm = $discount->discount_amount_mm ?? "-";
-                    $discount_amount_foreign = $discount->discount_amount_foreign ?? "-";
 
                     return '<ul class="list-group">
-                        <li class="list-group-item">MM - ' . $discount_amount_mm . '</li>
-                        <li class="list-group-item">Foreign - ' . $discount_amount_foreign . '</li>
+                        <li class="list-group-item">MMK - ' . $discount_amount_mm . '</li>
                         </ul>';
 
                 })
                 ->addColumn('addon_percentage', function ($discount) {
                     $addon_percentage_mm = $discount->addon_percentage_mm ?? "-";
-                    $addon_percentage_foreign = $discount->addon_percentage_foreign ?? "-";
 
                     return '<ul class="list-group">
-                        <li class="list-group-item">MM - ' . $addon_percentage_mm . '</li>
-                        <li class="list-group-item">Foreign - ' . $addon_percentage_foreign . '</li>
+                        <li class="list-group-item"> % - ' . $addon_percentage_mm . '</li>
                         </ul>';
-
                 })
                 ->addColumn('addon_amount', function ($discount) {
                     $addon_amount_mm = $discount->addon_amount_mm ?? "-";
-                    $addon_amount_foreign = $discount->addon_amount_foreign ?? "-";
-
                     return '<ul class="list-group">
-                        <li class="list-group-item">MM - ' . $addon_amount_mm . '</li>
-                        <li class="list-group-item">Foreign - ' . $addon_amount_foreign . '</li>
+                        <li class="list-group-item">MMK - ' . $addon_amount_mm . '</li>
                         </ul>';
-
                 })
-                ->filterColumn('roomtype', function ($query, $keyword) {
-                    $query->whereHas('room', function ($q1) use ($keyword) {
-                        $q1->whereHas('roomtype', function ($q2) use ($keyword) {
-                            $q2->where('name', 'LIKE', "%{$keyword}%");
-                        });
-                    });
-                })
-                ->rawColumns(['action', 'roomtype', 'discount_percentage', 'discount_amount', 'addon_percentage', 'addon_amount'])
+               
+                ->rawColumns(['action', 'customer','item', 'discount_percentage', 'discount_amount', 'addon_percentage', 'addon_amount'])
                 ->make(true);
         }
         return view('backend.admin.discounts.index');
@@ -112,12 +106,12 @@ class DiscountController extends Controller
             abort(404);
         }
         $user_account_type = AccountType::where('trash', '0')->get();
-        $room_type = Rooms::where('trash', '0')->get();
+        $items = Item::where('trash', '0')->get();
 
-        return view('backend.admin.discounts.create', compact('user_account_type', 'room_type'));
+        return view('backend.admin.discounts.create', compact('user_account_type', 'items'));
     }
 
-    public function store(DiscountsRequest $request)
+    public function store(Request $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_discount')) {
             abort(404);
@@ -125,16 +119,11 @@ class DiscountController extends Controller
 
         $discount = new Discounts();
         $discount->user_account_id = $request['user_account_id'];
-        $discount->room_type_id = $request['room_type_id'];
+        $discount->item_id = $request['item_id'];
         $discount->discount_percentage_mm = $request['discount_percentage_mm'];
-        $discount->discount_percentage_foreign = $request['discount_percentage_foreign'];
         $discount->discount_amount_mm = $request['discount_amount_mm'];
-        $discount->discount_amount_foreign = $request['discount_amount_foreign'];
         $discount->addon_percentage_mm = $request['addon_percentage_mm'];
-        $discount->addon_percentage_foreign = $request['addon_percentage_foreign'];
         $discount->addon_amount_mm = $request['addon_amount_mm'];
-        $discount->addon_amount_foreign = $request['addon_amount_foreign'];
-
         $discount->save();
 
         activity()
@@ -159,11 +148,11 @@ class DiscountController extends Controller
 
         $discount = Discounts::findOrFail($id);
         $user_account_type = AccountType::where('trash', '0')->get();
-        $room_type = Rooms::where('trash', '0')->get();
-        return view('backend.admin.discounts.edit', compact('discount', 'user_account_type', 'room_type'));
+        $items = Item::where('trash', '0')->get();
+        return view('backend.admin.discounts.edit', compact('discount', 'user_account_type', 'items'));
     }
 
-    public function update(DiscountsRequest $request, $id)
+    public function update(Request $request, $id)
     {
         if (!$this->getCurrentAuthUser('admin')->can('edit_discount')) {
             abort(404);
@@ -171,15 +160,11 @@ class DiscountController extends Controller
 
         $discount = Discounts::findOrFail($id);
         $discount->user_account_id = $request['user_account_id'];
-        $discount->room_type_id = $request['room_type_id'];
+        $discount->item_id = $request['item_id'];
         $discount->discount_percentage_mm = $request['discount_percentage_mm'];
-        $discount->discount_percentage_foreign = $request['discount_percentage_foreign'];
         $discount->discount_amount_mm = $request['discount_amount_mm'];
-        $discount->discount_amount_foreign = $request['discount_amount_foreign'];
         $discount->addon_percentage_mm = $request['addon_percentage_mm'];
-        $discount->addon_percentage_foreign = $request['addon_percentage_foreign'];
         $discount->addon_amount_mm = $request['addon_amount_mm'];
-        $discount->addon_amount_foreign = $request['addon_amount_foreign'];
 
         $discount->update();
         activity()

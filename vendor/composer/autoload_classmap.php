@@ -174,6 +174,7 @@ return array(
     'App\\Models\\Bussinessinfo' => $baseDir . '/app/Models/Bussinessinfo.php',
     'App\\Models\\BuyingItem' => $baseDir . '/app/Models/BuyingItem.php',
     'App\\Models\\CardType' => $baseDir . '/app/Models/CardType.php',
+    'App\\Models\\Cashbook' => $baseDir . '/app/Models/Cashbook.php',
     'App\\Models\\Category' => $baseDir . '/app/Models/Category.php',
     'App\\Models\\Credit' => $baseDir . '/app/Models/Credit.php',
     'App\\Models\\DailySellReport' => $baseDir . '/app/Models/DailySellReport.php',

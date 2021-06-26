@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\TaxRequest;
-use App\Http\Traits\AuthorizePerson;
 use App\Models\Tax;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
 use Yajra\DataTables\DataTables;
+use App\Http\Requests\TaxRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Traits\AuthorizePerson;
 
 class TaxController extends Controller
 {
@@ -27,11 +28,10 @@ class TaxController extends Controller
                 ->addColumn('action', function ($row) use ($request) {
                     $detail_btn = '';
                     $edit_btn = '';
-                    if ($this->getCurrentAuthUser('admin')->can('edit_tax')) {
-                        $edit_btn = '<a class="edit text text-primary mr-3" href="' . route('admin.taxes.edit', ['tax' => $row->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
-                    }
+                    $edit_btn = '<a class="edit text text-primary mr-3" href="' . route('admin.taxes.edit', ['tax' => $row->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
+                    $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $row->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
 
-                    return "${edit_btn}";
+                    return "${edit_btn} ${trash_or_delete_btn}";
                 })
                 ->addColumn('plus-icon', function () {
                     return null;
@@ -43,6 +43,40 @@ class TaxController extends Controller
 
         return view('backend.admin.tax.index');
     }
+
+    public function create()
+    {
+        if (!$this->getCurrentAuthUser('admin')->can('add_user')) {
+            abort(404);
+        }
+        return view('backend.admin.tax.create');
+    }
+
+    public function store(Request $request)
+    {
+       
+        $tax = new Tax();
+        $tax->name = $request->name;
+        $tax->amount = $request->amount;
+        $tax->save();
+
+        activity()
+            ->performedOn($tax)
+            ->causedBy(auth()->guard('admin')->user())
+            ->withProperties(['source' => 'tax '])
+            ->log('New tax is added');
+
+        return redirect()->route('admin.taxes.index')->with('success', 'New Tax Successfully Created.');
+    }
+
+    public function show(Tax $tax)
+    {
+        if (!$this->getCurrentAuthUser('admin')->can('show_user')) {
+            abort(404);
+        }
+        return view('backend.admin.tax.show', compact('tax'));
+    }
+
 
     public function edit($id)
     {
@@ -74,6 +108,22 @@ class TaxController extends Controller
 
         return redirect()->route('admin.taxes.index')->with('success', 'Successfully Updated');
 
+    }
+
+    public function destroy(Tax $tax)
+    {
+        if (!$this->getCurrentAuthUser('admin')->can('delete_user')) {
+            abort(404);
+        }
+
+        $tax->delete();
+        activity()
+            ->performedOn($tax)
+            ->causedBy(auth()->guard('admin')->user())
+            ->withProperties(['source' => 'Tax'])
+            ->log('Tax is deleted');
+
+        return ResponseHelper::success();
     }
 
 }

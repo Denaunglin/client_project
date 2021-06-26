@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
-@section('meta_title', 'Users')
-@section('page_title', 'Users')
+@section('meta_title', 'Customer')
+@section('page_title')
+@lang("message.header.customer")
+@endsection
+@section('customer-active','mm-active')
+
 @section('page_title_icon')
 <i class="metismenu-icon pe-7s-users"></i>
 @endsection
@@ -10,11 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     @can('add_user')
-    <a href="{{route('admin.client-users.create')}}" title="Add User" class="btn btn-primary action-btn">Add User</a>
+    <a href="{{route('admin.client-users.create')}}" title="Add User" class="btn btn-primary action-btn">@lang("message.header.add_customer")</a>
     @endcan
 </div>
 @endsection
@@ -24,7 +28,7 @@
 <div class="d-inline-block mb-2">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> Registered Date : </span>
+                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> @lang("message.header.registered_date"): </span>
             </div>
             <input type="text" class="form-control datepicker" placeholder="All">
         </div>
@@ -40,12 +44,12 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Account Type</th>
+                                <th>@lang("message.name")</th>
+                                <th>@lang("message.phone")</th>
+                                <th>@lang("message.header.account_type")</th>
                                 {{-- <th>Roles</th> --}}
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th class="no-sort action">@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -160,7 +164,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-            ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+            ajax: {
+                    'url' : '{{ url("/admin/client-users?trash=0") }}',
+                    'type': 'GET',
+                },
             columns: [
                 {data: "plus-icon", name: "plus-icon", defaultContent: null},
                 {data: 'name', name: 'name', defaultContent: "-", class: ""},
@@ -216,17 +223,15 @@
 
             var daterange = $('.datepicker').val();
             var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-            app_table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?daterange=${daterange}&trash=${trash}`).load();
+            app_table.ajax.url(`{{url('/admin/client-users?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
         });
 
         $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
 
             var daterange = $('.datepicker').val();
-            var status = $('.status').val();
-            var payment_status = $('.payment_status').val();
             var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-            app_table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?daterange=${daterange}&status=${status}&payment_status=${payment_status}&trash=${trash}`).load();
+            app_table.ajax.url(`{{url('/admin/client-users?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
         }); 
 
     });

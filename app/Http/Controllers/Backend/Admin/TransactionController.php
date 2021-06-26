@@ -7,13 +7,14 @@ use Auth;
 use Cart;
 use App\Models\Item;
 //sorry kalau ada typo dalam penamaan dalam bahasa inggris 
+use App\Models\User;
 use App\Models\Transcation;
 use Illuminate\Http\Request;
+
 use App\Models\HistoryProduct;
 
-use App\Models\ProductTranscation;
-
 //import dulu packagenya biar bs dipake
+use App\Models\ProductTranscation;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
@@ -22,8 +23,33 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 class TransactionController extends Controller
 {
 
-    public function addProductCart($id){
+    public function addProductCart($id , Request $request){
+
         $product = Item::where('id',$id)->get();
+     
+        $discount_amount = 0;
+        $discount_percentage = 0;
+        $addon_percentage = 0;
+        $addon_amount = 0;
+
+        // if($request->customer){
+        //     $customer_check = User::where('id',$request->customer)->first();
+        //     if($customer_check->accounttype){
+        //         $accounttype = $customer_check->accounttype->id;
+        //         $discount_type = Discounts::where('trash', '0')->where('user_account_id', $accounttype)->where('room_type_id', $room->id)->first();
+        //         $detailprices = ResponseHelper::roomschedulediscount($room, $nationality, $client_user, $discount_type);
+              
+        //         $customer_account_check = $customer_check->accounttype->discount ? $$customer_check->accounttype->discount : null;
+        //         if($customer_account_check){
+        //             $discount_amount = $customer_account_check->$discount_amount_mm ;
+        //             $discount_percentage = $customer_account_check->$discount_percentage_mm ;
+        //             $addon_percentage = $customer_account_check->$addon_percentage_mm ;
+        //             $addon_amount = $customer_account_check->$addon_amount_mm ;
+                
+        //         }
+        //     }
+        // }
+
         $cart = Session::get('cart');
         $cart[$product[0]->id] = array(
         "id" => $product[0]->id,

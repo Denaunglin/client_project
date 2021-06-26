@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
-@section('meta_title', 'Add User')
-@section('page_title', 'Add User')
+@section('meta_title', 'Add Customer')
+@section('page_title')
+@lang("message.header.add_customer")
+@endsection
 @section('page_title_icon')
 <i class="metismenu-icon pe-7s-users"></i>
 @endsection
@@ -18,52 +20,52 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="name">Name</label>
+                                <label for="name">@lang("message.name")</label>
                                 <input type="text" name="name" id="name" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="email">Email</label>
+                                <label for="email">@lang("message.email")</label>
                                 <input type="email" name="email" id="email" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="phone">Phone</label>
+                                <label for="phone">@lang("message.phone")</label>
                                 <input type="text" name="phone" id="phone" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="nrc_passport">NRC or Passport</label>
+                                <label for="nrc_passport">@lang("message.nrc_or_passport")</label>
                                 <input type="text" name="nrc_passport" id="nrc_passport" class="form-control">
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="date_of_birth">Date of Birth</label>
+                                <label for="date_of_birth">@lang("message.date_of_birth")</label>
                                 <input type="text" name="date_of_birth" id="date_of_birth" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Gender</label>
+                                <label>@lang("message.gender")</label>
                                 <div class="row ">
                                     <div class="form-check ml-5">
                                         <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" checked  value="male" >
                                         <label class="form-check-label" for="exampleRadios1">
-                                          Male
+                                            @lang("message.male")
                                         </label>
                                     </div>
                                     <div class="form-check ml-5">
                                         <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" checked value="female" >
                                         <label class="form-check-label" for="exampleRadios2">
-                                          Female
+                                            @lang("message.female")
                                         </label>
                                     </div>
                                 </div>
@@ -71,51 +73,16 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="address">Address </label>
+                                <label for="address">@lang("message.address") </label>
                                 <textarea  name="address" id="address" class="form-control"></textarea>
                             </div>
                         </div>
-
-                       <div class="col-md-6">
-                        <label for="">Profile Image</label>
-                        <p><strong>Recommedation :</strong> Image size should be (1000 x 400 ) and under 2 MB </p>
-                        <div class="input-group mb-1">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="imageAddon"><i
-                                        class="fas fa-cloud-upload-alt"></i></span>
-                            </div>
-                            <div class="custom-file">
-                                <input type="file" name="image" class="custom-file-input" accept="image/*"
-                                    id="image" aria-describedby="imageAddon" >
-                                <label class="custom-file-label" for="image">Choose file</label>
-                            </div>
-                        </div>
-                        <div class="image_preview"></div>
-                       </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="password">Password</label>
-                                <input type="password" name="password" id="password" class="form-control">
-                            </div>
-                        </div>
-
-                        {{-- <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="roles">Roles</label>
-                                <select class="form-control select2" name="roles[]" id="roles" multiple>
-                                    @foreach($roles as $role)
-                                        <option value="{{$role->name}}">{{$role->name}}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div> --}}
                     </div>
 
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.client-users.index') }}" class="btn btn-danger mr-5">Cancel</a>
-                            <input type="submit" value="Add" class="btn btn-success">
+                            <a href="{{ route('admin.client-users.index') }}" class="btn btn-danger mr-5">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.add")" class="btn btn-success">
                         </div>
                     </div>
                 </form>

@@ -1,6 +1,8 @@
 @extends('backend.admin.layouts.app')
-@section('meta_title', 'Edit Item')
-@section('page_title', 'Edit Item')
+@section('meta_title', 'Edit Service')
+@section('page_title')
+@lang("message.header.edit_service")
+@endsection
 @section('page_title_icon')
 
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
@@ -11,94 +13,44 @@
     <div class="col-md-12">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <form action="{{ route('admin.items.update',$items->id) }}" method="post" id="edit"
+                <form action="{{ route('admin.services.update',$services->id) }}" method="post" id="edit"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Item Category</label>
-                                <select class="form-control select2" id="item_category" name="item_category_id" required>
-                                    <option value="">Choose Item Category</option>
-                                    @forelse($item_category as $data)
-                                    <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Item Sub Category</label>
-                                <select class="form-control select2" id="item_sub_category" name="item_sub_category_id" required>
-                                    <option value="">Choose Item Sub Category</option>
-                                    <option value="0">None</option>
-                                    @forelse($item_sub_category as $data)
-                                    <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Item </label>
-                                <select class="form-control select2" id="item_sub_category" name="item_sub_category_id" required>
-                                    <option value="">Choose Item </option>
-                                    <option value="0">None</option>
-                                    @forelse($item as $data)
-                                    <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label> Unit </label>
-                                <input type="text" id="unit" name="unit" class="form-control  @error('unit') is-invalid @enderror" >
-                                @error('unit')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Minimun Qty</label>
-                                <input type="number" id="minimun_qty" name="minimun_qty" class="form-control  @error('minimun_qty') is-invalid @enderror" >
-                                @error('minimun_qty')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Stock In Hand</label>
-                                <input type="number" id="stock_in_hand" name="stock_in_hand" class="form-control  @error('stock_in_hand') is-invalid @enderror" >
-                                @error('stock_in_hand')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
-                       
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>To Reorder </label>
-                                <input type="number" id="to_reorder" step="any" name="to_reorder" class="form-control" required>
+                                <label> @lang("message.header.service_name") </label>
+                                <input type="text" id="service_name" value="{{$services->service_name}}" name="service_name" class="form-control  @error('service_name') is-invalid @enderror" >
+                                @error('service_name')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
                         </div>
-
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label >@lang("message.description")</label>
+                                <textarea name="description" class="form-control" id="description" cols="30" rows="5">{{$services->description}}</textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>@lang("message.header.service_charges") </label>
+                                <input type="number" id="service_charges"  value="{{$services->service_charges}}"  name="service_charges" class="form-control  @error('service_charges') is-invalid @enderror" >
+                                @error('service_charges')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.items.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.services.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.update")" class="btn btn-success">
                         </div>
                     </div>
                 </form>
@@ -132,7 +84,7 @@
 
 </script>
 
-{!! JsValidator::formRequest('App\Http\Requests\ItemRequest', '#edit') !!}
+{!! JsValidator::formRequest('App\Http\Requests\ServiceRequest', '#edit') !!}
 <script>
     $(function() {
 $('input[name="expire_date"]').daterangepicker({

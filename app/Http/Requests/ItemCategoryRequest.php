@@ -31,7 +31,7 @@ class ItemCategoryRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'Item Category name field is required.',
+            'name.required' => 'Name field is required.',
         ];
     }
 }

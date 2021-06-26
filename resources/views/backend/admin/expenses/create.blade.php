@@ -1,11 +1,18 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Add Expense')
-@section('page_title', 'Add Expense')
+@section('page_title')
+@lang("message.header.add_expense")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
+@section('page_title_buttons')
+<div class="d-flex justify-content-end">
+    <a href="{{route('admin.expense_categories.create')}}" title="Add Expense Category" class="btn btn-primary action-btn">@lang("message.header.add_expense_category")</a> &emsp13;
+    <a href="{{route('admin.expense_types.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_expense_type")</a>
+</div>
+@endsection
 @section('content')
-@include('layouts.errors_alert')
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
@@ -13,47 +20,35 @@
                 <form action="{{ route('admin.expenses.store') }}" method="post" id="create" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Name </label>
-                                <input type="text" id="name" name="name" class="form-control  @error('name') is-invalid @enderror" >
-                                @error('name')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
                        
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Expense Category</label>
+                                <label>@lang("message.header.expense_category")</label>
                                 <select class="form-control select2" id="expense_category_id" name="expense_category_id" required>
-                                    <option value="">Choose Expense Category</option>
+                                    <option value="">@lang("message.header.choose_expense_category")</option>
                                     @forelse($expense_categories as $data)
                                     <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Expense Type</label>
+                                <label>@lang("message.header.expense_type")</label>
                                 <select class="form-control select2" id="expense_type_id" name="expense_type_id" required>
-                                    <option value="">Choose Expense type</option>
+                                    <option value="">@lang("message.header.choose_expense_type")</option>
                                     @forelse($expense_types as $data)
                                     <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    @empty<p>@lang("message.header.add_expense")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
-                       
                      
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label> Price</label>
+                                <label> @lang("message.header.price")</label>
                                 <input type="number" id="price" name="price" class="form-control  @error('price') is-invalid @enderror" >
                                 @error('price')
                                 <span class="invalid-feedback" role="alert">
@@ -65,8 +60,8 @@
 
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>About </label>
-                                <textarea type="text" id="about" name="about" class="form-control  @error('about') is-invalid @enderror" ></textarea>
+                                <label>@lang("message.about") </label>
+                               <textarea type="text" id="about" name="about" class="form-control  @error('about') is-invalid @enderror" ></textarea>
                                 @error('about')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -77,8 +72,8 @@
                     </div>
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.expenses.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.expenses.index') }}" class="btn btn-danger mr-3">@lang("message.cancel") </a>
+                            <input type="submit" value="@lang("message.confirm") " class="btn btn-success">
                         </div>
                     </div>
                 </form>
@@ -112,7 +107,7 @@
     // });
    
 </script>
-{!! JsValidator::formRequest('App\Http\Requests\ItemRequest','#create') !!}
+{!! JsValidator::formRequest('App\Http\Requests\ExpenseRequest','#create') !!}
 <script>
         $(function() {
   $('input[name="expire_date"]').daterangepicker({

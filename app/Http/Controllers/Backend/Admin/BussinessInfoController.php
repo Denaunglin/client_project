@@ -8,6 +8,7 @@ use App\Models\Bussinessinfo;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
+use App\Http\Requests\BussinessInfoRequest;
 use Spatie\ImageOptimizer\OptimizerChainFactory;
 
 class BussinessInfoController extends Controller
@@ -69,7 +70,7 @@ class BussinessInfoController extends Controller
         return view('backend.admin.bussiness_infos.create');
     }
 
-    public function store(Request $request)
+    public function store(BussinessInfoRequest $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
@@ -126,7 +127,7 @@ class BussinessInfoController extends Controller
         return view('backend.admin.bussiness_infos.edit', compact('bussiness_infos'));
     }
 
-    public function update(Request $request, $id)
+    public function update(BussinessInfoRequest $request, $id)
     {
         if (!$this->getCurrentAuthUser('admin')->can('edit_item')) {
             abort(404);

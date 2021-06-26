@@ -25,14 +25,9 @@ class StoreClientUser extends FormRequest
     {
         return [
             'name' => 'required|string|max:160',
-            'email' => 'required|unique:users',
             'phone' => 'required|unique:users',
-            'nrc_passport' => 'required',
-            'date_of_birth' => 'required',
             'gender' => 'required',
             'address' => 'required',
-            'password' => 'required',
-            'password' => 'required|min:8',
         ];
     }
 }

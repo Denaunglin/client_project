@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
-use App\Models\OrderList;
 use App\Models\Item;
+use App\Models\OrderList;
+use App\Models\ShopStorage;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use App\Models\ItemSubCategory;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
-use Yajra\DataTables\DataTables;
 
 
 class OrderListController extends Controller
@@ -24,24 +25,25 @@ class OrderListController extends Controller
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
+        $shop_storage = ShopStorage::where('trash',0)->get();
+
+        $order_item = [];
+        foreach($item as $item_data){
+            $get_order_item  = ShopStorage::where('item_id',$item_data->id)->where('qty','<',$item_data->minimun_qty )->first();
+            if($get_order_item != null){
+                $order_item [] = $get_order_item;
+            }
+        }
+
+
+        $order_list = [];
+        foreach($order_item as $data){
+            $order_list[] = Item::where('id',$data->item_id)->first();
+        }
+
         if ($request->ajax()) {
 
-            $order_lists = OrderList::anyTrash($request->trash);
-
-            if ($request->item != '') {
-                $items = $items->where('id', $request->item);
-            }
-
-            if ($request->item_category != '') {
-                $items = $items->where('item_category_id', $request->item_category);
-            }
-
-            if ($request->item_sub_category != '') {
-                $items = $items->where('item_sub_category_id', $request->item_sub_category);
-
-            }
-
-            return Datatables::of($order_lists)
+            return Datatables::of($order_list)
                 ->addColumn('action', function ($order_list) use ($request) {
                     $detail_btn = '';
                     $restore_btn = '';
@@ -65,20 +67,36 @@ class OrderListController extends Controller
 
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
-                ->addColumn('item_category', function ($order_list) {
+                ->addColumn('item_group', function ($order_list) {
 
                     return $order_list->item_category ? $order_list->item_category->name : '-';
                 })
-                ->addColumn('item_sub_category', function ($order_list) {
+                ->addColumn('item_sub_group', function ($order_list) {
                     return $order_list->item_sub_category_id ? $order_list->item_sub_category->name : '-';
                 })
-                ->addColumn('image', function ($order_list) {
-                    return '<img src="' . $order_list->image_path() . '" width="100px;"/>';
+                ->editColumn('minimun_qty', function ($order_list) {
+                    $minimun_qty = $order_list->minimun_qty ? $order_list->minimun_qty : '-';
+                    return "<span class='badge badge-danger'>".$minimun_qty."</span>";
+
+                })
+                ->editColumn('stock_in_hand',function($order_list){
+                    $shop_storage = ShopStorage::where('item_id',$order_list->id)->first();
+                    $stock_in_hand = $shop_storage->qty;
+                    return "<span class='badge badge-danger'>".$stock_in_hand."</span>";
+
+                })
+                ->editColumn('to_re_order',function($order_list){
+                    $shop_storage = ShopStorage::where('item_id',$order_list->id)->first();
+                    $stock_in_hand = $shop_storage->qty;
+                    $minimun_qty = $order_list->minimun_qty;
+                    $to_re_order = $minimun_qty - $stock_in_hand;
+                    return "<span class='badge badge-warning'>".$to_re_order."</span>";
+
                 })
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action','image'])
+                ->rawColumns(['action','minimun_qty','stock_in_hand','to_re_order'])
                 ->make(true);
         }
         return view('backend.admin.order_lists.index',compact('item','item_category','item_sub_category'));
@@ -114,8 +132,8 @@ class OrderListController extends Controller
         activity()
             ->performedOn($order_list)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel'])
-            ->log(' New Item  (' . $order_list->item_name . ') is created ');
+            ->withProperties(['source' => 'Order List  (Admin Panel'])
+            ->log(' New Order List  (' . $order_list->item_name . ') is created ');
 
         return redirect()->route('admin.order_lists.index')->with('success', 'Successfully Created');
     }
@@ -157,8 +175,8 @@ class OrderListController extends Controller
         activity()
             ->performedOn($order_list)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel'])
-            ->log('Item  (' . $order_list->item_name . ') is updated');
+            ->withProperties(['source' => 'Order List  (Admin Panel'])
+            ->log('Order List  (' . $order_list->item_name . ') is updated');
 
         return redirect()->route('admin.order_lists.index')->with('success', 'Successfully Updated');
     }
@@ -173,8 +191,8 @@ class OrderListController extends Controller
         activity()
             ->performedOn($order_list)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel'])
-            ->log(' Item  (' . $order_list->item_name . ')  is deleted ');
+            ->withProperties(['source' => 'Order List  (Admin Panel'])
+            ->log(' Order List  (' . $order_list->item_name . ')  is deleted ');
 
         return ResponseHelper::success();
     }
@@ -189,8 +207,8 @@ class OrderListController extends Controller
         activity()
             ->performedOn($order_list)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel)'])
-            ->log(' Item (' . $order_list->item_name . ')  is moved to trash ');
+            ->withProperties(['source' => 'Order List  (Admin Panel)'])
+            ->log(' Order List (' . $order_list->item_name . ')  is moved to trash ');
 
         return ResponseHelper::success();
     }
@@ -201,8 +219,8 @@ class OrderListController extends Controller
         activity()
             ->performedOn($order_list)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel'])
-            ->log(' Item  (' . $order_list->item_name . ')  is restored from trash ');
+            ->withProperties(['source' => 'Order List  (Admin Panel'])
+            ->log(' Order List  (' . $order_list->item_name . ')  is restored from trash ');
 
         return ResponseHelper::success();
     }

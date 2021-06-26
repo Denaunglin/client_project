@@ -17,7 +17,6 @@ class CreateAccountTypesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('commission')->nullable();
-            $table->string('booking_limit')->nullable();
             $table->tinyInteger('trash')->default(0);
             $table->timestamps();
         });

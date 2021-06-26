@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
-@section('meta_title', 'Discount & Addon')
-@section('page_title', 'Discount & Addon ')
+@section('meta_title', 'Discount')
+@section('page_title')
+@lang("message.header.discount")
+@endsection
+@section('discount-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,12 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     @can('add_discount')
-    <a href="{{route('admin.discounts.create')}}" title="Add Disocunt" class="btn btn-primary action-btn">Add Discount &
-        Addon
+    <a href="{{route('admin.discounts.create')}}" title="Add Disocunt" class="btn btn-primary action-btn">@lang("message.header.add_discount")
     </a>
     @endcan
 </div>
@@ -32,14 +35,12 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>User Account Type</th>
-                                <th>Room Type</th>
-                                <th>Discount Percentage </th>
-                                <th>Discount Amount </th>
-                                <th>Addon Percentage </th>
-                                <th>Addon Amount </th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th> @lang("message.header.customer_type")</th>
+                                <th> @lang("message.header.item")</th>
+                                <th>@lang("message.header.discount_percentage") </th>
+                                <th>@lang("message.header.discount_amount")</th>
+                                <th class="no-sort action">@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -73,21 +74,24 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/discounts?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/discounts?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
                         defaultContent: null
                     },
                     {
-                        data: 'accounttype.name',
-                        name: 'accounttype.name',
+                        data: 'customer',
+                        name: 'customer',
                         defaultContent: "-",
                         class: ""
                     },
                     {
-                        data: 'roomtype',
-                        name: 'roomtype',
+                        data: 'item',
+                        name: 'item',
                         defaultContent: "-",
                         class: ""
                     },
@@ -101,18 +105,6 @@
                     {
                         data: 'discount_amount',
                         name: 'discount_amount',
-                        defaultContent: "-",
-                        class: ""
-                    },
-                    {
-                        data: 'addon_percentage',
-                        name: 'addon_percentage',
-                        defaultContent: "-",
-                        class: ""
-                    },
-                    {
-                        data: 'addon_amount',
-                        name: 'addon_amount',
                         defaultContent: "-",
                         class: ""
                     },
@@ -170,7 +162,7 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/discounts?trash=' + trash).load();
+            table.ajax.url(`{{url('/admin/discounts?trash=`+trash+`/')}}`).load();
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -183,7 +175,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/discounts/' + id + '/trash',
+                            url :`{{url('/admin/discounts/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -203,7 +195,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/discounts/' + id + '/restore',
+                            url :`{{url('/admin/discounts/`+id+`/restore')}}`,  
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -223,7 +215,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/discounts/' + id,
+                            url :`{{url('/admin/discounts/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

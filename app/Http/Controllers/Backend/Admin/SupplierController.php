@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Backend\Admin;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use App\Helper\ResponseHelper;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
-use Yajra\DataTables\DataTables;
+use App\Http\Requests\SupplierRequest;
 
 
 class SupplierController extends Controller
@@ -68,7 +69,7 @@ class SupplierController extends Controller
         return view('backend.admin.suppliers.create');
     }
 
-    public function store(Request $request)
+    public function store(SupplierRequest $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_user')) {
             abort(404);
@@ -107,7 +108,7 @@ class SupplierController extends Controller
         return view('backend.admin.suppliers.edit', compact('suppliers'));
     }
 
-    public function update(Request $request, Supplier $supplier)
+    public function update(SupplierRequest $request, Supplier $supplier)
     {
         if (!$this->getCurrentAuthUser('admin')->can('edit_user')) {
             abort(404);

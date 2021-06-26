@@ -14,6 +14,10 @@ class BuyingItem extends Model
     {
         return $this->belongsTo('App\Models\Item', 'item_id', 'id');
     }
+    public function supplier()
+    {
+        return $this->belongsTo('App\Models\Supplier', 'supplier_id', 'id');
+    }
 
     public function item_category()
     {

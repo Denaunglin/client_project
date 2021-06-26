@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
-@section('meta_title', 'Edit User')
-@section('page_title', 'Edit User')
+@section('meta_title', 'Edit Customer')
+@section('page_title')
+@lang("message.header.edit_customer")
+@endsection
 @section('page_title_icon')
 <i class="metismenu-icon pe-7s-users"></i>
 @endsection
@@ -17,52 +19,52 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="name">Name</label>
+                                    <label for="name">@lang("message.name")</label>
                                 <input type="text" name="name" value="{{$client_user->name}}" id="name" class="form-control">
                                 </div>
                             </div>
     
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="email">Email</label>
+                                    <label for="email">@lang("message.email")</label>
                                 <input type="email" name="email" value="{{$client_user->email}}" id="email" class="form-control">
                                 </div>
                             </div>
     
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="phone">Phone</label>
+                                    <label for="phone">@lang("message.phone")</label>
                                 <input type="text" name="phone" value="{{$client_user->phone}}" id="phone" class="form-control">
                                 </div>
                             </div>
     
                             <div class="col-md-6">
                                 <div class="form-group">
-                                <label for="nrc_no">NRC or Passport</label>
+                                <label for="nrc_no">@lang("message.nrc_or_passport")</label>
                                 <input type="text" name="nrc_passport" value="{{$client_user->nrc_passport}}" id="nrc_no" class="form-control">
                                 </div>
                             </div>
     
                             <div class="col-md-6">
                                 <div class="form-group">
-                                <label for="date_of_birth">Date of Birth</label>
+                                <label for="date_of_birth">@lang("message.date_of_birth")</label>
                                 <input type="text" name="date_of_birth" value="{{$client_user->date_of_birth}}"  class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Gender</label>
+                                    <label>@lang("message.gender")</label>
                                     <div class="row ">
                                         <div class="form-check ml-5">
                                             <input class="form-check-input" type="radio" name="gender" id="exampleRadios1" @if($client_user->gender=='male') checked @endif   value="male" >
                                             <label class="form-check-label" for="exampleRadios1">
-                                              Male
+                                                @lang("message.male")
                                             </label>
                                         </div>
                                         <div class="form-check ml-5">
                                             <input class="form-check-input" type="radio" name="gender" id="exampleRadios2" @if($client_user->gender=='female') checked @endif value="female" >
                                             <label class="form-check-label" for="exampleRadios2">
-                                              Female
+                                                @lang("message.female")
                                             </label>
                                         </div>
                                     </div>
@@ -70,43 +72,16 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="address">Address </label>
+                                    <label for="address">@lang("message.address") </label>
                                 <textarea  name="address" id="address" class="form-control">{{$client_user->address}}</textarea>
                                 </div>
                             </div>
     
-                           <div class="col-md-6">
-                            <label for="">Profile Image</label>
-                            <div class="input-group mb-1">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="imageAddon"><i
-                                            class="fas fa-cloud-upload-alt"></i></span>
-                                </div>
-                                <div class="custom-file">
-                                    <input type="file" name="image" class="custom-file-input" accept="image/*"
-                                        id="image" aria-describedby="imageAddon" >
-                                    <label class="custom-file-label" for="image">Choose file</label>
-                                </div>
-                            </div>
-                            <div class="image_preview">
-                                @if($client_user->userprofile)
-                                <img src="{{$client_user->userprofile->image_path()}}">
-                                @else
-                                @endif
-                               
-                            </div>
-                           </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="password">Password</label>
-                                    <input type="password" name="password" id="password" class="form-control">
-                                </div>
-                            </div>
-    
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="roles">Account Type</label>
+                                    <label for="roles">@lang("message.header.customer_type")</label>
                                     <select class="form-control " name="account_type" id="roles" >
+                                        <option value="0">@lang("message.header.default_customer")</option>
                                         @foreach($accounttype as $data)
                                             <option value="{{$data->id}}" @if($client_user->account_type==$data->id) selected @endif>{{$data->name}}</option>
                                         @endforeach
@@ -117,8 +92,8 @@
     
                         <div class="row">
                             <div class="col-md-12 text-center">
-                                <a href="{{ route('admin.client-users.index') }}" class="btn btn-danger mr-5">Cancel</a>
-                                <input type="submit" value="Add" class="btn btn-success">
+                                <a href="{{ route('admin.client-users.index') }}" class="btn btn-danger mr-5">@lang("message.cancel")</a>
+                                <input type="submit" value="@lang("message.add")" class="btn btn-success">
                             </div>
                         </div>
                 </form>

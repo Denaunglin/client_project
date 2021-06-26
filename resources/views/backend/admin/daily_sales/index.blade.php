@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Daily Sales Report')
-@section('page_title', 'Daily Sales Report')
+@section('page_title')
+@lang("message.header.daily_sales_report")
+@endsection
+@section('daily-sale-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,6 +14,16 @@
 @endsection
 
 @section('content')
+<div class="col-md-6 col-sm-12 col-xl-3">
+    <div class="d-inline-block mb-2">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i>  @lang("message.date") : </span>
+            </div>
+            <input type="text" class="form-control datepicker" placeholder="All">
+        </div>
+    </div>
+</div>
 
 <div class="row">
     <div class="col-md-12">
@@ -20,18 +34,32 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th>Barcode</th>
-                                <th>Item Name</th>
-                                <th>Unit</th>
-                                <th>Item Category <br></th>
-                                <th>Sub Item Category</th>
-                                <th>Qty</th>
-                                <th>Price</th>
-                                <th>Discount</th>
-                                <th>Total Price</th>
+                                <th>@lang("message.header.barcode")</th>
+                                <th>@lang("message.header.item_name")</th>
+                                <th>@lang("message.header.unit")</th>
+                                <th>@lang("message.header.item_category")  <br></th>
+                                <th>@lang("message.header.item_sub_category")</th>
+                                <th>@lang("message.header.qty")</th>
+                                <th>@lang("message.header.rate_per_unit")</th>
+                                <th>@lang("message.header.discount")</th>
+                                <th>@lang("message.header.total_price")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th></th>
+                                <th>@lang("message.header.total")</th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -51,6 +79,7 @@
                 serverSide: true,
                 dom: 'Bfrtip',
                 buttons: [
+                    'excel',
                     {
               text: '<i class="fas fa-file-pdf"></i> PDF',
               extend: 'pdfHtml5',
@@ -96,6 +125,7 @@
                   doc['footer'] = (function(page, pages) {
                       return {
                           columns: [
+                              
                               {
                                   alignment: 'right',
                                   text: ['page ', {
@@ -143,7 +173,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/daily_sales?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
                     {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
@@ -174,18 +207,84 @@
                     <div class="spinner-border text-info" role="status">
                         <span class="sr-only">Loading...</span>
                     </div></div>`
-                    }
-            });
+                    },
+                    footerCallback: function(row, data, start, end, display) {
+                    var api = this.api(),
+                    data;
+
+                // Remove the formatting to get integer data for summation
+                var intVal = function(i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                        i : 0;
+                };
+
+                // Total
+                total6 = api.column(6).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+
+                total7 = api.column(7).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total9 = api.column(9).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+
+                // Update footer
+                $(api.column(6).footer()).html(total6.toLocaleString());
+                $(api.column(7).footer()).html(total7.toLocaleString());
+
+                $(api.column(9).footer()).html(total9.toLocaleString());
+
+        }
+            }); 
         });
 
 
-        $(document).on('change', '.item, .item_category , .item_sub_category', function() {
+        $(".datepicker").daterangepicker({
+            opens: "right",
+            alwaysShowCalendars: true,
+            autoUpdateInput: false,
+            startDate: moment().startOf('month'),
+            endDate: moment().endOf('month'),
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            },
+            locale: {
+                cancelLabel: 'Clear',
+                format: 'YYYY-MM-DD',
+                separator: " , ",
+            }
+        });
+
+        $('.datepicker').on('apply.daterangepicker', function(ev, picker) {
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' , ' + picker.endDate.format('YYYY-MM-DD'));
+            var daterange = $('.datepicker').val();
+            var trash = $('.trashswitch').prop('checked') ? 1 : 0;
+            app_table.ajax.url(`{{url('/admin/daily_sales?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
+
+        });
+
+
+        $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
+            $(this).val('');
+
+            var daterange = $('.datepicker').val();
+            var status = $('.status').val();
+            var payment_status = $('.payment_status').val();
+            var trash = $('.trashswitch').prop('checked') ? 1 : 0;
+            app_table.ajax.url(`{{url('/admin/daily_sales?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
+        }); 
+
+
+        $(document).on('change', '.item', function() {
                  var booking_user_name = $('#booking_user_name').val();
                 var item = $('.item').val();
                 var item_category = $('.item_category').val();
                 var item_sub_category=$('.item_sub_category').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-                app_table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?item=${item}&item_category=${item_category}&item_sub_category=${item_sub_category}&trash=${trash}`).load();
+                app_table.ajax.url(`{{url('/admin/daily_sales?item=`+item+`&trash=`+trash+`/')}}`).load();
+
         });
 
 </script>

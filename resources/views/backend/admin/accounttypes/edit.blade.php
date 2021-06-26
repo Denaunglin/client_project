@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Edit Account Type')
-@section('page_title', 'Edit Account Type')
+@section('page_title')
+@lang("message.header.edit_account_type")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -18,14 +20,14 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Name</label>
+                                <label>@lang("message.name")</label>
                                 <input type="text" value="{{$accounttype->name}}" id="name" name="name"
                                     class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Commission Percentage </label>
+                                <label>@lang("message.header.commission_percentage") </label>
                                 <div class="input-group">
                                     <input type="number" value="{{$accounttype->commission}}" step="any" id="commission"
                                         name="commission" class="form-control">
@@ -35,36 +37,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>Booking limit</label>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="custom-control custom-radio">
-                                                <input type="radio" class="gender custom-control-input " @if($accounttype->booking_limit==1) checked @endif id="default1" value="1" name="booking_limit" >
-                                                    <label class="custom-control-label" for="default1">On</label>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-12">
-                                                <div class="custom-control custom-radio">
-                                                <input type="radio" class="gender custom-control-input" @if($accounttype->booking_limit==0) checked @endif id="default2" value="0" name="booking_limit">
-                                                    <label class="custom-control-label" for="default2">Off</label>
-                                                </div>
-                                            </div>
-                                        </div> 
-                            </div>
-                         </div>
-
-
                     </div>
-
-
                     <div class="row">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.accounttypes.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.accounttypes.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang('message.confirm')" class="btn btn-success">
                         </div>
                     </div>
                 </form>

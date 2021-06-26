@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
+use App\Models\Tax;
 use App\Models\Item;
+use App\Models\User;
+use App\Models\Cashbook;
 use App\Models\Supplier;
+use App\Models\Discounts;
 use App\Models\SellItems;
 use App\Models\ItemLedger;
 use App\Models\ShopStorage;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
 use App\Models\ItemSubCategory;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\ItemRequest;
@@ -31,11 +36,14 @@ class SellItemController extends Controller
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
         if ($request->ajax()) {
+            $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
             $sell_items = SellItems::anyTrash($request->trash);
-
+            if ($daterange) {
+                $sell_items = SellItems::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
+            }
             if ($request->item != '') {
-                $sell_items = $sell_items->where('id', $request->item);
+                $sell_items = $sell_items->where('item_id', $request->item);
             }
 
             if ($request->item_category != '') {
@@ -52,6 +60,7 @@ class SellItemController extends Controller
                     $detail_btn = '';
                     $restore_btn = '';
                     $edit_btn = ' ';
+                    $invoice_btn = '';
                     $trash_or_delete_btn = ' ';
 
                     if ($this->getCurrentAuthUser('admin')->can('edit_item_category')) {
@@ -59,17 +68,19 @@ class SellItemController extends Controller
                     }
 
                     if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
+                       
+                        $invoice_btn = '<a class="edit text text-primary" href="' . route('admin.sell_invoice', $sell_item->id) . '"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>';
 
                         if ($request->trash == 1) {
                             $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $sell_item->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
-                            $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $itsell_itemem->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
+                            $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $sell_item->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
                         } else {
                             $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $sell_item->id . '"><i class="fas fa-trash fa-lg"></i></a>';
                         }
 
                     }
 
-                    return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
+                    return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn} ${invoice_btn} ";
                 })
                 ->addColumn('item_id', function ($sell_item) {
 
@@ -109,8 +120,6 @@ class SellItemController extends Controller
         }
 
         $cart = Session::get('cart');
-
-        dd($cart);
         if($cart){
             $item = Item::findOrFail($cart['id']);
         }else{
@@ -123,6 +132,7 @@ class SellItemController extends Controller
             $sell_item = new SellItems();
             $sell_item->barcode = $item->barcode;
             $sell_item->item_id = $item->id;
+            $sell_item->customer_id = 0 ;
             $sell_item->unit = $item->unit;
             $sell_item->item_category_id = $item->item_category_id;
             $sell_item->item_sub_category_id = $item->item_sub_category_id;
@@ -131,6 +141,18 @@ class SellItemController extends Controller
             $sell_item->discount = $request['discount'];
             $sell_item->net_price = $request['net_price'];
             $sell_item->save();
+
+            $cash_book = new Cashbook();
+            $cash_book->cashbook_income = $sell_item->net_price;
+            $cash_book->cashbook_outgoing = 0 ;
+            $cash_book->buying_id = null;
+            $cash_book->service_id = null;
+            $cash_book->selling_id = $sell_item->id;
+            $cash_book->expense_id = null;
+            $cash_book->credit_id = null;
+            $cash_book->return_id = null;
+            $cash_book->save();
+
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
             if($shop_storage){
@@ -153,8 +175,7 @@ class SellItemController extends Controller
             $item_ledger->selling_back = '0';
             $item_ledger->adjust_in = '0';
             $item_ledger->adjust_out = '0';
-            $item_ledger->adjust_list = '0';
-            $item_ledger->closing_qty = $request->qty;
+            $item_ledger->closing_qty = $shop_storage->qty;
             $item_ledger->save();
         }else{
             for ($var = 0; $var < $item_count - 1;) {
@@ -162,6 +183,7 @@ class SellItemController extends Controller
                 $sell_item = new SellItems();
                 $sell_item->barcode = $data->barcode;
                 $sell_item->item_id = $data->id;
+                $sell_item->customer_id = 0 ;
                 $sell_item->unit = $data->unit;
                 $sell_item->item_category_id = $data->item_category_id;
                 $sell_item->item_sub_category_id = $data->item_sub_category_id;
@@ -170,6 +192,17 @@ class SellItemController extends Controller
                 $sell_item->discount = $request['discount'];
                 $sell_item->net_price = $request['net_price'];
                 $sell_item->save();
+
+                $cash_book = new Cashbook();
+                $cash_book->cashbook_income = $sell_item->net_price;
+                $cash_book->cashbook_outgoing = 0 ;
+                $cash_book->buying_id = null;
+                $cash_book->service_id = null;
+                $cash_book->selling_id = $sell_item->id;
+                $cash_book->expense_id = null;
+                $cash_book->credit_id = null;
+                $cash_book->return_id = null;
+                $cash_book->save();
 
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
                 if($shop_storage){
@@ -183,7 +216,6 @@ class SellItemController extends Controller
                     $shop_storage->save();
                 }
         
-        
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
                 $item_ledger->opening_qty = '0';
@@ -193,8 +225,7 @@ class SellItemController extends Controller
                 $item_ledger->selling_back = '0';
                 $item_ledger->adjust_in = '0';
                 $item_ledger->adjust_out = '0';
-                $item_ledger->adjust_list = '0';
-                $item_ledger->closing_qty = $request->qty;
+                $item_ledger->closing_qty = $shop_storage->qty;
                 $item_ledger->save();
                 $var++;
             }
@@ -246,6 +277,7 @@ class SellItemController extends Controller
         $item=Item::where('id',$request->item_id)->first();
         $sell_item = SellItems::findOrFail($id);
         $shop_storage = ShopStorage::where('item_id',$item->id)->first();
+        $opening_qty = $shop_storage->qty;
 
         $qty1 = $sell_item->qty ;
         $qty2 = $request->qty;
@@ -259,6 +291,7 @@ class SellItemController extends Controller
 
         $sell_item->barcode = $item->barcode;
         $sell_item->item_id = $item->id;
+        $sell_item->customer_id = 0 ;
         $sell_item->unit = $item->unit;
         $sell_item->item_category_id = $item->item_category_id;
         $sell_item->item_sub_category_id = $item->item_sub_category_id;
@@ -267,6 +300,30 @@ class SellItemController extends Controller
         $sell_item->discount = $request['discount'];
         $sell_item->net_price = $request['net_price'];
         $sell_item->update();
+
+        $cash_book =  Cashbook::where('selling_id', $sell_item->id)->first();;
+        $cash_book->cashbook_income = $sell_item->net_price;
+        $cash_book->cashbook_outgoing = 0 ;
+        $cash_book->buying_id = null;
+        $cash_book->selling_id = $sell_item->id;
+        $cash_book->service_id = null;
+        $cash_book->expense_id = null;
+        $cash_book->credit_id = null;
+        $cash_book->return_id = null;
+        $cash_book->update();
+
+        $item_ledger=ItemLedger::where('item_id',$request->item_id)->first();
+        $item_ledger->item_id = $request->item_id;
+        $item_ledger->opening_qty = $opening_qty;
+        $item_ledger->buying_buy = $item_ledger->buying_buy;
+        $item_ledger->buying_back = $item_ledger->buying_back;
+        $item_ledger->selling_sell = $request->qty;
+        $item_ledger->selling_back = $item_ledger->buying_back;
+        $item_ledger->adjust_out = $request->qty;
+        $item_ledger->adjust_in = $item_ledger->adjust_in;
+        $item_ledger->closing_qty = $shop_storage->closing_qty;
+        $item_ledger->update();
+
 
         activity()
             ->performedOn($sell_item)
@@ -309,7 +366,7 @@ class SellItemController extends Controller
         return ResponseHelper::success();
     }
 
-    public function restore(ItemCategory $sell_item)
+    public function restore(SellItems $sell_item)
     {
         $sell_item->restore();
         activity()
@@ -323,23 +380,87 @@ class SellItemController extends Controller
 
     public function indexSell(Request $request){
       
-        $cart = Session::get('cart');        
+        $discount_percentage = 0 ;
+        $discount_amount = 0 ;
+        $subtotal =0;
+        $total = 0;
+        $total_qty = 0;
+        $item_name = '-';
+        $rate_per_unit = 0;
+        $tax = 0;
+        $tax_percent = 0;
+        $tax_data = Tax::where('trash',0)->get();
+        foreach($tax_data as $amount){
+            $tax_percent += $amount->amount;
+        }
+        $tax = $tax_percent / 100;
+
+        $customer_id = $request->customer ? $request->customer : 0;
+
+        $cart = Session::get('cart');  
+        $account_type = null;
+        if($cart){  
+            if($request->customer != 0){
+                $customer = User::where('id',$request->customer)->first();
+                $account_type = $customer->accounttype ? $customer->accounttype : null ;
+                $discounts =[];
+            }
 
         $item_count = count($cart);
         if($item_count == 1){
             foreach( $cart as $cart_data){
+            if($account_type != null){
+                $discounts = Discounts::where('user_account_id',$account_type->id)->where('item_id',$cart_data['id'])->first();
+                $discount_percentage = $discounts ? $discounts->discount_percentage_mm : 0;
+                $discount_amount = $discounts ? $discounts->discount_amount_mm : 0;
+
+                    if($discount_percentage != 0 ){
+                        $subtotal += ( $cart_data['quantity'] * $cart_data['price']) ;
+                        $total = ($subtotal) * ( ($cart_data['quantity'] * $discount_percentage) / 100);
+        
+                    }if($discount_amount != 0){
+                        $subtotal += ( $cart_data['quantity'] * $cart_data['price']) ;
+                        $total =  ($subtotal) - ($discount_amount * $cart_data['quantity']);
+
+                    }
+            }
+                    
             $item = Item::where('id',$cart_data['id'])->first();
+
             $sell_item = new SellItems();
             $sell_item->barcode = $item->barcode;
             $sell_item->item_id = $item->id;
+            $sell_item->customer_id = $customer_id ;
             $sell_item->unit = $item->unit;
             $sell_item->item_category_id = $item->item_category_id;
             $sell_item->item_sub_category_id = $item->item_sub_category_id;
             $sell_item->qty = $cart_data['quantity'];
             $sell_item->price = $cart_data['price'];
-            $sell_item->discount = 0;
-            $sell_item->net_price = $cart_data['total'];
+            if($discount_amount !=0){
+                $sell_item->discount = $discount_amount;
+            }elseif($discount_percentage !=0){
+                $sell_item->discount = $discount_percentage;
+            }else{
+                $sell_item->discount = 0;
+            }
+            if($total !=0){
+                $sell_item->net_price =  $total + ($total * $tax);
+            }else{
+                $sell_item->net_price = $cart_data['total'] + ($cart_data['total'] * $tax ) ;
+            }
             $sell_item->save();
+
+            $cash_book = new Cashbook();
+            $cash_book->cashbook_income = $sell_item->net_price;
+            $cash_book->cashbook_outgoing = 0 ;
+            $cash_book->buying_id = null;
+            $cash_book->service_id = null;
+            $cash_book->selling_id = $sell_item->id;
+            $cash_book->expense_id = null;
+            $cash_book->credit_id = null;
+            $cash_book->return_id = null;
+
+            $cash_book->save();
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
             if($shop_storage){
@@ -362,26 +483,63 @@ class SellItemController extends Controller
             $item_ledger->selling_back = '0';
             $item_ledger->adjust_in = '0';
             $item_ledger->adjust_out = '0';
-            $item_ledger->adjust_list = '0';
             $item_ledger->closing_qty =  $shop_storage->qty;
             $item_ledger->save();
         }
          }else{
             for ($var = 0; $var < $item_count - 1;) {
             foreach( $cart as $cart_data){
+                if($account_type != null){
+                    $discounts = Discounts::where('user_account_id',$account_type->id)->where('item_id',$cart_data['id'])->first();
+                    $discount_percentage = $discounts ? $discounts->discount_percentage_mm : 0;
+                    $discount_amount = $discounts ? $discounts->discount_amount_mm : 0;
+    
+                        if($discount_percentage != 0 ){
+                            $subtotal += ( $cart_data['quantity'] * $cart_data['price']) ;
+                            $total = ($subtotal) * ( ($cart_data['quantity'] * $discount_percentage) / 100);
+            
+                        }if($discount_amount != 0){
+                            $subtotal += ( $cart_data['quantity'] * $cart_data['price']) ;
+                            $total = ($subtotal) - ($discount_amount * $cart_data['quantity']);
+    
+                        }
+                }
+
              $item = Item::where('id',$cart_data['id'])->get();
             foreach ($item as $data) {
                 $sell_item = new SellItems();
                 $sell_item->barcode = $data->barcode;
                 $sell_item->item_id = $data->id;
+                $sell_item->customer_id = $customer_id ;
                 $sell_item->unit = $data->unit;
                 $sell_item->item_category_id = $data->item_category_id;
                 $sell_item->item_sub_category_id = $data->item_sub_category_id;
                 $sell_item->qty = $cart_data['quantity'];
                 $sell_item->price = $cart_data['price'];
-                $sell_item->discount = 0;
-                $sell_item->net_price = $cart_data['total'];
+                if($discount_amount !=0){
+                    $sell_item->discount = $discount_amount;
+                }elseif($discount_percentage !=0){
+                    $sell_item->discount = $discount_percentage;
+                }else{
+                    $sell_item->discount = 0;
+                }
+                if($total !=0){
+                    $sell_item->net_price =  $total + ($total * $tax);
+                }else{
+                    $sell_item->net_price = $cart_data['total'] + ($cart_data['total'] * $tax);
+                }
                 $sell_item->save();
+
+                $cash_book = new Cashbook();
+                $cash_book->cashbook_income = $sell_item->net_price;
+                $cash_book->cashbook_outgoing = 0 ;
+                $cash_book->buying_id = null;
+                $cash_book->service_id = null;
+                $cash_book->selling_id = $sell_item->id;
+                $cash_book->expense_id = null;
+                $cash_book->credit_id = null;
+                $cash_book->return_id = null;
+                $cash_book->save();
 
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
                 if($shop_storage){
@@ -395,7 +553,6 @@ class SellItemController extends Controller
                     $shop_storage->save();
                 }
         
-        
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
                 $item_ledger->opening_qty = '0';
@@ -405,7 +562,6 @@ class SellItemController extends Controller
                 $item_ledger->selling_back = '0';
                 $item_ledger->adjust_in = '0';
                 $item_ledger->adjust_out = '0';
-                $item_ledger->adjust_list = '0';
                 $item_ledger->closing_qty =  $shop_storage->qty;
                 $item_ledger->save();
                 $var++;
@@ -430,5 +586,12 @@ class SellItemController extends Controller
             ->log(' Sell Item is created ');
 
         return redirect()->route('admin.sell_items.index')->with('success', 'Successfully Created');
+    }else{
+        return redirect()->back()->with('error', 'There is empty Cart');
+    }
+}
+    
+    public function creditSellView(){
+
     }
 }

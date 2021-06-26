@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Items')
-@section('page_title', 'Items')
+@section('page_title')
+@lang("message.header.item")
+@endsection
+@section('item-price-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,11 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     @can('add_item')
-    <a href="{{route('admin.items.create')}}" title="Add Category" class="btn btn-primary action-btn">Add Item</a>
+    <a href="{{route('admin.items.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_item")</a>
     @endcan
 </div>
 @endsection
@@ -28,11 +32,11 @@
                     <div class="input-group" >
                         <div class="input-group-prepend"><span class="input-group-text">Item Name : </span></div>
                         <select class="custom-select item mr-1" >
-                            <option value="">All</option>
+                            <option value="">@lang("message.header.all")</option>
                             @forelse($item as $data)
                             <option value="{{$data->id}}">{{$data->name}}</option>
                             @empty
-                            <option value="">There is no Item Data !</option>
+                            <option value="">@lang("message.header.there_is_no_data")</option>
                             @endforelse
                         </select>
                     </div>
@@ -41,13 +45,13 @@
         <div class="col-md-6 col-sm-12 col-xl-3">
                 <div class="d-inline-block mb-2"style="width:100%">
                     <div class="input-group" >
-                        <div class="input-group-prepend"><span class="input-group-text">Item Category : </span></div>
+                        <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_category") : </span></div>
                         <select class="custom-select item_category mr-1">
-                            <option value="">All</option>
+                            <option value="">@lang("message.header.all")</option>
                             @forelse($item_category as $data)
                             <option value="{{$data->id}}">{{$data->name}}</option>
                             @empty
-                            <option value="">There is no Item Data !</option>
+                            <option value="">@lang("message.header.there_is_no_data")!</option>
                             @endforelse
                         </select>
                     </div>
@@ -56,13 +60,13 @@
         <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2"style="width:100%">
                 <div class="input-group" >
-                    <div class="input-group-prepend"><span class="input-group-text">Item Sub Category : </span></div>
+                    <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_sub_category") : </span></div>
                     <select class="custom-select item_sub_category mr-1">
-                        <option value="">All</option>
+                        <option value="">@lang("message.header.all")</option>
                             @forelse($item_sub_category as $data)
                             <option value="{{$data->id}}">{{$data->name}}</option>
                             @empty
-                            <option value="">There is no Item Data !</option>
+                            <option value="">@lang("message.there_is_no_data")!</option>
                             @endforelse
                     </select>
                 </div>
@@ -79,19 +83,19 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th class="no-sort">Image</th>
-                                <th>Barcode</th>
-                                <th>Item Name</th>
-                                <th>Unit</th>
-                                <th>Item Category <br></th>
-                                <th>Sub Item Category</th>
-                                <th>Minumun Qty</th>
-                                <th>Buying Price</th>
-                                <th>Retail Price</th>
-                                <th>Wholesale Price</th>
-                                <th>Created At</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th class="no-sort">@lang("message.image")</th>
+                                <th>@lang("message.header.barcode")</th>
+                                <th>@lang("message.header.item_name")</th>
+                                <th>@lang("message.header.unit")</th>
+                                <th>@lang("message.header.item_category")</th>
+                                <th>@lang("message.header.item_sub_category")</th>
+                                <th>@lang("message.header.minimun_qty")</th>
+                                <th>@lang("message.header.buying_price")</th>
+                                <th>@lang("message.header.retail_price")</th>
+                                <th>@lang("message.header.wholesale_price")</th>
+                                <th>@lang("message.header.created_at")</th>
+                                <th>@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -114,6 +118,7 @@
                 serverSide: true,
                 dom: 'Bfrtip',
                 buttons: [
+                    'excel',
                     {
               text: '<i class="fas fa-file-pdf"></i> PDF',
               extend: 'pdfHtml5',
@@ -206,7 +211,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+                ajax: {
+                    'url' :'{{ url("/admin/items?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
                     {data: 'image', name: 'image', defaultContent: "-", class: ""},
@@ -245,7 +253,6 @@
             });
         });
 
-
         $(document).on('change', '.item, .item_category , .item_sub_category', function() {
                  var booking_user_name = $('#booking_user_name').val();
                 var daterange = $('.datepicker').val();
@@ -253,7 +260,8 @@
                 var item_category = $('.item_category').val();
                 var item_sub_category=$('.item_sub_category').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-                app_table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?item=${item}&item_category=${item_category}&item_sub_category=${item_sub_category}&trash=${trash}`).load();
+                app_table.ajax.url(`{{url('/admin/items?item=`+item+`&trash=`+trash+`&item_sub_category=`+item_sub_category+`&item_category=`+item_category+`/')}}`).load();
+
         });
 
         $(document).on('change', '.trashswitch', function () {
@@ -262,68 +270,68 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/items?trash=' + trash).load();
+            app_table.ajax.url(`{{url('/admin/items?trash=`+trash+`/')}}`).load();
         });
 
-        $(document).on('click', '.trash', function (e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            swal("Are you sure, you want to trash?", {
-                    className: "danger-bg",
-                    buttons: [true, "Yes"],
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: '/admin/items/' + id + '/trash',
-                            type: 'GET',
-                            success: function () {
-                                table.ajax.reload();
-                            }
-                        });
-                    }
-                });
-        });
+        // $(document).on('click', '.trash', function (e) {
+        //     e.preventDefault();
+        //     var id = $(this).data('id');
+        //     swal("Are you sure, you want to trash?", {
+        //             className: "danger-bg",
+        //             buttons: [true, "Yes"],
+        //         })
+        //         .then((willDelete) => {
+        //             if (willDelete) {
+        //                 $.ajax({
+        //                     url: '/admin/items/' + id + '/trash',
+        //                     type: 'GET',
+        //                     success: function () {
+        //                         app_table.ajax.reload();
+        //                     }
+        //                 });
+        //             }
+        //         });
+        // });
 
-        $(document).on('click', '.restore', function (e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            swal("Are you sure, you want to restore?", {
-                    className: "danger-bg",
-                    buttons: [true, "Yes"],
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: '/admin/items/' + id + '/restore',
-                            type: 'GET',
-                            success: function () {
-                                table.ajax.reload();
-                            }
-                        });
-                    }
-                });
-        });
+        // $(document).on('click', '.restore', function (e) {
+        //     e.preventDefault();
+        //     var id = $(this).data('id');
+        //     swal("Are you sure, you want to restore?", {
+        //             className: "danger-bg",
+        //             buttons: [true, "Yes"],
+        //         })
+        //         .then((willDelete) => {
+        //             if (willDelete) {
+        //                 $.ajax({
+        //                     url: '/admin/items/' + id + '/restore',
+        //                     type: 'GET',
+        //                     success: function () {
+        //                         app_table.ajax.reload();
+        //                     }
+        //                 });
+        //             }
+        //         });
+        // });
 
-        $(document).on('click', '.destroy', function (e) {
-            e.preventDefault();
-            var id = $(this).data('id');
-            swal("Are you sure, you want to delete?", {
-                    className: "danger-bg",
-                    buttons: [true, "Yes"],
-                })
-                .then((willDelete) => {
-                    if (willDelete) {
-                        $.ajax({
-                            url: '/admin/items/' + id,
-                            type: 'GET',
-                            success: function () {
-                                table.ajax.reload();
-                            }
-                        });
-                    }
-                });
-        });
+        // $(document).on('click', '.destroy', function (e) {
+        //     e.preventDefault();
+        //     var id = $(this).data('id');
+        //     swal("Are you sure, you want to delete?", {
+        //             className: "danger-bg",
+        //             buttons: [true, "Yes"],
+        //         })
+        //         .then((willDelete) => {
+        //             if (willDelete) {
+        //                 $.ajax({
+        //                     url: '/admin/items/' + id,
+        //                     type: 'GET',
+        //                     success: function () {
+        //                         app_table.ajax.reload();
+        //                     }
+        //                 });
+        //             }
+        //         });
+        // });
 </script>
 @include('backend.admin.layouts.assets.trash_script')
 <script>

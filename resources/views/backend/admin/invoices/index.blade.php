@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Invoices')
-@section('page_title', 'Invoices')
+@section('page_title')
+@lang("message.invoice")
+@endsection
+@section('invoice-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,7 +14,7 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 </div>
 @endsection
@@ -20,7 +24,7 @@
  <div class="d-inline-block mb-2">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> Invoice Date : </span>
+                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> @lang("message.header.invoice_date") : </span>
             </div>
             <input type="text" class="form-control datepicker" placeholder="All">
         </div>
@@ -35,11 +39,11 @@
                     <table class="align-middle table data-table">
                         <thead>
                             <th></th>
-                            <th>Booking_no</th>
-                            <th>Invoice no</th>
-                            <th>Created at</th>
-                            <th>Updated at</th>
-                            <th class="no-sort action">Action</th>
+                            <th>@lang("message.header.invoice_about")</th>
+                            <th>@lang("message.header.invoice_no")</th>
+                            <th>@lang("message.header.created_at")</th>
+                            <th>@lang("message.header.updated_at")</th>
+                            <th class="no-sort action">@lang("message.header.action")</th>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -71,15 +75,19 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-            ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+            // ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+            ajax: {
+                    'url' :'{{ url("/admin/invoices?trash=0") }}',
+                    'type': 'GET',
+                },
             columns: [{
                     data: "plus-icon",
                     name: "plus-icon",
                     defaultContent: null
                 },
                 {
-                    data: 'booking.booking_number',
-                    name: 'booking.booking_number',
+                    data: 'invoice_about',
+                    name: 'invoice_about',
                     defaultContent: "-",
                     class: ""
                 },
@@ -168,17 +176,17 @@
 
             var daterange = $('.datepicker').val();
             var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-            table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?daterange=${daterange}&trash=${trash}`).load();
+            table.ajax.url(`{{url('/admin/invoices?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
+
         });
 
         $('.datepicker').on('cancel.daterangepicker', function(ev, picker) {
             $(this).val('');
 
             var daterange = $('.datepicker').val();
-            var status = $('.status').val();
-            var payment_status = $('.payment_status').val();
             var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-            table.ajax.url(`${PREFIX_URL}/admin/${route_model_name}?daterange=${daterange}&status=${status}&payment_status=${payment_status}&trash=${trash}`).load();
+            table.ajax.url(`{{url('/admin/invoices?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
+
         }); 
 
 
@@ -188,7 +196,7 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/invoices?trash=' + trash).load();
+            table.ajax.url(`{{url('/admin/invoices?trash=`+trash+`/')}}`).load();
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -201,7 +209,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/invoices/' + id + '/trash',
+                            url :`{{url('/admin/invoices/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -221,7 +229,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/invoices/' + id + '/restore',
+                            url :`{{url('/admin/invoices/`+id+`/restore')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -241,7 +249,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/invoices/' + id,
+                            url :`{{url('/admin/invoices/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

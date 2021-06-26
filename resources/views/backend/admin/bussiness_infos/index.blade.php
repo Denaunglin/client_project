@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Bussiness Info')
-@section('page_title', 'Bussiness Info')
+@section('page_title')
+@lang("message.header.bussiness_info")
+@endsection
+@section('bussiness-info-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,12 +14,13 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")
+        </strong></label>
     </div>
 
     @can('add_payment_card')
-    <a href="{{route('admin.bussiness_infos.create')}}" title="Add Category" class="btn btn-primary action-btn">Add Bussiness
-        Info</a>
+    <a href="{{route('admin.bussiness_infos.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_bussiness_info")
+    </a>
     @endcan
 </div>
 @endsection
@@ -31,15 +36,24 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Logo</th>
-                                <th>Bussiness Name</th>
-                                <th>Bussiness Type</th>
-                                <th>Address</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <th>Remark</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th>@lang("message.header.logo")
+                                </th>
+                                <th>@lang("message.header.bussiness_name")
+                                </th>
+                                <th>@lang("message.header.bussiness_type")
+                                </th>
+                                <th>@lang("message.address")
+                                </th>
+                                <th>@lang("message.email")
+                                </th>
+                                <th>@lang("message.phone")
+                                </th>
+                                <th>@lang("message.remark")
+                                </th>
+                                <th class="no-sort action">@lang("message.header.action")
+                                </th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")
+                                </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -71,7 +85,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/bussiness_infos?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/bussiness_infos?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
@@ -173,7 +190,8 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/bussiness_infos?trash=' + trash).load();
+            table.ajax.url(`{{url('/admin/bussiness_infos?trash=`+trash+`/')}}`).load();
+
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -186,7 +204,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/bussiness_infos/' + id + '/trash',
+                            url :`{{url('/admin/bussiness_infos/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -206,7 +224,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/bussiness_infos/' + id + '/restore',
+                            url :`{{url('/admin/bussiness_infos/`+id+`/restore')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -226,7 +244,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/bussiness_infos/' + id,
+                            url :`{{url('/admin/bussiness_infos/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

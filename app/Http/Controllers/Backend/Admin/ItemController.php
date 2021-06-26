@@ -132,8 +132,6 @@ class ItemController extends Controller
         $item->buying_price = $request['buying_price'];
         $item->retail_price = $request['retail_price'];
         $item->wholesale_price = $request['wholesale_price'];
-        $item->expire_status = $request['expire_status'];
-        $item->expire_date = $expire_date;
         $item->save();
 
         activity()
@@ -197,8 +195,6 @@ class ItemController extends Controller
         $item->buying_price = $request['buying_price'];
         $item->retail_price = $request['retail_price'];
         $item->wholesale_price = $request['wholesale_price'];
-        $item->expire_status = $request['expire_status'];
-        $item->expire_date = $expire_date;
         $item->update();
 
         activity()
@@ -210,7 +206,33 @@ class ItemController extends Controller
         return redirect()->route('admin.items.index')->with('success', 'Successfully Updated');
     }
 
-    public function destroy(ItemCategory $item)
+  
+    public function trash(Item $item)
+    {
+    
+        $item->trash();
+        activity()
+            ->performedOn($item)
+            ->causedBy(auth()->guard('admin')->user())
+            ->withProperties(['source' => 'Item  (Admin Panel)'])
+            ->log(' Item (' . $item->name . ')  is moved to trash ');
+
+        return ResponseHelper::success();
+    }
+
+    public function restore(Item $item)
+    {
+        $item->restore();
+        activity()
+            ->performedOn($item)
+            ->causedBy(auth()->guard('admin')->user())
+            ->withProperties(['source' => 'Item  (Admin Panel'])
+            ->log(' Item  (' . $item->name . ')  is restored from trash ');
+
+        return ResponseHelper::success();
+    }
+
+    public function destroy(Item $item)
     {
         if (!$this->getCurrentAuthUser('admin')->can('delete_item')) {
             abort(404);
@@ -225,33 +247,6 @@ class ItemController extends Controller
         return ResponseHelper::success();
     }
 
-    public function trash(ItemCategory $item)
-    {
-        if (!$this->getCurrentAuthUser('admin')->can('delete_item')) {
-            abort(404);
-        }
-
-        $item->trash();
-        activity()
-            ->performedOn($item)
-            ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel)'])
-            ->log(' Item (' . $item->name . ')  is moved to trash ');
-
-        return ResponseHelper::success();
-    }
-
-    public function restore(ItemCategory $item)
-    {
-        $item->restore();
-        activity()
-            ->performedOn($item)
-            ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Item  (Admin Panel'])
-            ->log(' Item  (' . $item->name . ')  is restored from trash ');
-
-        return ResponseHelper::success();
-    }
 
     public function reorderList(Request $request){
         $item = Item::where('trash',0)->get();

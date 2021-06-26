@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Expense Categories')
-@section('page_title', 'Expense Cateogries')
+@section('page_title')
+@lang("message.header.expense_category")
+@endsection
+@section('expense-category-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,11 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     @can('add_payment_card')
-    <a href="{{route('admin.expense_categories.create')}}" title="Add Expense Category" class="btn btn-primary action-btn">Add Expense Category</a>
+    <a href="{{route('admin.expense_categories.create')}}" title="Add Expense Category" class="btn btn-primary action-btn">@lang("message.header.add_expense_category")</a>
     @endcan
 </div>
 @endsection
@@ -30,9 +34,9 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Name</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th>@lang("message.name")</th>
+                                <th class="no-sort action">@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -64,7 +68,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/expense_categories?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/expense_categories?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
@@ -130,7 +137,7 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/expense_categories?trash=' + trash).load();
+            table.ajax.url(`{{url('/admin/expense_categories?trash=`+trash+`/')}}`).load();
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -143,7 +150,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/expense_categories/' + id + '/trash',
+                            url :`{{url('/admin/expense_categories/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -163,7 +170,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/expense_categories/' + id + '/restore',
+                            url :`{{url('/admin/expense_categories/`+id+`/restore')}}`,  
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -183,7 +190,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/expense_categories/' + id,
+                            url :`{{url('/admin/expense_categories/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

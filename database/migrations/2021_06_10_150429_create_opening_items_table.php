@@ -24,7 +24,6 @@ class CreateOpeningItemsTable extends Migration
             $table->integer('price')->default(0);
             $table->integer('discount')->default(0);
             $table->integer('net_price')->nullabel();
-            $table->tinyInteger('credit_status')->default(0);
             $table->tinyInteger('trash')->default(0);    
             $table->timestamps();
         });

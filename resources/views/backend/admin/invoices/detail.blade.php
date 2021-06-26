@@ -1,6 +1,10 @@
 @extends('backend.admin.layouts.app')
-@section('meta_title', 'Invoice Detail')
-@section('page_title', 'Invoice Detail')
+@section('page_title')
+@lang("message.header.invoice_detail")
+@endsection
+@section('page_title')
+@lang("message.invoices")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection

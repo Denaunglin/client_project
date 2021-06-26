@@ -16,12 +16,8 @@ class CreateServicesTable extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('service_name');
-            $table->integer('retail_price');
-            $table->integer('retail_discount');
-            $table->integer('retail_tax');
-            $table->integer('wholesale_price');
-            $table->integer('wholesale_discount');
-            $table->integer('wholesale_tax');
+            $table->string('description');
+            $table->integer('service_charges')->default(0);
             $table->tinyInteger('trash')->default(0);    
             $table->timestamps();
         });

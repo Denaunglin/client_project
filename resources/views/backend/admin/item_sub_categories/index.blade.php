@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Item Sub Categories')
-@section('page_title', 'Item Sub Categories')
+@section('page_title')
+@lang("message.header.item_sub_category")
+@endsection
+@section('item-sub-category-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -10,12 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     @can('add_item_sub_category')
-    <a href="{{route('admin.item_sub_categories.create')}}" title="Add Category" class="btn btn-primary action-btn">Add Item Sub Category
-    </a>
+    <a href="{{route('admin.item_sub_categories.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_item_sub_category")</a>
     @endcan
 </div>
 @endsection
@@ -30,9 +33,9 @@
                     <table class="align-middle table data-table">
                         <thead>
                             <th></th>
-                            <th>Name </th>
-                            <th class="no-sort action">Action</th>
-                            <th class="d-none hidden">Updated at</th>
+                            <th>@lang("message.name") </th>
+                            <th class="no-sort action">@lang("message.header.action")</th>
+                            <th class="d-none hidden">@lang("message.header.updated_at")</th>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -50,7 +53,10 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: `/admin/item_sub_categories?trash=0`,
+            ajax: {
+                    'url' :'{{ url("/admin/item_sub_categories?trash=0") }}',
+                    'type': 'GET',
+                },
             columns: [{
                     data: "plus-icon",
                     name: "plus-icon",
@@ -120,7 +126,8 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/item_sub_categories?trash=' + trash).load();
+            app_table.ajax.url(`{{url('/admin/item_sub_categories?trash=`+trash+`/')}}`).load();
+
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -133,7 +140,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/item_sub_categories/' + id + '/trash',
+                            url :`{{url('/admin/item_sub_categories/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -153,7 +160,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/item_sub_categories/' + id + '/restore',
+                            url :`{{url('/admin/item_sub_categories/`+id+`/restore')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -173,7 +180,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/roomtypes/' + id,
+                            url :`{{url('/admin/item_sub_categories/`+id+`/')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

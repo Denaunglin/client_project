@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
-@section('meta_title', 'Edit Room Type')
-@section('page_title', 'Edit Room Type')
+@section('meta_title', 'Edit Tax')
+@section('page_title')
+@lang("message.header.edit_tax")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -19,7 +21,13 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label>Tax</label>
+                                <label for="">@lang("message.name")</label>
+                                <input type="text" name="name" value="{{$tax->name}}" id="name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label>@lang("message.header.tax")</label>
                                 <div class="input-group">
                                     <input type="number" value="{{$tax->amount}}" class="form-control" name="amount"
                                         required>
@@ -34,8 +42,8 @@
 
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.taxes.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Update" class="btn btn-success">
+                            <a href="{{ route('admin.taxes.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.update")" class="btn btn-success">
                         </div>
                     </div>
                 </form>

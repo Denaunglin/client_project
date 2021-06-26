@@ -2,6 +2,8 @@
 
 @section('meta_title', 'Payslips')
 @section('page_title', 'Payslips')
+@section('payslip-active','mm-active')
+
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -109,7 +111,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `/admin/payslips?trash=0`,
+                ajax: {
+                    'url' :'{{ url("/admin/payslips?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [{
                         data: "plus-icon",
                         name: "plus-icon",
@@ -170,7 +175,8 @@
             } else {
                 var trash = 0;
             }
-            table.ajax.url('/admin/payslips?trash=' + trash).load();
+            app_table.ajax.url(`{{url('/admin/payslips?trash=`+trash+`/')}}`).load();
+
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -183,7 +189,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/payslips/' + id + '/trash',
+                            url :`{{url('/admin/payslips/`+id+`/trash')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -304,7 +310,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/payslips/' + id + '/restore',
+                            url :`{{url('/admin/payslips/`+id+`/restore')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();
@@ -324,7 +330,8 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url: '/admin/payslips/' + id,
+                            url :`{{url('/admin/payslips/`+id+`/')}}`,
+
                             type: 'DELETE',
                             success: function () {
                                 table.ajax.reload();

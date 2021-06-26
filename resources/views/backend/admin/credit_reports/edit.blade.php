@@ -1,6 +1,8 @@
 @extends('backend.admin.layouts.app')
-@section('meta_title', 'Edit Credit Report')
-@section('page_title', 'Edit Credit Report')
+@section('meta_title', 'Edit Credit')
+@section('page_title')
+@lang("message.header.edit_credit")
+@endsection
 @section('page_title_icon')
 
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
@@ -11,41 +13,46 @@
     <div class="col-md-12">
         <div class="main-card mb-3 card">
             <div class="card-body">
-                <form action="{{ route('admin.credit_reports.update',$items->id) }}" method="post" id="edit"
+                <form action="{{ route('admin.credit_reports.update',$credit->id) }}" method="post" id="edit"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Customer </label>
+                                <label>@lang("message.header.customer") </label>
                                 <select class="form-control select2" id="customer_id" name="customer_id" required>
-                                    <option value="">Choose Customer </option>
-                                    <option value="0">None</option>
+                                    <option value="">@lang("message.header.choose_customer") </option>
                                     @forelse($customer as $data)
-                                    <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    <option @if($credit->customer_id == $data->id) selected @endif  value="{{$data->id}}">{{$data->name }}</option>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
+                                
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item </label>
+                                <label>@lang("message.header.item") </label>
                                 <select class="form-control select2" id="item_id" name="item_id" required>
-                                    <option value="">Choose Item </option>
-                                    <option value="0">None</option>
+                                    <option value="">@lang("message.header.choose_item")</option>
                                     @forelse($item as $data)
-                                    <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    <option  @if($credit->item_id == $data->id) selected @endif value="{{$data->id}}">{{$data->name }}</option>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label> Original Amount </label>
-                                <input type="number" id="origin_amount" name="origin_amount" class="form-control  @error('origin_amount') is-invalid @enderror" >
+                                <label for="">@lang("message.header.qty")</label>
+                                <input type="number" id="qty" value="{{$credit->qty}}" name="qty" class="form-control  @error('qty') is-invalid @enderror">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label> @lang("message.header.original_amount") </label>
+                            <input type="number" id="origin_amount" value="{{$credit->origin_amount}}" name="origin_amount" class="form-control  @error('origin_amount') is-invalid @enderror" >
                                 @error('origin_amount')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -55,8 +62,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Paid Amount</label>
-                                <input type="number" id="paid_amount" name="paid_amount" class="form-control  @error('paid_amount') is-invalid @enderror" >
+                                <label>@lang("message.header.paid_amount")</label>
+                                <input type="number" id="paid_amount"  value="{{$credit->paid_amount}}"  name="paid_amount" class="form-control  @error('paid_amount') is-invalid @enderror" >
                                 @error('paid_amount')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -66,8 +73,8 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Credit Amount</label>
-                                <input type="number" id="credit_amount" name="credit_amount" class="form-control  @error('credit_amount') is-invalid @enderror" >
+                                <label>@lang("message.header.credit_amount")</label>
+                                <input type="number" id="credit_amount"  value="{{$credit->credit_amount}}"  name="credit_amount" class="form-control  @error('credit_amount') is-invalid @enderror" >
                                 @error('credit_amount')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -75,17 +82,29 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>Remain Amount </label>
-                                <input type="number" id="remain_amount" step="any" name="remain_amount" class="form-control" required>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>@lang("message.header.paid_date") </label>
+                                    <input type="text" id="paid_date" value="{{$credit->paid_date}}"  name="paid_date" class="form-control" required>
+                                </div>
                             </div>
-                        </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>@lang("message.header.paid_times")  </label>
+                                <input type="number" value="{{$credit->paid_times}}" id="paid_times" step="any" name="paid_times" class="form-control @error('paid_times') is-invalid @enderror">
+                                </div>
+                                @error('paid_times')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
+                            </div>
+                    </div>
 
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
                             <a href="{{ route('admin.credit_reports.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
                         </div>
                     </div>
                 </form>
@@ -122,17 +141,17 @@
 {!! JsValidator::formRequest('App\Http\Requests\ItemRequest', '#edit') !!}
 <script>
     $(function() {
-$('input[name="expire_date"]').daterangepicker({
-singleDatePicker: true,
-showDropdowns: true,
-minYear: 1901,
-locale: {
-format: 'YYYY-MM-DD'
-},
-maxYear: parseInt(moment().format('YYYY'),10)
-}, function(start, end, label) {
-var years = moment().diff(start, 'years');
-});
-});
-</script>
+      $('input[name="paid_date"]').daterangepicker({
+        singleDatePicker: true,
+        showDropdowns: true,
+        minYear: 1901,
+        locale: {
+        format: 'YYYY-MM-DD'
+        },
+        maxYear: parseInt(moment().format('YYYY'),10)
+      }, function(start, end, label) {
+        var years = moment().diff(start, 'years');
+      });
+    });
+    </script>
 @endsection

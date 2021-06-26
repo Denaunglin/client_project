@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Suppliers')
-@section('page_title', 'Suppliers')
+@section('page_title')
+@lang("message.header.supplier")
+@endsection
+@section('supplier-active','mm-active')
+
 @section('page_title_icon')
 <i class="metismenu-icon pe-7s-users"></i>
 @endsection
@@ -10,11 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang('message.header.trash')</strong></label>
     </div>
 
     @can('add_user')
-    <a href="{{route('admin.suppliers.create')}}" title="Add User" class="btn btn-primary action-btn">Add Supplier</a>
+    <a href="{{route('admin.suppliers.create')}}" title="Add User" class="btn btn-primary action-btn">@lang('message.header.add_supplier')</a>
     @endcan
 </div>
 @endsection
@@ -30,11 +34,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Name</th>
-                                <th>Phone</th>
-                                <th>Address</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th>@lang('message.name')</th>
+                                <th>@lang('message.phone')</th>
+                                <th>@lang('message.address')</th>
+                                <th class="no-sort action">@lang('message.header.action')</th>
+                                <th class="d-none hidden">@lang('message.updated')</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -149,7 +153,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-            ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+            ajax: {
+                    'url' : '{{ url("/admin/suppliers?trash=0") }}',
+                    'type': 'GET',
+                },
             columns: [
                 {data: "plus-icon", name: "plus-icon", defaultContent: null},
                 {data: 'name', name: 'name', defaultContent: "-", class: ""},

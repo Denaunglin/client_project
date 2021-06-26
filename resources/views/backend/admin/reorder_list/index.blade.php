@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Items Reorder List')
-@section('page_title', 'Items Reorder List')
+@section('page_title')
+@lang("message.header.reorder_list")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -18,7 +20,6 @@
 @section('content')
 <div class="pb-3">
     <div class="row">
-      
         <div class="col-md-6 col-sm-12 col-xl-3">
                     <div class="d-inline-block mb-2 " style="width:100%">
                     <div class="input-group" >
@@ -104,7 +105,7 @@
 
 @section('script')
 <script>
-    var route_model_name = "items";
+    var route_model_name = "reorder_lists";
         var app_table;
         $(function() {
             app_table = $('.data-table').DataTable({
@@ -123,7 +124,10 @@
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
                 ],
-                ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+                ajax: {
+                    'url' : '{{ url("/admin/reorder_lists?trash=0") }}',
+                    'type': 'GET',
+                },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
                     {data: 'image', name: 'image', defaultContent: "-", class: ""},

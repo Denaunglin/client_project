@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
-@section('meta_title', 'Edit Item Category')
-@section('page_title', 'Edit Item Category')
+@section('meta_title', 'Edit Shop Storage')
+@section('page_title')
+@lang("message.header.add_shop_storage")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection

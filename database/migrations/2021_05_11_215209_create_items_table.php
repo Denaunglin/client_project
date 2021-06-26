@@ -25,11 +25,8 @@ class CreateItemsTable extends Migration
             $table->integer('buying_price')->default(0);
             $table->integer('retail_price')->default(0);
             $table->integer('wholesale_price')->default(0);
-            $table->tinyInteger('expire_status')->default(0);
-            $table->timestamp('expire_date')->nullabel();
             $table->tinyInteger('trash')->default(0);
             $table->timestamps();
-
         });
     }
 

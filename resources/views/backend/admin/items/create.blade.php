@@ -1,8 +1,17 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Add Item')
-@section('page_title', 'Add Item')
+@section('page_title')
+@lang("message.header.add_item")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
+@endsection
+
+@section('page_title_buttons')
+<div class="d-flex justify-content-end">
+    <a href="{{route('admin.item_categories.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_item_category")</a> &emsp13;
+    <a href="{{route('admin.item_sub_categories.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_item_sub_category")</a>
+</div>
 @endsection
 @section('content')
 @include('layouts.errors_alert')
@@ -15,7 +24,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Barcode </label>
+                                <label>@lang("message.header.barcode")</label>
                                 <input type="number" id="barcode" name="barcode" class="form-control  @error('barcode') is-invalid @enderror" >
                                 @error('barcode')
                                 <span class="invalid-feedback" role="alert">
@@ -26,7 +35,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item Name </label>
+                                <label>@lang("message.header.item_name") </label>
                                 <input type="text" id="name" name="name" class="form-control  @error('name') is-invalid @enderror" >
                                 @error('name')
                                 <span class="invalid-feedback" role="alert">
@@ -37,32 +46,31 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item Category</label>
+                                <label>@lang("message.header.item_category")</label>
                                 <select class="form-control select2" id="item_category" name="item_category_id" required>
-                                    <option value="">Choose Item Category</option>
+                                    <option value="">@lang("message.header.choose_item_category")</option>
                                     @forelse($item_category as $data)
                                     <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Item Sub Category</label>
+                                <label>@lang("message.header.item_sub_category")</label>
                                 <select class="form-control select2" id="item_sub_category" name="item_sub_category_id" required>
-                                    <option value="">Choose Item Sub Category</option>
-                                    <option value="0">None</option>
+                                    <option value="">@lang("message.header.choose_item_sub_category")</option>
                                     @forelse($item_sub_category as $data)
                                     <option value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>There is no data</p>
+                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label> Unit </label>
+                                <label> @lang("message.header.unit") </label>
                                 <input type="text" id="unit" name="unit" class="form-control  @error('unit') is-invalid @enderror" >
                                 @error('unit')
                                 <span class="invalid-feedback" role="alert">
@@ -73,7 +81,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Minimun Qty</label>
+                                <label>@lang("message.header.minimun_qty")</label>
                                 <input type="number" id="minimun_qty" name="minimun_qty" class="form-control  @error('minimun_qty') is-invalid @enderror" >
                                 @error('minimun_qty')
                                 <span class="invalid-feedback" role="alert">
@@ -84,7 +92,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Buying Price</label>
+                                <label>@lang("message.header.buying_price")</label>
                                 <input type="number" id="buying_price" name="buying_price" class="form-control  @error('buying_price') is-invalid @enderror" >
                                 @error('buying_price')
                                 <span class="invalid-feedback" role="alert">
@@ -95,19 +103,19 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Retail Price</label>
+                                <label>@lang("message.header.retail_price")</label>
                                 <input type="number" id="retail_price" step="any" name="retail_price" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Wholesale Price</label>
+                                <label>@lang("message.header.wholesale_price")</label>
                                 <input type="number" id="wholesale_price" step="any" name="wholesale_price" class="form-control" required>
                             </div>
                         </div>
                     
                     <div class="col-md-12 mb-3">
-                        <label for="">Item Image</label>
+                        <label for="">@lang("message.header.image")</label>
                         <p><strong>Recommedation :</strong> Image size should be (1000 x 400 ) and under 2 MB </p>
                         <div class="input-group mb-1">
                             <div class="input-group-prepend">
@@ -125,8 +133,8 @@
                     </div>
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.items.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.items.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
                         </div>
                     </div>
                 </form>

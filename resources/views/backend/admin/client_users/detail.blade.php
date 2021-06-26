@@ -47,7 +47,7 @@
                         <tr>
                             <td>Email</td>
                         <td>
-                            {{$client_detail->email}}
+                            {{$client_detail->email ? $client_detail->email : 'No email added' }}
 
                         </td>
                         </tr>
@@ -84,63 +84,7 @@
                                 {{$client_detail->address}}
                             </td>
                         </tr>
-                    @if($nrc_image)
-                         <tr>
-                            <td>
-                                <b>Nrc Front Image</b>
-                            </td>
-                            <td>
-                            <b>Nrc Back Image</b>
-                            </td>
-                        </tr>
-                           <tr>
-                            <td>
-                                
-                            <img src="{{$nrc_image->image_path_front()}}" width="100px" alt="" data-toggle="modal" data-target="#exampleModal1">
-                            <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Nrc Front Image</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                    <img src="{{$nrc_image->image_path_front()}}" width="100%" alt="">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </td>
-                            <td>
-                            <img src="{{$nrc_image->image_path_back()}}" width="100px" alt="" data-toggle="modal" data-target="#exampleModal2">
-                             <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                    <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Nrc Back Image</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                    <img src="{{$nrc_image->image_path_back()}}" width="100%" alt="">
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </td>
-                        </tr>
-                    @endif
-                        
-
+               
                     </tbody>
                    </table>
                </div>

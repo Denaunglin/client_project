@@ -23,7 +23,6 @@ class CreateItemLedgersTable extends Migration
             $table->string('selling_back');
             $table->string('adjust_in');
             $table->string('adjust_out');
-            $table->string('adjust_list');
             $table->string('closing_qty');
             $table->tinyInteger('trash')->default(0);
             $table->timestamps();

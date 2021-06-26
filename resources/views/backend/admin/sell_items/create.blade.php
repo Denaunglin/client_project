@@ -1,6 +1,8 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Add Commodity Sales Item')
-@section('page_title', 'Add Commodity Sales Item')
+@section('page_title')
+@lang("message.header.sell_item")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection

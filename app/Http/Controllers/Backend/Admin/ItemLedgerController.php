@@ -6,10 +6,11 @@ use App\Models\Item;
 use App\Models\ItemLedger;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
 use App\Models\ItemSubCategory;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
-use Yajra\DataTables\DataTables;
 
 class ItemLedgerController extends Controller
 {
@@ -24,8 +25,12 @@ class ItemLedgerController extends Controller
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
         if ($request->ajax()) {
-
+            $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
+            
             $item_ledgers = ItemLedger::anyTrash($request->trash);
+            if ($daterange) {
+                $item_ledgers = ItemLedger::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
+            }
             if ($request->item != '') {
                 $item_ledgers = $item_ledgers->where('item_id', $request->item);
             }
@@ -46,10 +51,6 @@ class ItemLedgerController extends Controller
                     $edit_btn = ' ';
                     $trash_or_delete_btn = ' ';
 
-                    if ($this->getCurrentAuthUser('admin')->can('edit_item_category')) {
-                        $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.item_ledgers.edit', ['item_ledger' => $item_ledger->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
-                    }
-
                     if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
 
                         if ($request->trash == 1) {
@@ -61,7 +62,7 @@ class ItemLedgerController extends Controller
 
                     }
 
-                    return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
+                    return "${detail_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
                 ->addColumn('barcode', function ($item_ledger) {
 
@@ -113,7 +114,6 @@ class ItemLedgerController extends Controller
         $item_ledgers->selling_back = $request['selling_back'];
         $item_ledgers->adjust_in = $request['adjust_in'];
         $item_ledgers->adjust_out = $request['adjust_out'];
-        $item_ledgers->adjust_list = $request['adjust_list'];
         $item_ledgers->closing_qty = $request['closing_qty'];
         $item_ledgers->save();
 
@@ -138,10 +138,11 @@ class ItemLedgerController extends Controller
         }
 
         $item_ledger = ItemLedger::findOrFail($id);
+        $item= Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
 
-        return view('backend.admin.item_ledgers.edit', compact('item_ledger', 'item_category', 'item_sub_category'));
+        return view('backend.admin.item_ledgers.edit', compact('item_ledger','item', 'item_category', 'item_sub_category'));
     }
 
     public function update(ItemRequest $request, $id)
@@ -150,7 +151,6 @@ class ItemLedgerController extends Controller
             abort(404);
         }
         $item_ledgers = ItemLedger::findOrFail($id);
-
         $item_ledgers->item_id = $request['item_id'];
         $item_ledgers->opening_qty = $request['opening_qty'];
         $item_ledgers->buying_buy = $request['buying_buy'];
@@ -159,7 +159,6 @@ class ItemLedgerController extends Controller
         $item_ledgers->selling_back = $request['selling_back'];
         $item_ledgers->adjust_in = $request['adjust_in'];
         $item_ledgers->adjust_out = $request['adjust_out'];
-        $item_ledgers->adjust_list = $request['adjust_list'];
         $item_ledgers->closing_qty = $request['closing_qty'];
         $item_ledgers->update();
 
@@ -188,7 +187,7 @@ class ItemLedgerController extends Controller
         return ResponseHelper::success();
     }
 
-    public function trash(ItemLedger $item_ledgers)
+    public function trash(ItemLedger $item_ledger)
     {
         if (!$this->getCurrentAuthUser('admin')->can('delete_item')) {
             abort(404);

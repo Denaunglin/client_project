@@ -1,7 +1,9 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Add Expense Type')
-@section('page_title', 'Add Expense Type')
+@section('page_title')
+@lang("message.header.add_expense_type")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
@@ -38,5 +40,5 @@
 @endsection
 
 @section('script')
-{!! JsValidator::formRequest('App\Http\Requests\CardTypeRequest', '#create') !!}
+{!! JsValidator::formRequest('App\Http\Requests\AccounttypeRequest', '#create') !!}
 @endsection

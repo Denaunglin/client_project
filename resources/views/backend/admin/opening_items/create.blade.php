@@ -1,9 +1,17 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Add Opening Item')
-@section('page_title', 'Add Opening Item')
+@section('page_title')
+@lang("message.header.add_opening_item")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
+@section('page_title_buttons')
+<div class="d-flex justify-content-end">
+    <a href="{{route('admin.items.create')}}" title="Add Category" class="btn btn-primary action-btn">@lang("message.header.add_item")</a>
+</div>
+@endsection
+
 @section('content')
 @include('layouts.errors_alert')
 <div class="row">
@@ -19,22 +27,22 @@
                                     <thead>
                                         <tr >
                                             <th class="text-center">
-                                                id
+                                                @lang("message.header.id")
                                             </th>
                                             <th class="text-center">
-                                                Item
+                                                @lang("message.header.item")
                                             </th>
                                             <th class="text-center">
-                                                Qty
+                                                @lang("message.header.qty")
                                             </th>
                                             <th class="text-center">
-                                                Rate Per Unit
+                                                @lang("message.header.rate_per_unit")
                                             </th>
                                             <th class="text-center">
-                                                Discount
+                                                @lang("message.header.discount")
                                             </th>
                                             <th class="text-center">
-                                                Total Pirce
+                                                @lang("message.header.total_price")
                                             </th>
                                            
                                         </tr>
@@ -46,10 +54,10 @@
                                             </td>
                                             <td>
                                                 <select class="form-control custom-select" id="item_id" name="item_id[]" required>
-                                                    <option value="">Choose Item Category</option>
+                                                    <option value="">@lang("message.header.choose_item_category")</option>
                                                     @forelse($item as $data)
                                                     <option value="{{$data->id}}">{{$data->name }}</option>
-                                                    @empty<p>There is no data</p>
+                                                    @empty<p>@lang("message.header.there_is_no_data")</p>
                                                     @endforelse
                                                 </select>                                             
                                             </td>
@@ -72,13 +80,13 @@
                                 </table>
                             </div>
                         </div>
-                        <a id="add_row" class="btn btn-default pull-left">Add Row</a><a id='delete_row' class="pull-right btn btn-default">Delete Row</a>
+                        <a id="add_row" class="btn btn-default pull-left">@lang("message.header.add_row")</a><a id='delete_row' class="pull-right btn btn-default">Delete Row</a>
                     </div>  
                   
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.opening_items.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.opening_items.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
                         </div>
                     </div>
                 </form>
@@ -91,7 +99,7 @@
 
 @section('script')
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
+{!! JsValidator::formRequest('App\Http\Requests\BuyingItemRequest', '#create') !!}
 <script>
   
     $(document).ready(function(){

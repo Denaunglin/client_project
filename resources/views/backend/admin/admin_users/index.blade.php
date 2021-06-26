@@ -1,7 +1,11 @@
 @extends('backend.admin.layouts.app')
 
 @section('meta_title', 'Admin Users')
-@section('page_title', 'Admin Users')
+@section('page_title')
+@lang("message.header.admin_user")
+@endsection
+@section('admin-user-active','mm-active')
+
 @section('page_title_icon')
 <i class="metismenu-icon pe-7s-users"></i>
 @endsection
@@ -10,11 +14,11 @@
 <div class="d-flex justify-content-end">
     <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
-        <label class="custom-control-label" for="trashswitch"><strong>Trash</strong></label>
+        <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
     {{-- @can('add_admin_user') --}}
-    <a href="{{route('admin.admin-users.create')}}" title="Add Admin User" class="btn btn-primary action-btn">Add Admin User</a>
+    <a href="{{route('admin.admin-users.create')}}" title="Add Admin User" class="btn btn-primary action-btn">@lang("message.header.add_admin_user")</a>
     {{-- @endcan --}}
 </div>
 @endsection
@@ -30,11 +34,11 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Roles</th>
-                                <th class="no-sort action">Action</th>
-                                <th class="d-none hidden">Updated at</th>
+                                <th>@lang("message.name")</th>
+                                <th>@lang("message.email")</th>
+                                <th>@lang("message.header.roles")</th>
+                                <th class="no-sort action">@lang("message.header.action")</th>
+                                <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -55,7 +59,10 @@ $(function() {
     app_table = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: `${PREFIX_URL}/admin/${route_model_name}?trash=0`,
+        ajax: {
+                    'url' : '{{ url("/admin/admin-users?trash=0") }}',
+                    'type': 'GET',
+                },
         columns: [
             {data: "plus-icon", name: "plus-icon", defaultContent: null},
             {data: 'name', name: 'name', defaultContent: "-", class: ""},

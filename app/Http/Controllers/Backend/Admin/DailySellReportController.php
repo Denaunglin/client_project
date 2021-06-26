@@ -14,7 +14,6 @@ use Yajra\DataTables\DataTables;
 class DailySellReportController extends Controller
 {
     public function index(Request $request){
-
         
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
@@ -23,19 +22,10 @@ class DailySellReportController extends Controller
         $sell_items = SellItems::whereDate('created_at',$check_date)->get();
         if ($request->ajax()) {
             $check_date = date('Y-m-d');
+            $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
             $sell_items = SellItems::where('trash',0)->whereDate('created_at',$check_date)->get();
-
-            if ($request->item != '') {
-                $sell_items = $sell_items->where('id', $request->item);
-            }
-
-            if ($request->item_category != '') {
-                $sell_items = $sell_items->where('item_category_id', $request->item_category);
-            }
-
-            if ($request->item_sub_category != '') {
-                $sell_items = $sell_items->where('item_sub_category_id', $request->item_sub_category);
-
+            if ($daterange) {
+                $sell_items = SellItems::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }
 
             return Datatables::of($sell_items)

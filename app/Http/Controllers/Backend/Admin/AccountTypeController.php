@@ -72,7 +72,6 @@ class AccountTypeController extends Controller
         $accounttype = new AccountType();
         $accounttype->name = $request['name'];
         $accounttype->commission = $request->commission;
-        $accounttype->booking_limit = $request->booking_limit;
         $accounttype->save();
 
         activity()
@@ -108,7 +107,6 @@ class AccountTypeController extends Controller
         $accounttype = AccountType::findOrFail($id);
         $accounttype->name = $request['name'];
         $accounttype->commission = $request->commission;
-        $accounttype->booking_limit = $request->booking_limit;
         $accounttype->update();
 
         activity()
