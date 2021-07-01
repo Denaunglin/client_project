@@ -74,7 +74,6 @@ class CashbookController extends Controller
                     }
                     if($cashbook->return_id != null){
                         $status= '<span class=" badge badge-success text-white"> Return Charges </span>';
-
                     }
                     return $status ;
                 })

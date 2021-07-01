@@ -39,7 +39,7 @@ class BuyingItemController extends Controller
                 $buying_items = BuyingItem::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }
             if ($request->item != '') {
-                $buying_items = $buying_items->where('item_id', $request->item);
+                $buying_items = BuyingItem::where('item_id', $request->item);
             }
 
             return Datatables::of($buying_items)
@@ -272,7 +272,7 @@ class BuyingItemController extends Controller
         $item=Item::where('id',$request->item_id)->first();
         $buying_item = BuyingItem::findOrFail($id);
         $shop_storage = ShopStorage::where('item_id',$item->id)->first();
-        $opening_qty = $shop_storage->qty;
+        $opening_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
 
         $qty1 = $buying_item->qty ;
         $qty2 = $request->qty;

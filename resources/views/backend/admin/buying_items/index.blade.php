@@ -26,13 +26,12 @@
 @section('content')
 <div class="pb-3">
     <div class="row">
-      
-        {{-- <div class="col-md-6 col-sm-12 col-xl-3">
+        <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2 " style="width:100%">
                 <div class="input-group" >
                     <div class="input-group-prepend"><span class="input-group-text">  @lang("message.header.item_name") : </span></div>
                     <select class="custom-select item mr-1" >
-                        <option value=""> @lang("message.header.all")</option>
+                        <option value=""> @lang("message.header.select_item")</option>
                         @forelse($item as $data)
                         <option value="{{$data->id}}">{{$data->name}}</option>
                         @empty
@@ -41,7 +40,7 @@
                     </select>
                 </div>
             </div>
-        </div>    --}}
+        </div>   
     <div class="col-md-6 col-sm-12 col-xl-3">
         <div class="d-inline-block mb-2">
             <div class="input-group">
@@ -304,12 +303,9 @@
         }); 
 
         $(document).on('change', '.item', function() {
-                 var booking_user_name = $('#booking_user_name').val();
-                var daterange = $('.datepicker').val();
                 var item = $('.item').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
-
-                app_table.ajax.url(`{{url('/admin/credit_reports?item=`+item+`&trash=`+trash+`/')}}`).load();
+                app_table.ajax.url(`{{url('/admin/buying_items?item=`+item+`&trash=`+trash+`/')}}`).load();
         });
 
         $(document).on('change', '.trashswitch', function () {

@@ -161,6 +161,8 @@ class SellItemController extends Controller
 
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
+            $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+
             if($shop_storage){
                 $qty = ($shop_storage->qty) - ($sell_item->qty);
                 $shop_storage->qty = $qty;
@@ -174,7 +176,7 @@ class SellItemController extends Controller
 
             $item_ledger= new ItemLedger();
             $item_ledger->item_id = $item->id;
-            $item_ledger->opening_qty = '0';
+            $item_ledger->opening_qty = $open_qty;
             $item_ledger->buying_buy = '0';
             $item_ledger->buying_back = '0';
             $item_ledger->selling_sell = $request->qty;
@@ -211,6 +213,8 @@ class SellItemController extends Controller
                 $cash_book->save();
 
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
+                $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+
                 if($shop_storage){
                     $qty = ($shop_storage->qty) + ($sell_item->qty);
                     $shop_storage->qty = $qty;
@@ -224,7 +228,7 @@ class SellItemController extends Controller
         
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
-                $item_ledger->opening_qty = '0';
+                $item_ledger->opening_qty = $open_qty;
                 $item_ledger->buying_buy = '0';
                 $item_ledger->buying_back = '0';
                 $item_ledger->selling_sell = $request->qty;
@@ -274,7 +278,7 @@ class SellItemController extends Controller
         $item=Item::where('id',$request->item_id)->first();
         $sell_item = SellItems::findOrFail($id);
         $shop_storage = ShopStorage::where('item_id',$item->id)->first();
-        $opening_qty = $shop_storage->qty;
+        $opening_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
 
         $qty1 = $sell_item->qty ;
         $qty2 = $request->qty;
@@ -459,6 +463,8 @@ class SellItemController extends Controller
             $cash_book->save();
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
+            $opening_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+
             if($shop_storage){
                 $qty = ($shop_storage->qty) - ($sell_item->qty);
                 $shop_storage->qty = $qty;
@@ -472,7 +478,7 @@ class SellItemController extends Controller
 
             $item_ledger= new ItemLedger();
             $item_ledger->item_id = $item->id;
-            $item_ledger->opening_qty = '0';
+            $item_ledger->opening_qty = $opening_qty;
             $item_ledger->buying_buy = '0';
             $item_ledger->buying_back = '0';
             $item_ledger->selling_sell = $cart_data['quantity'];
@@ -538,6 +544,8 @@ class SellItemController extends Controller
                 $cash_book->save();
 
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
+                $opening_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+
                 if($shop_storage){
                     $qty = ($shop_storage->qty) - ($sell_item->qty);
                     $shop_storage->qty = $qty;
@@ -551,7 +559,7 @@ class SellItemController extends Controller
         
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
-                $item_ledger->opening_qty = '0';
+                $item_ledger->opening_qty = $opening_qty;
                 $item_ledger->buying_buy = '0';
                 $item_ledger->buying_back = '0';
                 $item_ledger->selling_sell = $cart_data['quantity'];

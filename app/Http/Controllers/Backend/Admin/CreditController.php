@@ -149,6 +149,33 @@ class CreditController extends Controller
         $sell_item->discount = 0;
         $sell_item->net_price = $request['origin_amount'];
         $sell_item->save();
+
+        $shop_storage = ShopStorage::where('item_id',$item->id)->first();
+        $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+
+        if($shop_storage){
+            $qty = ($shop_storage->qty) - ($sell_item->qty);
+            $shop_storage->qty = $qty;
+            $shop_storage->update();
+        }else{
+            $shop_storage = new ShopStorage();
+            $shop_storage->item_id = $item->id;
+            $shop_storage->qty = $sell_item->qty;
+            $shop_storage->save();
+        }
+
+           $item_ledger= new ItemLedger();
+            $item_ledger->item_id = $item->id;
+            $item_ledger->opening_qty = $open_qty;
+            $item_ledger->buying_buy = '0';
+            $item_ledger->buying_back = '0';
+            $item_ledger->selling_sell = $request->qty;
+            $item_ledger->selling_back = '0';
+            $item_ledger->adjust_in = '0';
+            $item_ledger->adjust_out = '0';
+            $item_ledger->closing_qty = $shop_storage->qty;
+            $item_ledger->save();
+
         
         activity()
             ->performedOn($credit)
@@ -202,6 +229,8 @@ class CreditController extends Controller
         $cash_book->credit_id = $credit->id;
         $cash_book->return_id = null;
         $cash_book->save();
+
+        
 
         activity()
             ->performedOn($credit)
