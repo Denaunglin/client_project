@@ -27,7 +27,7 @@
 <div class="pb-3">
     <div class="row">
       
-        <div class="col-md-6 col-sm-12 col-xl-3">
+        {{-- <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2 " style="width:100%">
                 <div class="input-group" >
                     <div class="input-group-prepend"><span class="input-group-text">  @lang("message.header.item_name") : </span></div>
@@ -41,7 +41,7 @@
                     </select>
                 </div>
             </div>
-        </div>   
+        </div>    --}}
     <div class="col-md-6 col-sm-12 col-xl-3">
         <div class="d-inline-block mb-2">
             <div class="input-group">
@@ -121,7 +121,7 @@
                     orientation: 'portrait', //portrait
                     pageSize: 'A4', //A3 , A5 , A6 , legal , letter
                     exportOptions: {
-                        columns: [1,2,3,4,5,6,7,8,9]
+                        columns: [1,2,3,4,5,6,7,8,9,10]
                     },
                     customize: function(doc) {
                         //Remove the title
@@ -130,7 +130,7 @@
                         doc.pageMargins = [20, 60, 20, 30];
                         doc.defaultStyle.fontSize = 6;
                         doc.defaultStyle.font = 'NotoSansMyanmar';
-                        doc.styles.tableHeader.fontSize = 8;
+                        doc.styles.tableHeader.fontSize = 6;
                         doc.content[0].table.widths = '*';
 
                         // Header

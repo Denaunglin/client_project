@@ -25,4 +25,8 @@ class SellItems extends Model
     {
         return $this->belongsTo('App\Models\ItemSubCategory', 'item_sub_category_id', 'id');
     }
+
+    public function customer(){
+        return $this->belongsTo('App\Models\User', 'customer_id', 'id');
+    }
 }

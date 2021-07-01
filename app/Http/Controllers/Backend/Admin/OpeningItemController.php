@@ -37,6 +37,7 @@ class OpeningItemController extends Controller
             if ($daterange) {
                 $opening_items = OpeningItem::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }
+            
             if ($request->item != '') {
                 $opening_items = $opening_items->where('item_id', $request->item);
             }

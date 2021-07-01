@@ -42,6 +42,10 @@ class OrderListController extends Controller
         }
 
         if ($request->ajax()) {
+            if($request->item){
+              $order_list =   $order_list->where('id',$request->item)->get();
+            }
+
 
             return Datatables::of($order_list)
                 ->addColumn('action', function ($order_list) use ($request) {

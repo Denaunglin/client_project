@@ -51,6 +51,7 @@ class ProfitLostController extends Controller
                 $item_id  []= $data->selling->item->id ;
             }
         }
+
         
         $item_count = count ($item_id);
           if($item_count != 0){
@@ -86,15 +87,15 @@ class ProfitLostController extends Controller
         }
 
         $cashbook_data = [
-            "total_selling_profit" => number_format($total_selling_profit,3,',',','),
+            "total_selling_profit" => number_format($total_selling_profit),
             "total_sell_qty" => number_format($item_count),
-            'cashbook_income' => number_format($cashbook_income, 3, ',', ' ,'),
-            'cashbook_outgoing' => number_format($cashbook_outgoing, 3, ',', ', '),
-            'cashbook_total' => number_format($cashbook_total, 3, ',', ' ,'),
+            'cashbook_income' => number_format($cashbook_income),
+            'cashbook_outgoing' => number_format($cashbook_outgoing),
+            'cashbook_total' => number_format($cashbook_total),
             'cashbook_income_list' => $cashbook_income_list,
             'cashbook_outgoing_list' => $cashbook_outgoing_list,
-            'profit' =>number_format( $profit , 3, ',', ' ,'),
-            'lost' => number_format($lost, 3, ',', ' ,') ,
+            'profit' =>number_format( $profit),
+            'lost' => number_format($lost) ,
         ];
 
         if ($request->ajax()) {

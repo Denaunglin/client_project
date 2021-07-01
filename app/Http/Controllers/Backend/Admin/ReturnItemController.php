@@ -27,6 +27,7 @@ class ReturnItemController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('view_item')) {
             abort(404);
         }
+        
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
@@ -34,6 +35,7 @@ class ReturnItemController extends Controller
             $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
             $return_items = ReturnItem::anyTrash($request->trash);
+            
             if ($daterange) {
                 $return_items = ReturnItem::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }

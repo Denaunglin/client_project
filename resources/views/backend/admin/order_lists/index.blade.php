@@ -24,7 +24,7 @@
 @endsection
 
 @section('content')
-<div class="pb-3">
+{{-- <div class="pb-3">
     <div class="row">
       
         <div class="col-md-6 col-sm-12 col-xl-3">
@@ -44,7 +44,7 @@
         </div>
               
     </div>   
-    </div>
+    </div> --}}
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">
@@ -93,7 +93,7 @@
               orientation: 'portrait', //portrait
               pageSize: 'A4', //A3 , A5 , A6 , legal , letter
               exportOptions: {
-                  columns: [1,2,3,4,5,6,7,8,9]
+                  columns: [1,2,3,4,5,6,7]
               },
               customize: function(doc) {
                   //Remove the title

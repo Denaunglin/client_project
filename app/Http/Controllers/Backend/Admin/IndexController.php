@@ -12,6 +12,7 @@ use App\Models\AccountType;
 use Darryldecode\Cart\Cart;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use App\Models\Bussinessinfo;
 use App\Models\BookingCalendar;
 use App\Models\ItemSubCategory;
 use Yajra\DataTables\DataTables;
@@ -85,11 +86,13 @@ class IndexController extends Controller
 
     public function show(Request $request){
 
+
         $discount_percentage = 0 ;
         $discount_amount = 0 ;
         $total_discount_amount = 0;
         $total_discount_percentage = 0;
         $cart = session()->get('cart');
+
         $subtotal =0;
         $total = 0;
         $total_qty = 0;
@@ -158,6 +161,7 @@ class IndexController extends Controller
                 $subtotal = $row['quantity'] * $row['price'];
                 $total = ($subtotal) ;
                 $total_qty = $row['quantity'];
+                $rate_per_unit = $row['price'];
 
                 $datam [] = [
                     'item_name' => $item_name,
@@ -191,7 +195,9 @@ class IndexController extends Controller
         $grand_total_qty = $grand_total_qty;
         $grand_sub_total = $grand_sub_total;    
 
-        return view('backend.admin.final_pay.index',compact('pay_items','grand_total','grand_total_qty','total_discount_percentage','total_discount_amount','tax_data','tax'));
+        $buss_info = Bussinessinfo::where('trash',0)->first();
+
+        return view('backend.admin.final_pay.index',compact('pay_items','grand_total','grand_total_qty','total_discount_percentage','total_discount_amount','tax_data','buss_info','tax'));
     }
 
 }

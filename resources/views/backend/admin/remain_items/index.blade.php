@@ -62,7 +62,7 @@
                         <tfoot>
                             <tr>
                                 <th></th>
-                                <th>@lang("message.header.total")</th>
+                                <th>@lang("message.header.remain_qty")</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>

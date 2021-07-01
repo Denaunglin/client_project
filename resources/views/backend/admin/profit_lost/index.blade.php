@@ -23,7 +23,7 @@
     <div class="d-inline-block mb-2">
         <div class="input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i>  @lang("message.header.date") : </span>
+                <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i>  @lang("message.date") : </span>
             </div>
             <input type="text" class="form-control datepicker" placeholder="All">
         </div>
@@ -60,7 +60,6 @@
                 serverSide: true,
                 dom: 'Bfrtip',
                 buttons: [
-                    'excel',
                     {
               text: '<i class="fas fa-file-pdf"></i> PDF',
               extend: 'pdfHtml5',

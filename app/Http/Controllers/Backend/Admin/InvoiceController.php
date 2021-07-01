@@ -227,7 +227,7 @@ class InvoiceController extends Controller
         $services = Service::where('id', $id)->first();
         $bussiness_info = Bussinessinfo::where('trash',0)->first();
         $invoice_pdf = new Invoice();
-        $invoice_pdf->invoice_number = 0 ;
+        $invoice_pdf->invoice_no = 0 ;
         $invoice_pdf->item_id = null;
         $invoice_pdf->service_id =  $services->id;
         $invoice_pdf->save();
@@ -288,6 +288,7 @@ class InvoiceController extends Controller
         $subscriber_count = $subscribers->count();
 
         $invoice_pdf = new ExtraInvoice();
+        $invoice_pdf->item_id = null;
         $invoice_pdf->booking_id = $booking->id;
         $invoice_pdf->save();
 

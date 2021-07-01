@@ -23,7 +23,7 @@
 <div class="pb-3">
     <div class="row">
       
-        <div class="col-md-6 col-sm-12 col-xl-3">
+        {{-- <div class="col-md-6 col-sm-12 col-xl-3">
                     <div class="d-inline-block mb-2 " style="width:100%">
                     <div class="input-group" >
                         <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_name") : </span></div>
@@ -37,7 +37,8 @@
                         </select>
                     </div>
                 </div>
-        </div>
+        </div> --}}
+        
         <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2">
                 <div class="input-group">
@@ -48,6 +49,7 @@
                 </div>
             </div>
         </div>
+       
        
     </div>   
     </div>
@@ -67,8 +69,8 @@
                                 <th colspan="2" class="text-center bg-light">@lang("message.header.buying_list")</th>
                                 <th colspan="2" class="text-center bg-light">@lang("message.header.selling_list")</th>
                                 <th colspan="2" class="text-center bg-light">@lang("message.header.transform")</th> 
-                                <th rowspan="2" class="text-center ">@lang("message.header.adjustment") </th>
                                 <th rowspan="2" class="text-center ">@lang("message.header.closing_qty") </th>
+                                <th rowspan="2" class="text-center hidden ">@lang("message.header.closing_qty") </th>
                                 <th rowspan="2" class="no-sort action">@lang("message.header.action")</th>    
                             </tr>   
                             <tr >
@@ -146,7 +148,7 @@
               orientation: 'portrait', //portrait
               pageSize: 'A4', //A3 , A5 , A6 , legal , letter
               exportOptions: {
-                  columns: [1,2,3,4,5,6,7,8,9]
+                  columns: [1,2,3,4,5,6,7,8,9,10,11,12]
               },
               customize: function(doc) {
                   //Remove the title
@@ -155,7 +157,7 @@
                   doc.pageMargins = [20, 40, 20, 30];
                   doc.defaultStyle.fontSize = 6;
                   doc.defaultStyle.font = 'NotoSansMyanmar';
-                  doc.styles.tableHeader.fontSize = 8;
+                  doc.styles.tableHeader.fontSize = 6;
                   doc.content[0].table.widths = '*';
                   doc.styles.tableBodyEven.alignment = 'center';
                   doc.styles.tableBodyOdd.alignment = 'center';
@@ -247,8 +249,9 @@
                     {data: 'selling_back', name: 'selling_back', defaultContent: "-", class: ""},
                     {data: 'adjust_in', name: 'adjust_in', defaultContent: "-", class: ""},
                     {data: 'adjust_out', name: 'adjust_out', defaultContent: "-", class: ""},
-                    {data: 'adjust_list', name: 'adjust_list', defaultContent: "-", class: ""},
                     {data: 'closing_qty', name: 'closing_qty', defaultContent: "-", class: ""},
+                    {data: 'adjust_out', name: 'adjust_out', defaultContent: "-", class: ""},
+
                     {data: 'action', name: 'action', orderable: false, searchable: false, class: "action"},
                     ],
                     order: [

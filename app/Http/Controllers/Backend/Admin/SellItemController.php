@@ -35,6 +35,8 @@ class SellItemController extends Controller
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
+        $tax = Tax::where('trash',0)->first();
+
         if ($request->ajax()) {
             $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
@@ -82,6 +84,11 @@ class SellItemController extends Controller
 
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn} ${invoice_btn} ";
                 })
+                ->addColumn('customer', function ($sell_item) {
+                    $customer = $sell_item->customer ? $sell_item->customer->name.'</br>'.$sell_item->customer->phone.'</br>'.$sell_item->customer->address : 'Default Customer';
+                    return $customer;
+                    
+                })
                 ->addColumn('item_id', function ($sell_item) {
 
                     return $sell_item->item_id ? $sell_item->item->name : '-';
@@ -96,10 +103,10 @@ class SellItemController extends Controller
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action','item_id','item_category','item_sub_category'])
+                ->rawColumns(['action','customer','item_id','item_category','item_sub_category'])
                 ->make(true);
         }
-        return view('backend.admin.sell_items.index',compact('item','item_category','item_sub_category'));
+        return view('backend.admin.sell_items.index',compact('item','item_category','item_sub_category','tax'));
     }
 
     public function create()
@@ -109,8 +116,9 @@ class SellItemController extends Controller
         }
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
+        $customer = User::where('trash',0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
-        return view('backend.admin.sell_items.create', compact('item_category','item', 'item_sub_category'));
+        return view('backend.admin.sell_items.create', compact('item_category','customer','item', 'item_sub_category'));
     }
 
     public function store(Request $request)
@@ -119,20 +127,18 @@ class SellItemController extends Controller
             abort(404);
         }
 
-        $cart = Session::get('cart');
-        if($cart){
-            $item = Item::findOrFail($cart['id']);
-        }else{
-            $item = Item::findOrFail($request->item_id);
-        }
-      
+     
+        $item = Item::findOrFail($request->item_id);
+        $customer_id = $request->customer_id ? $request->customer_id : 0;
+        $customer = User::where('id',$request->customer_id)->first();
+        
         $item_count = count($item);
         if($item_count == 1){
             $item = $item->first();
             $sell_item = new SellItems();
             $sell_item->barcode = $item->barcode;
             $sell_item->item_id = $item->id;
-            $sell_item->customer_id = 0 ;
+            $sell_item->customer_id = $customer_id ;
             $sell_item->unit = $item->unit;
             $sell_item->item_category_id = $item->item_category_id;
             $sell_item->item_sub_category_id = $item->item_sub_category_id;
@@ -183,7 +189,7 @@ class SellItemController extends Controller
                 $sell_item = new SellItems();
                 $sell_item->barcode = $data->barcode;
                 $sell_item->item_id = $data->id;
-                $sell_item->customer_id = 0 ;
+                $sell_item->customer_id = $customer_id ;
                 $sell_item->unit = $data->unit;
                 $sell_item->item_category_id = $data->item_category_id;
                 $sell_item->item_sub_category_id = $data->item_sub_category_id;
@@ -230,15 +236,6 @@ class SellItemController extends Controller
                 $var++;
             }
         }
-        }
-
-        if($cart){
-            $id=[];
-            foreach($cart as $data){
-                $id=$data['id'];
-                unset($cart[$id]);
-            }
-            Session::put('cart', $cart);
         }
 
         activity()
@@ -323,7 +320,6 @@ class SellItemController extends Controller
         $item_ledger->adjust_in = $item_ledger->adjust_in;
         $item_ledger->closing_qty = $shop_storage->closing_qty;
         $item_ledger->update();
-
 
         activity()
             ->performedOn($sell_item)

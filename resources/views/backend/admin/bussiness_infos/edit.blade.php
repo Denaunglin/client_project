@@ -39,7 +39,7 @@
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label>@lang("message.phone")</label>
-                                <input type="number" id="phone" value="{{$bussiness_infos->phone}}" name="phone" class="form-control">
+                                <input type="text"  id="phone" value="{{$bussiness_infos->phone}}" name="phone" class="form-control">
                             </div>
                         </div>
                         <div class="col-md-12">

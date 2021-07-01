@@ -1,11 +1,13 @@
 @extends('backend.admin.layouts.app')
-@section('meta_title', 'Room Detail')
-@section('page_title', 'Room Detail')
+@section('meta_title', 'Item Detail')
+@section('page_title')
+@lang("message.header.item")
+@endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
 @section('style')
-<link rel="stylesheet" href="{{asset('assets/css/backend_room_detail.css')}}">
+<link rel="stylesheet" href="{{asset('assets/css/backend_items.css')}}">
 @endsection
 @section('content')
 @include('layouts.errors_alert')
@@ -16,128 +18,72 @@
                 <div class="tile">
                     <div class="wrapper">
                         <div class="banner-imgs col-md-6 offset-md-3 col-sm-12">
-                            <img src="{{$room_detail->image_path()}}" alt="Image 1">
+                            <img src="{{$items->image_path()}}" alt="Image 1" width="50%" height="auto">
                         </div>
 
                         <div class="dates">
                             <div class="start">
-                                <strong>Created Date</strong> {{$room_detail->created_at}}
-                                <span></span>
+                                <strong>@lang("message.header.created_at")</strong>  : {{$items->created_at}}
+                                <span></span>   
                             </div>
+                            <hr>
                             <div class="ends">
-                                <strong>Updated Date</strong> {{$room_detail->updated_at}}
+                                <strong>@lang("message.header.updated_at")</strong> :  {{$items->updated_at}}
                             </div>
+                            <hr>
                         </div>
 
                         <div class="stats">
 
                             <div>
-                                <strong>Room Type </strong> {{$room_detail->roomtype->name}}
+                                <strong> @lang("message.name") </strong>  : {{$items->name}}
                             </div>
+<hr>
+                            <div>
+                                <strong>@lang("message.header.barcode")</strong>  : {{$items->barcode}}
+                            </div>
+                            <hr>
 
                             <div>
-                                <strong>Bed Type</strong> {{$room_detail->bedtype->name}}
+                                <strong>@lang("message.header.unit")</strong>  : {{$items->unit}}
                             </div>
+                            <hr>
 
                             <div>
-                                <strong>Room Qty</strong> {{$room_detail->room_qty}}
+                                <strong>@lang("message.header.item_category")</strong>  : {{$items->item_category->name}}
                             </div>
-                        </div>
-
-                        <div class="stats">
-                            <div>
-                                <strong>Adult Qty</strong> {{$room_detail->adult_qty}}
-                            </div>
+                            <hr>
 
                             <div>
-                                <p><strong>Myanmar Price</strong> {{$room_detail->price}} MMK /Night</p>
+                                <strong>@lang("message.header.item_sub_category")</strong> :  {{$items->item_sub_category->name}}
                             </div>
+                            <hr>
 
                             <div>
-                                <p><strong>Foreign Price</strong> $ {{$room_detail->foreign_price}} /Night</p>
+                                <strong>@lang("message.header.minimun_qty")</strong> :  {{$items->minimun_qty}}
                             </div>
-
-                        </div>
-                        <div class="stats">
-                            <div>
-                                <strong>Extra Bed Qty</strong> {{$room_detail->extra_bed_qty}}
-                            </div>
+                            <hr>
 
                             <div>
-                                <p><strong>Extra Bed MM Price</strong> {{$room_detail->extra_bed_mm_price}} MMK /Night</p>
+                                <strong>@lang("message.header.buying_price")</strong> :  {{$items->buying_price}}
                             </div>
+                            <hr>
 
                             <div>
-                                <p><strong>Extra Bed Foreign Price</strong> $ {{$room_detail->extra_bed_foreign_price}} /Night</p>
+                                <strong>@lang("message.header.retail_price")</strong> : {{$items->retail_price}}
                             </div>
-
-                        </div>
-                        <div class="stats">
-                            <div>
-                                <strong>Early Check In</strong>
-                            </div>
+                            <hr>
 
                             <div>
-                                <p><strong>Early Check-In MM Price</strong> {{$room_detail->early_checkin_mm}} MMK /Night</p>
+                                <strong>@lang("message.header.wholesale_price")</strong> : {{$items->wholesale_price}}
                             </div>
-
-                            <div>
-                                <p><strong>Early Check-In Foreign Price</strong> $ {{$room_detail->early_checkin_foreign}} /Night</p>
-                            </div>
-
-                        </div>
-                        <div class="stats">
-                            <div>
-                                <strong>Late Check Out</strong>
-                            </div>
-
-                            <div>
-                                <p><strong>Late Check-Out MM Price</strong> {{$room_detail->late_checkout_mm}} MMK /Night</p>
-                            </div>
-
-                            <div>
-                                <p><strong>Late Check-Out Foreign Price</strong> $ {{$room_detail->late_checkout_foreign}} /Night</p>
-                            </div>
+                            <hr>
 
                         </div>
 
-                        <div class="text-center p-5">
-                            <strong>Description</strong>
-
-                            <p class="mt-3" style="white-space:pre-wrap;">{{$room_detail->description}}</p>
-                        </div>
                         <hr>
 
-                        <div class="text-center py-3">
-                            <strong>Facilities</strong>
-
-                            @foreach($facilities as $data)
-
-                            <span class="badge badge-info mt-3">{{$app[$data]}}</span>
-
-                            @endforeach
-
-                        </div>
-                        <hr>
-
-                        <div class="text-center py-3 my-3">
-                            <p><strong>Room Layout</strong></p>
-                            @if(count($room_detail->roomlayout))
-                            <div class="row">
-                                @forelse($room_detail->roomlayout as $roomlayout)
-                                <div class="col-md-3 mb-2">
-                                    <div class="card border-info">
-                                        <div class="card-body">
-                                            <p class="mb-0">Room Number - {{$roomlayout->room_no}}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                @empty
-                                @endforelse
-                            </div>
-                            @endif
-                        </div>
-                        <hr>
+                      
 
                         <div class="footer">
                             <a href="{{url('admin/rooms')}}" class="Cbtn Cbtn-primary">Back</a>

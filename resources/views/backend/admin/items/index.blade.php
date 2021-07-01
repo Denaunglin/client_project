@@ -26,13 +26,12 @@
 @section('content')
 <div class="pb-3">
     <div class="row">
-      
         <div class="col-md-6 col-sm-12 col-xl-3">
                     <div class="d-inline-block mb-2 " style="width:100%">
                     <div class="input-group" >
                         <div class="input-group-prepend"><span class="input-group-text">Item Name : </span></div>
                         <select class="custom-select item mr-1" >
-                            <option value="">@lang("message.header.all")</option>
+                            <option value="">@lang("message.header.select_item")</option>
                             @forelse($item as $data)
                             <option value="{{$data->id}}">{{$data->name}}</option>
                             @empty
@@ -47,7 +46,7 @@
                     <div class="input-group" >
                         <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_category") : </span></div>
                         <select class="custom-select item_category mr-1">
-                            <option value="">@lang("message.header.all")</option>
+                            <option value="">@lang("message.header.select_item_category")</option>
                             @forelse($item_category as $data)
                             <option value="{{$data->id}}">{{$data->name}}</option>
                             @empty
@@ -57,12 +56,12 @@
                     </div>
             </div>
         </div>
-        <div class="col-md-6 col-sm-12 col-xl-3">
-            <div class="d-inline-block mb-2"style="width:100%">
-                <div class="input-group" >
-                    <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_sub_category") : </span></div>
+    <div class="col-md-6 col-sm-12 col-xl-3">
+        <div class="d-inline-block mb-2"style="width:100%">
+            <div class="input-group" >
+                <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_sub_category") : </span></div>
                     <select class="custom-select item_sub_category mr-1">
-                        <option value="">@lang("message.header.all")</option>
+                        <option value="">@lang("message.header.select_sub_item_category")</option>
                             @forelse($item_sub_category as $data)
                             <option value="{{$data->id}}">{{$data->name}}</option>
                             @empty
@@ -70,7 +69,7 @@
                             @endforelse
                     </select>
                 </div>
-        </div>
+        </div> 
     </div>
 </div>   
 </div>
@@ -126,7 +125,7 @@
               orientation: 'portrait', //portrait
               pageSize: 'A4', //A3 , A5 , A6 , legal , letter
               exportOptions: {
-                  columns: [2,3,4,5,6,7,8,9,10,11]
+                  columns: [2,3,4,5,6,7,8,9,10]
               },
               customize: function(doc) {
                   //Remove the title
@@ -135,7 +134,7 @@
                   doc.pageMargins = [20, 40, 20, 30];
                   doc.defaultStyle.fontSize = 6;
                   doc.defaultStyle.font = 'NotoSansMyanmar';
-                  doc.styles.tableHeader.fontSize = 8;
+                  doc.styles.tableHeader.fontSize = 6;
                   doc.content[0].table.widths = '*';
                   doc.styles.tableBodyEven.alignment = 'center';
                   doc.styles.tableBodyOdd.alignment = 'center';
@@ -254,15 +253,25 @@
         });
 
         $(document).on('change', '.item, .item_category , .item_sub_category', function() {
-                 var booking_user_name = $('#booking_user_name').val();
-                var daterange = $('.datepicker').val();
                 var item = $('.item').val();
                 var item_category = $('.item_category').val();
                 var item_sub_category=$('.item_sub_category').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
                 app_table.ajax.url(`{{url('/admin/items?item=`+item+`&trash=`+trash+`&item_sub_category=`+item_sub_category+`&item_category=`+item_category+`/')}}`).load();
-
         });
+
+        $(document).on('change', ' .item_category', function() {
+                var item_category = $('.item_category').val();
+                var trash = $('.trashswitch').prop('checked') ? 1 : 0;      
+                app_table.ajax.url(`{{url('/admin/items?item_category=`+item_category+`&trash=`+trash+`/')}}`).load();
+        });
+
+        $(document).on('change', ' .item_sub_category', function() {
+                var item_sub_category = $('.item_sub_category').val();
+                var trash = $('.trashswitch').prop('checked') ? 1 : 0;
+                app_table.ajax.url(`{{url('/admin/items?item_sub_category=`+item_sub_category+`&trash=`+trash+`/')}}`).load();
+        });
+        
 
         $(document).on('change', '.trashswitch', function () {
             if ($(this).prop('checked') == true) {

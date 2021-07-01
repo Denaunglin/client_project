@@ -19,7 +19,7 @@ class CreateBussinessinfosTable extends Migration
             $table->string('type');
             $table->string('address');
             $table->string('email');
-            $table->integer('phone');
+            $table->text('phone');
             $table->text('logo')->nullable();
             $table->string('remark')->nullable();
             $table->tinyInteger('trash')->default(0);

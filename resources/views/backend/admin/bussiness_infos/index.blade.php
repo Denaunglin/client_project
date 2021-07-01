@@ -48,8 +48,7 @@
                                 </th>
                                 <th>@lang("message.phone")
                                 </th>
-                                <th>@lang("message.remark")
-                                </th>
+                                
                                 <th class="no-sort action">@lang("message.header.action")
                                 </th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")
@@ -130,12 +129,7 @@
                         defaultContent: "-",
                         class: ""
                     },
-                    {
-                        data: 'remark',
-                        name: 'remark',
-                        defaultContent: "-",
-                        class: ""
-                    },
+                   
                     {
                         data: 'action',
                         name: 'action',

@@ -17,9 +17,9 @@
         <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
 
-    {{-- @can('add_item')
+    @can('add_item')
     <a href="{{route('admin.sell_items.create')}}" title="Add Category" class="btn btn-primary action-btn">Add Commodity Sales Item</a>
-    @endcan --}}
+    @endcan
 </div>
 @endsection
 
@@ -27,7 +27,7 @@
 <div class="pb-3">
     <div class="row">
       
-        <div class="col-md-6 col-sm-12 col-xl-3">
+        {{-- <div class="col-md-6 col-sm-12 col-xl-3">
                     <div class="d-inline-block mb-2 " style="width:100%">
                     <div class="input-group" >
                         <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_name") : </span></div>
@@ -41,12 +41,12 @@
                         </select>
                     </div>
                 </div>
-        </div>   
+        </div>    --}}
         <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> @lang("message.header.date") : </span>
+                        <span class="input-group-text"><i class="fas fa-calendar-alt mr-1"></i> @lang("message.date") : </span>
                     </div>
                     <input type="text" class="form-control datepicker" placeholder="All">
                 </div>
@@ -63,16 +63,15 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th>@lang("message.header.barcode")</th>
                                 <th>@lang("message.header.item_name")</th>
+                                <th>@lang("message.header.customer")</th>
                                 <th>@lang("message.header.unit")</th>
                                 <th>@lang("message.header.item_category")<br></th>
                                 <th>@lang("message.header.item_sub_category")</th>
                                 <th>@lang("message.header.qty")</th>
                                 <th>@lang("message.header.price")</th>
                                 <th>@lang("message.header.discount")</th>
-                                <th>@lang("message.header.tax") (%) </th>
-                                <th>@lang("message.header.total_price")</th>
+                                <th>@lang("message.header.total_price")+(@lang("message.header.tax"){{$tax->amount}}%)</th>
                                 <th class="no-sort action">@lang("message.header.action")</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
@@ -130,7 +129,7 @@
                   doc.pageMargins = [20, 40, 20, 30];
                   doc.defaultStyle.fontSize = 6;
                   doc.defaultStyle.font = 'NotoSansMyanmar';
-                  doc.styles.tableHeader.fontSize = 8;
+                  doc.styles.tableHeader.fontSize = 6;
                   doc.content[0].table.widths = '*';
                   doc.styles.tableBodyEven.alignment = 'center';
                   doc.styles.tableBodyOdd.alignment = 'center';
@@ -212,8 +211,8 @@
                 },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
                     {data: 'item_id', name: 'item_id', defaultContent: "-", class: ""},
+                    {data: 'customer', name: 'customer', defaultContent: "-", class: ""},
                     {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
                     {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
@@ -304,7 +303,7 @@
             app_table.ajax.url(`{{url('/admin/sell_items?daterange=`+daterange+`&trash=`+trash+`/')}}`).load();
         }); 
 
-        $(document).on('change', '.item, .item_category , .item_sub_category', function() {
+        $(document).on('change', '.item', function() {
                  var booking_user_name = $('#booking_user_name').val();
                 var item = $('.item').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;

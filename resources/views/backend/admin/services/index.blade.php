@@ -82,6 +82,87 @@
                 buttons: [
                     'excel',
                     {
+              text: '<i class="fas fa-file-pdf"></i> PDF',
+              extend: 'pdfHtml5',
+              filename: 'Service Report',
+              orientation: 'portrait', //portrait
+              pageSize: 'A4', //A3 , A5 , A6 , legal , letter
+              exportOptions: {
+                  columns: [1,2,3]
+              },
+              customize: function(doc) {
+                  //Remove the title
+                  doc.content.splice(0, 1);
+                  var report_time = moment().format('YYYY-MM-DD HH:mm:ss');
+                  doc.pageMargins = [20, 40, 20, 30];
+                  doc.defaultStyle.fontSize = 6;
+                  doc.defaultStyle.font = 'NotoSansMyanmar';
+                  doc.styles.tableHeader.fontSize = 8;
+                  doc.content[0].table.widths = '*';
+                  doc.styles.tableBodyEven.alignment = 'center';
+                  doc.styles.tableBodyOdd.alignment = 'center';
+                  // Header
+                  doc['header'] = (function() {
+                      return {
+                          columns: [{
+                                  alignment: 'left',
+                                  italics: true,
+                                  text: 'Service Report',
+                                  fontSize: 14,
+                              },
+                              {
+                                  alignment: 'right',
+                                  text: 'Report Time ' + report_time.toString(),
+                                  fontSize: 10
+                              },
+                          ],
+                          margin: [20,10]
+                      }
+                  });
+
+                  // Footer
+                  var now = new Date();
+                  var jsDate = now.getDate() + '-' + (now.getMonth() + 1) + '-' + now.getFullYear(); // Format is dd-mm-yyyy
+                  doc['footer'] = (function(page, pages) {
+                      return {
+                          columns: [
+                              {
+                                  alignment: 'right',
+                                  text: ['page ', {
+                                      text: page.toString()
+                                  }, ' of ', {
+                                      text: pages.toString()
+                                  }]
+                              }
+                          ],
+                          margin: 20
+                      }
+                  });
+
+                  // Body layout
+                  var objLayout = {};
+                  objLayout['hLineWidth'] = function(i) {
+                      return .5;
+                  };
+                  objLayout['vLineWidth'] = function(i) {
+                      return .5;
+                  };
+                  objLayout['hLineColor'] = function(i) {
+                      return '#aaa';
+                  };
+                  objLayout['vLineColor'] = function(i) {
+                      return '#aaa';
+                  };
+                  objLayout['paddingLeft'] = function(i) {
+                      return 4;
+                  };
+                  objLayout['paddingRight'] = function(i) {
+                      return 4;
+                  };
+                  doc.content[0].layout = objLayout;
+              }
+            },
+                    {
                         extend: 'refresh'
                     },
                     {

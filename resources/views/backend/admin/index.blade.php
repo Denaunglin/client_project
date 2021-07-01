@@ -117,8 +117,8 @@
                                 <div class="card-body">
                                     <label class="card-text text-center font-weight-bold"
                                         style="text-transform: capitalize;">
-                                        {{ Str::words($product->name,4) }} ({{$product->shopstorage ? $product->shopstorage->qty : 0}}) </label>
-                                    <p class="card-text text-center">MMK. {{ $product->retail_price }}
+                                        {{ Str::words($product->name,100) }}  <span class="text-info">({{$product->shopstorage ? $product->shopstorage->qty : 0}})</span>  </label>
+                                    <p class="card-text text-center">MMK. {{number_format($product->retail_price) }}
                                     </p>
                                 </div>
                             </div>

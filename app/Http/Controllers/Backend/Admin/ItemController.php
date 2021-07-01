@@ -27,21 +27,20 @@ class ItemController extends Controller
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
-        if ($request->ajax()) {
 
+        if ($request->ajax()) {
             $items = Item::anyTrash($request->trash);
 
             if ($request->item != '') {
-                $items = $items->where('id', $request->item);
+                $items = Item::where('id', $request->item)->get();
             }
 
             if ($request->item_category != '') {
-                $items = $items->where('item_category_id', $request->item_category);
+                $items = Item::where('item_category_id', $request->item_category)->get();
             }
 
             if ($request->item_sub_category != '') {
-                $items = $items->where('item_sub_category_id', $request->item_sub_category);
-
+                $items = Item::where('item_sub_category_id', $request->item_sub_category)->get();
             }
 
             return Datatables::of($items)
@@ -54,6 +53,8 @@ class ItemController extends Controller
                     if ($this->getCurrentAuthUser('admin')->can('edit_item_category')) {
                         $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.items.edit', ['item' => $item->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
                     }
+                    $detail_btn = '<a class="detail text text-primary" href="' . route('admin.items.detail', ['item' => $item->id]) . '"><i class="fas fa-info-circle fa-lg"></i></a>';
+
 
                     if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
 
@@ -143,9 +144,10 @@ class ItemController extends Controller
         return redirect()->route('admin.items.index')->with('success', 'Successfully Created');
     }
 
-    public function show(Item $item)
+    public function detail(Item $item)
     {
-        return view('backend.admin.items.show', compact('item'));
+        $items = $item;
+        return view('backend.admin.items.detail', compact('items'));
     }
 
     public function edit($id)

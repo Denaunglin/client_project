@@ -8,12 +8,33 @@
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
+@section('extra_css')
+<style>
+    .modal-content {
+        margin-top:100px !important;
+        position: relative !important;
+    }
+    .modal{
+        margin-top: 100px;  
+    }
+    .modal-backdrop{
+        position: relative !important;
 
+    }
+
+
+    .modal-backdrop.show {
+    opacity: 0 !important;
+}
+</style>
+@endsection
 @section('content')
 
 <div class="row">
     <div class="col-md-12 mb-3">
-        <button class="btn btn-primary float-right mt-3 print">@lang("message.header.print_slip")</button>
+        {{-- <button class="btn btn-primary float-right mt-3 print">@lang("message.header.print_slip")</button> --}}
+        <a type="submit" class="btn btn-success float-right btn-lg btn-sm" data-toggle="modal" data-target="#exampleModal" style="padding:1rem!important"
+        href="{{ url('admin/index/sell_items?customer='.request()->customer) }}" >Pay</a>
     </div>
 
     <div class="col-md-12">
@@ -21,6 +42,7 @@
         <div class="main-card mb-3 card">
             <div class="card-body">
                 <div class="table-responsive">
+
                     <table class="align-middle table data-table table-bordered">
                         <thead>
                             <tr>
@@ -105,8 +127,32 @@
     </div>
 
     <div class="col-md-12">
-        <a class="btn btn-success float-right btn-lg btn-sm" style="padding:1rem!important"
-         href="{{ url('admin/index/sell_items?customer='.request()->customer) }}" >Pay</a>
+         <div class="modal mt-5 fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header text-center">
+                    <p class="text-center">
+                        Would you like to print ?
+                    </p>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ url('admin/index/sell_items?customer='.request()->customer) }}" method="get" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-warning btn-block" >Pay</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-primary print btn-block" >@lang("message.header.print_slip")</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
 </div>
 

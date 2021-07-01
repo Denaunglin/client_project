@@ -126,7 +126,7 @@
             } else {
                 var trash = 0;
             }
-            app_table.ajax.url(`{{url('/admin/item_sub_categories?trash=`+trash+`/')}}`).load();
+            table.ajax.url(`{{url('/admin/item_sub_categories?trash=`+trash+`/')}}`).load();
 
         });
 

@@ -57,6 +57,9 @@ return [
         "edit_buying_item" => "Edit Buying Item",
         "buying_item" => "Buying Item",
         "item_name" => "Item Name",
+        "select_item" => "Select Item",
+        "select_item_category" => "Select Item Category",
+        "select_sub_item_category" => "Select Item Sub Category",
         "all" => "All",
         "daily_sales_report" => "Daily Sales Report",
         "created_date" => "Created Date",
@@ -529,5 +532,6 @@ return [
 
     "aboutus_content" => "Apex Hotel Nay Pyi Taw offers impeccable service and all the essential amenities to invigorate travelers.",
     "more_about_hotel" => "More about Apex Hotel Nay Pyi Taw",
+    "image" => "Image",
 
 ];

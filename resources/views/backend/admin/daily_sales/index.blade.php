@@ -96,7 +96,7 @@
                   doc.pageMargins = [20, 40, 20, 30];
                   doc.defaultStyle.fontSize = 6;
                   doc.defaultStyle.font = 'NotoSansMyanmar';
-                  doc.styles.tableHeader.fontSize = 8;
+                  doc.styles.tableHeader.fontSize = 6;
                   doc.content[0].table.widths = '*';
                   doc.styles.tableBodyEven.alignment = 'center';
                   doc.styles.tableBodyOdd.alignment = 'center';

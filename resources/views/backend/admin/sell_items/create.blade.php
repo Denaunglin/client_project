@@ -1,7 +1,7 @@
 @extends('backend.admin.layouts.app')
 @section('meta_title', 'Add Commodity Sales Item')
 @section('page_title')
-@lang("message.header.sell_item")
+@lang("message.header.add_selling_item")
 @endsection
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
@@ -16,6 +16,15 @@
                     @csrf
                         <div class="container">
                             <div class="row clearfix">
+                                <div class="col-md-4 mb-3">
+                                    <label for="">@lang("message.header.customer")</label>
+                                    <select name="customer_id" class="form-control" id="">
+                                        <option value="0">Default Customer</option>
+                                        @foreach($customer as $data) 
+                                    <option value="{{$data->id}}">{{$data->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
                                 <div class="col-md-12 column">
                                     <table class="table table-bordered table-hover" id="tab_logic">
                                         <thead>
