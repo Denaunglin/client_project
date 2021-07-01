@@ -39,9 +39,8 @@ class OpeningItemController extends Controller
             }
             
             if ($request->item != '') {
-                $opening_items = $opening_items->where('item_id', $request->item);
+                $opening_items = OpeningItem::where('item_id', $request->item);
             }
-
 
             return Datatables::of($opening_items)
                 ->addColumn('action', function ($opening_item) use ($request) {

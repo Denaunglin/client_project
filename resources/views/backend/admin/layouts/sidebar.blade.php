@@ -74,7 +74,7 @@
                 </li>
                <hr>
               
-               
+            
                 {{-- @can('view_payslip')
                 <li>
                     <a href="{{route('admin.payslips.index')}}"  class="menu-list-member  @yield('payslip-active')">
@@ -96,6 +96,45 @@
                 </li>
                 @endcan
                 <hr>
+
+                @can('view_room_plan')
+                <li class="app-sidebar__heading">@lang("message.header.merchandise")</li>
+                @endcan
+                @can('view_item_category')
+                <li>
+                    <a href="{{route('admin.buying_items.index')}}"  class="menu-list-member  @yield('merchandise-active')">
+                        <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
+                        @lang("message.header.merchandise")
+                    </a>
+                </li>
+                @endcan
+                <hr>
+
+                 
+                {{-- @can('view_room_plan')
+                <li class="app-sidebar__heading">@lang("message.header.merchandise")</li>
+                @endcan
+                @can('view_item_category')
+                <li>
+                    <a href="{{route('admin.buying_items.index')}}"  class="menu-list-member  @yield('merchandise-active')">
+                        <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
+                        @lang("message.header.merchandise")
+                    </a>
+                </li>
+                @endcan
+                <hr> --}}
+                @can('view_room_plan')
+                <li class="app-sidebar__heading">@lang("message.header.commodity_sales")</li>
+                @endcan
+                @can('view_item_category')
+                <li>
+                    <a href="{{route('admin.sell_items.index')}}"  class="menu-list-member  @yield('commodity-sale-active')">
+                        <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
+                        @lang("message.header.commodity_sales")
+                    </a>
+                </li>
+                @endcan
+              <hr>
 
                 @can('view_room_plan')
                 <li class="app-sidebar__heading">@lang("message.header.item_management")</li>
@@ -143,30 +182,7 @@
                     </a>
                 </li>
                 <hr>
-                @can('view_room_plan')
-                <li class="app-sidebar__heading">@lang("message.header.commodity_sales")</li>
-                @endcan
-                @can('view_item_category')
-                <li>
-                    <a href="{{route('admin.sell_items.index')}}"  class="menu-list-member  @yield('commodity-sale-active')">
-                        <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
-                        @lang("message.header.commodity_sales")
-                    </a>
-                </li>
-                @endcan
-              <hr>
-                @can('view_room_plan')
-                <li class="app-sidebar__heading">@lang("message.header.merchandise")</li>
-                @endcan
-                @can('view_item_category')
-                <li>
-                    <a href="{{route('admin.buying_items.index')}}"  class="menu-list-member  @yield('merchandise-active')">
-                        <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
-                        @lang("message.header.merchandise")
-                    </a>
-                </li>
-                @endcan
-                <hr>
+             
                  @can('view_room_plan')
                 <li class="app-sidebar__heading">@lang("message.header.ledger")</li>
                 @endcan

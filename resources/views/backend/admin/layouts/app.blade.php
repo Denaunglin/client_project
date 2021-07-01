@@ -32,6 +32,12 @@
     @include('backend.admin.layouts.assets.css')
 
     @yield('extra_css')
+    <style>
+        .ps__thumb-y{
+            background-color:rgb(136, 129, 129) !important;
+            width:15px !important;
+        }
+    </style>
 
     {{-- Recaptcha --}}
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -60,7 +66,7 @@
                     <div class="py-3">
                         <div class="d-inline-block">
                             <button class="previous-btn btn btn-dark"> <i class="fas fa-arrow-circle-left"></i>
-                                Back</button>
+                                @lang("message.back")</button>
                         </div>
                     </div>
 
