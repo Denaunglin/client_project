@@ -27,7 +27,6 @@ class BuyingItemRequest extends FormRequest
             'item_id' => 'required',
             'qty' => 'required',
             'price' => 'required',
-            'discount' => 'required',
             'net_price' => 'required',
         ];
     }

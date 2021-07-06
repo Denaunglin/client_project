@@ -134,7 +134,6 @@ class BuyingItemController extends Controller
             $buying_item->item_sub_category_id = $item->item_sub_category_id;
             $buying_item->qty = $request['qty'];
             $buying_item->price = $request['price'];
-            $buying_item->discount = $request['discount'];
             $buying_item->net_price = $request['net_price'];
             $buying_item->save();
 
@@ -188,7 +187,6 @@ class BuyingItemController extends Controller
                 $buying_item->item_sub_category_id = $data->item_sub_category_id;
                 $buying_item->qty = $request['qty'];
                 $buying_item->price = $request['price'];
-                $buying_item->discount = $request['discount'];
                 $buying_item->net_price = $request['net_price'];
                 $buying_item->save();
 
@@ -292,7 +290,6 @@ class BuyingItemController extends Controller
         $buying_item->item_sub_category_id = $item->item_sub_category_id;
         $buying_item->qty = $qty2;
         $buying_item->price = $request['price'];
-        $buying_item->discount = $request['discount'];
         $buying_item->net_price = $request['net_price'];
         $buying_item->update();
 
