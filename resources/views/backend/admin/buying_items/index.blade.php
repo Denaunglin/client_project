@@ -69,7 +69,6 @@
                                 <th>@lang("message.header.item_sub_category")</th>
                                 <th>@lang("message.header.qty")</th>
                                 <th>@lang("message.header.rate_per_unit")</th>
-                                <th>@lang("message.header.discount")</th>
                                 <th>@lang("message.header.total_price")</th>
                                 <th class="no-sort action">@lang("message.header.action")</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
@@ -80,7 +79,6 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.total")</th>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -218,7 +216,6 @@
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
                     {data: 'qty', name: 'qty', defaultContent: "-", class: ""},
                     {data: 'price', name: 'price', defaultContent: "-", class: ""},
-                    {data: 'discount', name: 'discount', defaultContent: "-", class: ""},
                     {data: 'net_price', name: 'net_price', defaultContent: "-", class: ""}, 
                     {data: 'action', name: 'action', orderable: false, searchable: false, class: "action"},
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
@@ -256,11 +253,11 @@
 
                 // Total
                 total7 = api.column(7).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
-                total10 = api.column(10).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total9 = api.column(9).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
                 $(api.column(7).footer()).html(total7.toLocaleString());
-                $(api.column(10).footer()).html(total10.toLocaleString());
+                $(api.column(9).footer()).html(total9.toLocaleString());
 
         }
             }); 

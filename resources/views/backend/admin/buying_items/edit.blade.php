@@ -16,7 +16,7 @@
                 <form action="{{ route('admin.buying_items.update',$item->id) }}" method="post" id="edit"
                     enctype="multipart/form-data">
                     @csrf
-                    @method('PUT')
+                    @method('POST')
                   
                     <div class="row">
                         <div class="col-md-12">
@@ -64,17 +64,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label> @lang("message.header.discount")</label>
-                                <input type="number" id="discount" value="{{$item->discount}}"   name="discount" class="form-control  @error('discount') is-invalid @enderror" >
-                                @error('discount')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                      
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label> @lang("message.header.total_price") </label>

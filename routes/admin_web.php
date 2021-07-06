@@ -95,7 +95,7 @@ Route::name('admin.')
             Route::put('/buying_items/{buying_item}/trash', 'BuyingItemController@trash')->name('buying_items.trash');
             Route::put('/buying_items/{buying_item}/', 'BuyingItemController@destroy')->name('buying_items.destroy');
             Route::get('/buying_items/{buying_item}/restore', 'BuyingItemController@restore')->name('buying_items.restore');
-            // Route::post('buying_items/{buying_item}/update', 'BuyingItemController@update')->name('buying_items.update');
+            Route::post('buying_items/{buying_item}/update', 'BuyingItemController@update')->name('buying_items.update');
 
             Route::resource('opening_items', 'OpeningItemController');
             Route::get('/opening_items/{opening_item}/trash', 'OpeningItemController@trash')->name('opening_items.trash');
