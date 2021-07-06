@@ -139,13 +139,15 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ url('admin/index/sell_items?customer='.request()->customer) }}" method="get" >
+                    <form action="{{ url('admin/index/sell_items?customer='.request()->customer) }}" id="myform" method="get" >
                         <div class="row">
                             <div class="col-md-6">
-                                <button type="submit" class="btn btn-warning btn-block" >Pay</button>
+                                <button type="submit" class="btn btn-warning btn-block" >No</button>
                             </div>
                             <div class="col-md-6">
-                                <button type="submit" class="btn btn-primary print btn-block" >@lang("message.header.print_slip")</button>
+                                <button type="submit" class="btn btn-primary print  btn-block"  >
+                                    Yes
+                                </button>
                             </div>
                         </div>
                     </form>
@@ -162,6 +164,8 @@
 <script>
 
     $(document).on('click', '.print', function(e) {
+        document.getElementById("myform").submit(); 
+
                 e.preventDefault();
                 var divContents = $(`.print-data`).html();
                 var printWindow = window.open('', '', 'height=400,width=800');

@@ -30,22 +30,22 @@
                                         <thead>
                                             <tr >
                                                 <th class="text-center">
-                                                    id
+                                                    @lang("message.header.id")
                                                 </th>
                                                 <th class="text-center">
-                                                    Item
+                                                    @lang("message.header.item")
                                                 </th>
                                                 <th class="text-center">
-                                                    Qty
+                                                    @lang("message.header.qty")
                                                 </th>
                                                 <th class="text-center">
-                                                    Rate Per Unit
+                                                    @lang("message.header.rate_per_unit")
                                                 </th>
                                                 <th class="text-center">
-                                                    Discount
+                                                    @lang("message.header.discount")
                                                 </th>
                                                 <th class="text-center">
-                                                    Total Pirce
+                                                    @lang("message.header.total_price")
                                                 </th>
                                                
                                             </tr>
@@ -65,10 +65,10 @@
                                                     </select>                                             
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="qty" name="qty" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
+                                                    <input type="number" id="numeric_value" name="qty" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="price" name="price" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
+                                                    <input type="number" id="aa" name="price" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
                                                 </td>
                                                 <td>
                                                     <input type="number" id="discount" name="discount" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
@@ -87,8 +87,8 @@
                         </div>  
                     <div class="row my-3">
                         <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.sell_items.index') }}" class="btn btn-danger mr-3">Cancel</a>
-                            <input type="submit" value="Confirm" class="btn btn-success">
+                            <a href="{{ route('admin.sell_items.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
                         </div>
                        
                     </div>
@@ -112,12 +112,23 @@
     for (var l=0 ; l < items.length; l++) {
     text +=  '<option value='+items[l].id+'>'+items[l].name+'</option>';
     } 
-     $("#add_row").click(function(){
-      $('#addr'+i).html("<td>"+ (i+1) +"</td><td><select class='custom-select' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td><td><input  name='qty"+i+"' type='number' placeholder='Qty'  class='form-control input-md'></td><td><input  name='price"+i+"' type='number' placeholder='Rate Per Unit'  class='form-control input-md'></td><td><input  name='discount"+i+"' type='number' placeholder='Discount'  class='form-control input-md'></td><td><input  name='net_price"+i+"' type='number' placeholder='Total Price'  class='form-control input-md'></td>");
 
+     $("#add_row").click(function(){
+      $('#addr'+i).html("<td>"+ (i+1) +"</td><td><select class='custom-select' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td><td><input id='numeric_value"+i+"'  name='qty"+i+"' type='number' placeholder='Qty'  class='form-control input-md'></td><td><input id='aa"+i+"'   name='price"+i+"' type='number' placeholder='Rate Per Unit'  class='form-control input-md'></td><td><input id='discount"+i+"'  name='discount"+i+"' type='number' placeholder='Discount'  class='form-control input-md'></td><td><input id='net_price"+i+"'   name='net_price"+i+"' type='number' placeholder='Total Price'  class='form-control input-md'></td>");
       $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
+
+    var a = i;
+    $('#discount'+a).keyup(function() {
+    var price = $("#aa"+a).val();
+    var qty = $("#numeric_value"+a).val();
+    var sum = 0;
+    sum = (qty * price ) - Number($(this).val()) ;
+    $('#net_price'+a).val(sum);
+    });
+
       i++; 
   });
+
      $("#delete_row").click(function(){
          if(i>1){
          $("#addr"+(i-1)).html('');
@@ -126,6 +137,17 @@
      });
 
 });
+
+$('#discount').keyup(function() {
+    var price = $("#aa").val();
+    var qty = $("#numeric_value").val();
+    console.log(qty);
+    var sum = 0;
+    sum = (qty * price ) - Number($(this).val()) ;
+    
+    $('#net_price').val(sum);
+    }); 
+
 
 // $('#item_id').change(function(e){
 //             var item_id =parseInt($('#item_id').val());

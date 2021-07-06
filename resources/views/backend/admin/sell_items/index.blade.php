@@ -71,7 +71,7 @@
                                 <th>@lang("message.header.qty")</th>
                                 <th>@lang("message.header.price")</th>
                                 <th>@lang("message.header.discount")</th>
-                                <th>@lang("message.header.total_price")+(@lang("message.header.tax"){{$tax->amount}}%)</th>
+                                <th>@lang("message.header.total_price") @if($tax)+(@lang("message.header.tax"){{$tax->amount}}%)@endif</th>
                                 <th class="no-sort action">@lang("message.header.action")</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
@@ -80,7 +80,7 @@
                         <tfoot>
                             <tr>
                                 <th></th>
-                                <th>Total</th>
+                                <th>@lang("message.total")</th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -309,6 +309,8 @@
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
                 app_table.ajax.url(`{{url('/admin/sell_items?item=`+item+`&trash=`+trash+`/')}}`).load();
         });
+
+        
 
 </script>
 @include('backend.admin.layouts.assets.trash_script')

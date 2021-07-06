@@ -48,9 +48,7 @@
                                             <th class="text-center">
                                                 @lang("message.header.rate_per_unit")
                                             </th>
-                                            <th class="text-center">
-                                                @lang("message.header.discount")
-                                            </th>
+                                         
                                             <th class="text-center">
                                                 @lang("message.header.total_price")
                                             </th>
@@ -72,16 +70,14 @@
                                                 </select>                                             
                                             </td>
                                             <td>
-                                                <input type="number" id="qty" name="qty" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
+                                                <input type="number" id="numeric_value" name="qty" autofocus="autofocus" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
                                             </td>
                                             <td>
-                                                <input type="number" id="price" name="price" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
+                                                <input type="number" id="aa" name="price" autofocus="autofocus" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
                                             </td>
+                                          
                                             <td>
-                                                <input type="number" id="discount" name="discount" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
-                                            </td>
-                                            <td>
-                                                <input type="number" id="net_price" name="net_price" class="form-control  @error('net_price') is-invalid @enderror" placeholder="Total Price" >
+                                                <input type="number" id="net_price" name="net_price" class="form-control   @error('net_price') is-invalid @enderror" placeholder="Total Price" >
                                             </td>
                                         </td>
                                         </tr>
@@ -119,19 +115,45 @@
     for (var l=0 ; l < items.length; l++) {
     text +=  '<option value='+items[l].id+'>'+items[l].name+'</option>';    
     } 
-     $("#add_row").click(function(){
-      $('#addr'+i).html("<td>"+ (i+1) +"</td><td><select class='custom-select' id='item_id' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td><td><input  name='qty"+i+"' type='number' placeholder='Qty'  class='form-control input-md'></td><td><input  name='price"+i+"' type='number' placeholder='Rate Per Unit'  class='form-control input-md'></td><td><input  name='discount"+i+"' type='number' placeholder='Discount'  class='form-control input-md'></td><td><input  name='net_price"+i+"' type='number' placeholder='Total Price'  class='form-control input-md'></td>");
-      $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
-      i++;  
-  });
-     $("#delete_row").click(function(){
-         if(i>1){
-         $("#addr"+(i-1)).html('');
-         i--;
-         }
-     });
+
+   
+
+    $("#add_row").click(function(){
+    $('#addr'+i).html("<td>"+ (i+1) +"</td><td><select class='custom-select' id='item_id' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+    $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
+
+    var a = i;
+    $('#aa'+a).keyup(function() {
+    var qty = $("#numeric_value"+a).val();
+    var sum = 0;
+    sum = qty * Number($(this).val());
+    $('#net_price'+a).val(sum);
+    });
+    
+    i++;  
+    });
+
+
+    $("#delete_row").click(function(){
+        if(i>1){
+        $("#addr"+(i-1)).html('');
+        i--;
+        }
+    });
 
 }); 
+
+
+$('#aa').keyup(function() {
+    var qty = $("#numeric_value").val();
+    var sum = 0;
+    sum = qty * Number($(this).val());
+    
+    $('#net_price').val(sum);
+    });
+
+
+
    
 </script>
 

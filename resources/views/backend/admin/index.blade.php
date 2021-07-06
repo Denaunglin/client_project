@@ -271,7 +271,7 @@
                             $customer = request()->customer ? request()->customer : 0;
                             @endphp
                             <a class="btn btn-success btn-lg btn-block" style="padding:1rem!important"
-                            href="{{ url('admin/final_pays?customer='.$customer) }}" >Pay</a>
+                            href="{{ url('admin/final_pays?customer='.$customer) }}" >Check Out</a>
 
                             {{-- <a class="btn btn-success btn-lg btn-block" style="padding:1rem!important"
                             href="{{ url('admin/index/sell_items') }}" >Pay</a> --}}
