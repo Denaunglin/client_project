@@ -102,24 +102,25 @@
                                         @php 
                                         $qty = $product->shopstorage ? $product->shopstorage->qty : 0 ;
                                         @endphp
+                                        <span class="text-info">({{$product->shopstorage ? $product->shopstorage->qty : 0}})</span>
                                         @if($qty == 0)
                                         <button type="button" class="btn btn-danger btn-sm float-right "><i class="fas fa-cart-plus"></i></button>
-                                        <img class="card-img-top gambar" src="{{ $product->image_path() }}"
-                                            alt="Card image cap">
+                                        
                                         @else
                                         <button type="submit" class="btn btn-primary btn-sm float-right "><i class="fas fa-cart-plus"></i></button>
-                                        <img class="card-img-top gambar" src="{{ $product->image_path() }}"
-                                            alt="Card image cap" style="cursor: pointer"
-                                            onclick="this.closest('form').submit();return false;">
+                                       
                                         @endif
                                     </form>
                                 </div>
                                 <div class="card-body">
                                     <label class="card-text text-center font-weight-bold"
                                         style="text-transform: capitalize;">
-                                        {{ Str::words($product->name,100) }}  <span class="text-info">({{$product->shopstorage ? $product->shopstorage->qty : 0}})</span>  </label>
-                                    <p class="card-text text-center">MMK. {{number_format($product->retail_price) }}
+                                        {{ Str::words($product->name,100) }}    </label>
+                                    <hr>
+                                        <p class="card-text text-center">{{number_format($product->retail_price) }} MMK. 
                                     </p>
+                                    
+                                    <hr>
                                 </div>
                             </div>
                         </div>

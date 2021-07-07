@@ -136,10 +136,8 @@ class SellItemController extends Controller
         if($item_count == 1){
             $item = $item->first();
             $sell_item = new SellItems();
-            $sell_item->barcode = $item->barcode;
             $sell_item->item_id = $item->id;
             $sell_item->customer_id = $customer_id ;
-            $sell_item->unit = $item->unit;
             $sell_item->item_category_id = $item->item_category_id;
             $sell_item->item_sub_category_id = $item->item_sub_category_id;
             $sell_item->qty = $request['qty'];
@@ -189,10 +187,8 @@ class SellItemController extends Controller
             for ($var = 0; $var < $item_count - 1;) {
             foreach ($item as $data) {
                 $sell_item = new SellItems();
-                $sell_item->barcode = $data->barcode;
                 $sell_item->item_id = $data->id;
                 $sell_item->customer_id = $customer_id ;
-                $sell_item->unit = $data->unit;
                 $sell_item->item_category_id = $data->item_category_id;
                 $sell_item->item_sub_category_id = $data->item_sub_category_id;
                 $sell_item->qty = $request['qty'];
@@ -290,10 +286,8 @@ class SellItemController extends Controller
             $shop_storage->update();
         }
 
-        $sell_item->barcode = $item->barcode;
         $sell_item->item_id = $item->id;
         $sell_item->customer_id = 0 ;
-        $sell_item->unit = $item->unit;
         $sell_item->item_category_id = $item->item_category_id;
         $sell_item->item_sub_category_id = $item->item_sub_category_id;
         $sell_item->qty = $request['qty'];
@@ -428,10 +422,8 @@ class SellItemController extends Controller
             $item = Item::where('id',$cart_data['id'])->first();
 
             $sell_item = new SellItems();
-            $sell_item->barcode = $item->barcode;
             $sell_item->item_id = $item->id;
             $sell_item->customer_id = $customer_id ;
-            $sell_item->unit = $item->unit;
             $sell_item->item_category_id = $item->item_category_id;
             $sell_item->item_sub_category_id = $item->item_sub_category_id;
             $sell_item->qty = $cart_data['quantity'];
@@ -510,10 +502,8 @@ class SellItemController extends Controller
              $item = Item::where('id',$cart_data['id'])->get();
             foreach ($item as $data) {
                 $sell_item = new SellItems();
-                $sell_item->barcode = $data->barcode;
                 $sell_item->item_id = $data->id;
                 $sell_item->customer_id = $customer_id ;
-                $sell_item->unit = $data->unit;
                 $sell_item->item_category_id = $data->item_category_id;
                 $sell_item->item_sub_category_id = $data->item_sub_category_id;
                 $sell_item->qty = $cart_data['quantity'];
