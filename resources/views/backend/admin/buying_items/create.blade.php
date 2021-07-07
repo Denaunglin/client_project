@@ -84,7 +84,7 @@
                                                 <div class="row">
                                                     
                                                     <div class="col-md-12 mb-3">
-                                                        <input type="text" id="search" autocomplete="off" name="search"  placeholder="search" class="form-control">
+                                                        <input type="search" id="search" autocomplete="off" name="search"  placeholder="search" class="form-control">
                                                     </div>
         
                                                     <div class="col-12">
@@ -150,7 +150,7 @@
    
 
     $("#add_row").click(function(){
-    $('#addr'+i).html("<td>"+ (i+1) +"</td><td><div class='row'><div class='col-md-12 mb-3'><input type='text' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+    $('#addr'+i).html("<td>"+ (i+1) +"</td><td><div class='row'><div class='col-md-12 mb-3'><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
     $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
 
     var a = i;
