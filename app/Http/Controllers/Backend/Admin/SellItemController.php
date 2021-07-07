@@ -316,7 +316,7 @@ class SellItemController extends Controller
         $item_ledger->selling_back = $item_ledger->buying_back;
         $item_ledger->adjust_out = $request->qty;
         $item_ledger->adjust_in = $item_ledger->adjust_in;
-        $item_ledger->closing_qty = $shop_storage->closing_qty;
+        $item_ledger->closing_qty = $shop_storage->qty;
         $item_ledger->update();
 
         activity()
