@@ -176,7 +176,7 @@
         let item = $(this).val();
         $.get('/get_item?item=' + item, function(data) {
                 $('#aa'+a).empty();
-        $('#aa'+a).val(data.retail_price);
+        $('#aa'+a).val(data.buying_price);
     });
 });
 
@@ -220,7 +220,7 @@ $('#numeric_value').keyup(function() {
             let item = $(this).val();
             $.get('/get_item?item=' + item, function(data) {
                     $('#aa').empty();
-            $('#aa').val(data.retail_price);
+            $('#aa').val(data.buying_price);
         });
     });
 
