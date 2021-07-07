@@ -159,7 +159,7 @@ class SellItemController extends Controller
 
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
-            $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+            $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
             if($shop_storage){
                 $qty = ($shop_storage->qty) - ($sell_item->qty);
@@ -209,7 +209,7 @@ class SellItemController extends Controller
                 $cash_book->save();
 
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
-                $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+                $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
                 if($shop_storage){
                     $qty = ($shop_storage->qty) + ($sell_item->qty);
