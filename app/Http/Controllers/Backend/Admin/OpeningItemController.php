@@ -111,7 +111,6 @@ class OpeningItemController extends Controller
             $opening_item = new OpeningItem();
             $opening_item->barcode = $item->barcode;
             $opening_item->item_id = $item->id;
-            $opening_item->unit = $item->unit;
             $opening_item->item_category_id = $item->item_category_id;
             $opening_item->item_sub_category_id = $item->item_sub_category_id;
             $opening_item->qty = $request['qty'];
@@ -141,7 +140,6 @@ class OpeningItemController extends Controller
                 $opening_item = new OpeningItem();
                 $opening_item->barcode = $data->barcode;
                 $opening_item->item_id = $data->id;
-                $opening_item->unit = $data->unit;
                 $opening_item->item_category_id = $data->item_category_id;
                 $opening_item->item_sub_category_id = $data->item_sub_category_id;
                 $opening_item->qty = $request['qty'];
@@ -219,7 +217,6 @@ class OpeningItemController extends Controller
 
         $opening_item->barcode = $item->barcode;
         $opening_item->item_id = $item->id;
-        $opening_item->unit = $item->unit;
         $opening_item->item_category_id = $item->item_category_id;
         $opening_item->item_sub_category_id = $item->item_sub_category_id;
         $opening_item->qty = $qty2;

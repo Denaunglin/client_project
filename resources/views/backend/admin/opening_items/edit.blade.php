@@ -19,17 +19,7 @@
                     @method('POST')
                   
                     <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang("message.header.barcode") </label>
-                            <input type="number" id="barcode" value="{{$item->barcode}}" name="barcode" class="form-control  @error('barcode') is-invalid @enderror" >
-                                @error('barcode')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                       
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>@lang("message.header.item") </label>
@@ -42,41 +32,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang("message.header.item_category")</label>
-                                <select class="form-control select2" id="item_category" name="item_category_id" required>
-                                    <option  value="">@lang("message.header.choose_item_category")</option>
-                                    @forelse($item_category as $data)
-                                    <option @if($item->item_category_id == $data->id) selected @endif value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>@lang("message.header.there_is_no_data")</p>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang("message.header.item_sub_category")</label>
-                                <select class="form-control select2" id="item_sub_category" name="item_sub_category_id" required>
-                                    <option value="">@lang("message.header.choose_item_sub_category")</option>
-                                    @forelse($item_sub_category as $data)
-                                    <option @if($item->item_sub_category_id == $data->id) selected @endif value="{{$data->id}}">{{$data->name }}</option>
-                                    @empty<p>@lang("message.header.there_is_no_data")</p>
-                                    @endforelse
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label> @lang("message.header.unit") </label>
-                                <input type="text" id="unit" value="{{$item->unit}}" name="unit" class="form-control  @error('unit') is-invalid @enderror" >
-                                @error('unit')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                       
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label> @lang("message.header.qty")</label>

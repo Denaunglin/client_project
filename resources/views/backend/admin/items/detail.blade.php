@@ -44,11 +44,7 @@
                             </div>
                             <hr>
 
-                            <div>
-                                <strong>@lang("message.header.unit")</strong>  : {{$items->unit}}
-                            </div>
-                            <hr>
-
+                         
                             <div>
                                 <strong>@lang("message.header.item_category")</strong>  : {{$items->item_category->name}}
                             </div>

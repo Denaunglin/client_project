@@ -22,6 +22,7 @@ class OrderListController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('view_item')) {
             abort(404);
         }
+        
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();

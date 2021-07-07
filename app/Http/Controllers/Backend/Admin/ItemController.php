@@ -126,7 +126,6 @@ class ItemController extends Controller
         $item->barcode = $request['barcode'];
         $item->image = $image_name ?? null;
         $item->name = $request['name'];
-        $item->unit = $request['unit'];
         $item->item_category_id = $request['item_category_id'];
         $item->item_sub_category_id = $request['item_sub_category_id'];
         $item->minimun_qty = $request['minimun_qty'];
@@ -190,7 +189,6 @@ class ItemController extends Controller
         $item->image = $image_name ?? null;
         $item->barcode = $request['barcode'];
         $item->name = $request['name'];
-        $item->unit = $request['unit'];
         $item->item_category_id = $request['item_category_id'];
         $item->item_sub_category_id = $request['item_sub_category_id'];
         $item->minimun_qty = $request['minimun_qty'];
@@ -258,8 +256,6 @@ class ItemController extends Controller
         if ($request->ajax()) {
 
             $items = Item::anyTrash($request->trash);
-
-
 
             if ($request->item != '') {
                 $items = $items->where('id', $request->item);

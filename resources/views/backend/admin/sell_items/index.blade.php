@@ -65,7 +65,6 @@
                                 <th class="hidden"></th>
                                 <th>@lang("message.header.item_name")</th>
                                 <th>@lang("message.header.customer")</th>
-                                <th>@lang("message.header.unit")</th>
                                 <th>@lang("message.header.item_category")<br></th>
                                 <th>@lang("message.header.item_sub_category")</th>
                                 <th>@lang("message.header.qty")</th>
@@ -81,7 +80,6 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.total")</th>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -120,7 +118,7 @@
               orientation: 'portrait', //portrait
               pageSize: 'A4', //A3 , A5 , A6 , legal , letter
               exportOptions: {
-                  columns: [1,2,3,4,5,6,7,8,9]
+                  columns: [1,2,3,4,5,6,7,8]
               },
               customize: function(doc) {
                   //Remove the title
@@ -213,7 +211,6 @@
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
                     {data: 'item_id', name: 'item_id', defaultContent: "-", class: ""},
                     {data: 'customer', name: 'customer', defaultContent: "-", class: ""},
-                    {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
                     {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
                     {data: 'qty', name: 'qty', defaultContent: "-", class: ""},
@@ -255,12 +252,12 @@
                 };
 
                 // Total
-                total6 = api.column(6).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
-                total9 = api.column(9).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total5 = api.column(5).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total8 = api.column(8).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
-                $(api.column(6).footer()).html(total6.toLocaleString());
-                $(api.column(9).footer()).html(total9.toLocaleString());
+                $(api.column(5).footer()).html(total5.toLocaleString());
+                $(api.column(8).footer()).html(total8.toLocaleString());
 
         }
             }); 

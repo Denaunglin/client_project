@@ -129,7 +129,6 @@ class BuyingItemController extends Controller
             $buying_item->barcode = $item->barcode;
             $buying_item->item_id = $item->id;
             $buying_item->supplier_id = $supplier ? $supplier->id : null ;
-            $buying_item->unit = $item->unit;
             $buying_item->item_category_id = $item->item_category_id;
             $buying_item->item_sub_category_id = $item->item_sub_category_id;
             $buying_item->qty = $request['qty'];
@@ -150,7 +149,7 @@ class BuyingItemController extends Controller
 
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
-            $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+            $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
             if($shop_storage){
                 $qty = ($shop_storage->qty) + ($buying_item->qty);
                 $shop_storage->qty = $qty;
@@ -182,7 +181,6 @@ class BuyingItemController extends Controller
                 $buying_item->barcode = $data->barcode;
                 $buying_item->supplier_id = $supplier ? $supplier->id : null;
                 $buying_item->item_id = $data->id;
-                $buying_item->unit = $data->unit;
                 $buying_item->item_category_id = $data->item_category_id;
                 $buying_item->item_sub_category_id = $data->item_sub_category_id;
                 $buying_item->qty = $request['qty'];
@@ -202,7 +200,7 @@ class BuyingItemController extends Controller
                 $cash_book->save();
 
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
-                $open_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+                $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
                 if($shop_storage){
                     $qty = ($shop_storage->qty) + ($buying_item->qty);
@@ -266,7 +264,8 @@ class BuyingItemController extends Controller
             abort(404);
         }
 
-        $supplier = Supplier::where('id',$request->supplier)->first();
+        $supplier = Supplier::where('id',$request->supplier_id)->first();
+
         $item=Item::where('id',$request->item_id)->first();
         $buying_item = BuyingItem::findOrFail($id);
         $shop_storage = ShopStorage::where('item_id',$item->id)->first();
@@ -285,7 +284,6 @@ class BuyingItemController extends Controller
         $buying_item->barcode = $item->barcode;
         $buying_item->supplier_id = $supplier ? $supplier->id : null;
         $buying_item->item_id = $item->id;
-        $buying_item->unit = $item->unit;
         $buying_item->item_category_id = $item->item_category_id;
         $buying_item->item_sub_category_id = $item->item_sub_category_id;
         $buying_item->qty = $qty2;
@@ -367,6 +365,17 @@ class BuyingItemController extends Controller
             ->log(' Item  (' . $buying_item->name . ')  is restored from trash ');
 
         return ResponseHelper::success();
+    }
+
+    public function getItem(Request $request){
+        if($request->search){
+            $search = $request->search;
+            $products = Item::where('name','LIKE','%'.$request->search.'%')->orderBy('created_at','desc')->get();
+        }
+        if($request->item){
+            $products = Item::where('id',$request->item)->first();
+        }
+        return $products;
     }
 
 }

@@ -65,17 +65,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label> @lang("message.header.unit") </label>
-                               <input type="text" id="unit" value="{{$items->unit}}" name="unit" class="form-control  @error('unit') is-invalid @enderror" >
-                                @error('unit')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                     
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>@lang("message.header.minimun_qty")</label>

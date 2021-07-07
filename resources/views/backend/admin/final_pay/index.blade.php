@@ -165,7 +165,6 @@
 
     $(document).on('click', '.print', function(e) {
         document.getElementById("myform").submit(); 
-
                 e.preventDefault();
                 var divContents = $(`.print-data`).html();
                 var printWindow = window.open('', '', 'height=400,width=800');

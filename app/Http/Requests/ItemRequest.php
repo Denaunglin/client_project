@@ -26,7 +26,6 @@ class ItemRequest extends FormRequest
         return [
             'barcode' => 'required',
             'name' => 'required',
-            'unit' => 'required',
             'item_category_id' => 'required',
             'item_sub_category_id' => 'required',
             'buying_price' => 'required',
@@ -42,7 +41,6 @@ class ItemRequest extends FormRequest
         return [
             'barcode.required' => 'Item Barcode field is required.',
             'name.required' => 'Item Name field is required.',
-            'unit.required' => 'Item Unit field is required.',
             'item_category_id.required' => 'Item Category field is required',
             'item_sub_category_id.required' => 'Item Sub Category field is required',
             'buying_price.required' => 'Item Buying Price is required',

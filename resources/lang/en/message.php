@@ -50,6 +50,8 @@ return [
         "print_slip" => "Print Slip",
         "total_disocunt" => "Total Discount",
         "choose_item_category" => "Choose Item Category",
+        "choose_item_sub_category" => "Choose Item Sub Category",
+
         "there_is_no_data" => "There is no data !",
         "add_row" => "Add Row",
         "delete_row" => "Delete Row",

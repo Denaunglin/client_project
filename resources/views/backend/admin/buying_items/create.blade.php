@@ -6,6 +6,26 @@
 @section('page_title_icon')
 <i class="pe-7s-menu icon-gradient bg-ripe-malin"></i>
 @endsection
+@section('extra_css')
+<style>
+       .modal-content {
+        margin-top:100px !important;
+        position: relative !important;
+    }
+    .modal{
+        margin-top: 100px;  
+    }
+    .modal-backdrop{
+        position: relative !important;
+
+    }
+
+
+    .modal-backdrop.show {
+    opacity: 0 !important;
+}
+</style>
+@endsection
 @section('page_title_buttons')
 <div class="d-flex justify-content-end">
        <a href="{{route('admin.suppliers.create')}}" title="Add User" class="btn btn-primary action-btn">Add Supplier</a>
@@ -39,6 +59,7 @@
                                             <th class="text-center">
                                                 @lang("message.header.id")
                                             </th>
+                                          
                                             <th class="text-center">
                                                 @lang("message.header.item")
                                             </th>
@@ -52,7 +73,6 @@
                                             <th class="text-center">
                                                 @lang("message.header.total_price")
                                             </th>
-                                           
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,13 +81,23 @@
                                             1
                                             </td>
                                             <td>
-                                                <select class="form-control custom-select" id="item_id" name="item_id[]" required>
-                                                    <option value="">@lang("message.header.choose_item_category")</option>
-                                                    @forelse($item as $data)
-                                                    <option value="{{$data->id}}">{{$data->name }}</option>
-                                                    @empty<p>@lang("message.header.there_is_no_data")</p>
-                                                    @endforelse
-                                                </select>                                             
+                                                <div class="row">
+                                                    
+                                                    <div class="col-md-12 mb-3">
+                                                        <input type="text" id="search" autocomplete="off" name="search"  placeholder="search" class="form-control">
+                                                    </div>
+        
+                                                    <div class="col-12">
+                                                        <select class="form-control custom-select" id="item_id" name="item_id[]"  required>
+                                                            <option value="">@lang("message.header.choose_item")</option>
+                                                            @forelse($item as $data)
+                                                            <option value="{{$data->id}}">{{$data->name }}</option>
+                                                            @empty<p>@lang("message.header.there_is_no_data")</p>
+                                                            @endforelse
+                                                        </select>   
+                                                       
+                                                    </div>
+                                                </div>
                                             </td>
                                             <td>
                                                 <input type="number" id="numeric_value" name="qty" autofocus="autofocus" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
@@ -82,6 +112,7 @@
                                         </td>
                                         </tr>
                                         <tr id='addr1'></tr>
+                                      
                                     </tbody>
                                 </table>
                             </div>
@@ -119,16 +150,36 @@
    
 
     $("#add_row").click(function(){
-    $('#addr'+i).html("<td>"+ (i+1) +"</td><td><select class='custom-select' id='item_id' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+    $('#addr'+i).html("<td>"+ (i+1) +"</td><td><div class='row'><div class='col-md-12 mb-3'><input type='text' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
     $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
 
     var a = i;
-    $('#aa'+a).keyup(function() {
-    var qty = $("#numeric_value"+a).val();
+    $('#numeric_value'+a).keyup(function() {
+    var price = $("#aa"+a).val();
     var sum = 0;
-    sum = qty * Number($(this).val());
+    sum = price * Number($(this).val());
     $('#net_price'+a).val(sum);
     });
+
+    $('#search'+a).change(function(e) {
+            let search = $(this).val();
+            $.get('/get_item?search=' + search, function(data) {
+                    $('#item_id'+a).empty();
+        $('#item_id'+a).append('<option disabled selected>'+ 'Choose Item' + '</option>');
+                    $.each(data, function( key, value ) {
+                      $('#item_id'+a).append('<option value="'+value.id+'" >'+value.name+'</option>');
+            });
+        });
+    });
+
+    $('#item_id'+a).on('change', function(e) {
+        let item = $(this).val();
+        $.get('/get_item?item=' + item, function(data) {
+                $('#aa'+a).empty();
+        $('#aa'+a).val(data.retail_price);
+    });
+});
+
     
     i++;  
     });
@@ -144,15 +195,34 @@
 }); 
 
 
-$('#aa').keyup(function() {
-    var qty = $("#numeric_value").val();
+$('#numeric_value').keyup(function() {
+    var price = $("#aa").val();
     var sum = 0;
-    sum = qty * Number($(this).val());
+    sum = price * Number($(this).val());
     
     $('#net_price').val(sum);
     });
 
 
+    $('#search').change(function(e) {
+            let search = $(this).val();
+            $.get('/get_item?search=' + search, function(data) {
+                    $('#item_id').empty();
+        $('#item_id').append('<option disabled selected>'+ 'Choose Item' + '</option>');
+                    $.each(data, function( key, value ) {
+                      $('#item_id').append('<option value="'+value.id+'" >'+value.name+'</option>');
+        });
+    });
+});
+
+
+    $('#item_id').on('change', function(e) {
+            let item = $(this).val();
+            $.get('/get_item?item=' + item, function(data) {
+                    $('#aa').empty();
+            $('#aa').val(data.retail_price);
+        });
+    });
 
    
 </script>

@@ -85,7 +85,7 @@
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3"><input type="text" name="search_item"
-                                    class="form-control col-sm-12 float-right"
+                                    class="form-control col-sm-12 float-right" autocomplete='off' 
                                     placeholder="@lang("message.header.search_product")..." onblur="this.form.submit()"></div>
                             <div class="col-md-3"><button type="submit"class="btn btn-primary btn-block float-right btn-block">@lang("message.header.search_product")</button></div>
                         </div>

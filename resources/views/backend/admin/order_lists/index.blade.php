@@ -57,7 +57,6 @@
                                 <th >@lang("message.header.item_category")</th>
                                 <th>@lang("message.header.item_sub_category")</th>
                                 <th>@lang("message.header.item_name")</th>
-                                <th>@lang("message.header.unit")</th>
                                 <th>@lang("message.header.minimun_qty")<br></th>
                                 <th>@lang("message.header.stock_in_hand")</th>
                                 <th>@lang("message.header.to_reorder")</th>
@@ -187,7 +186,6 @@
                     {data: 'item_group', name: 'item_group', defaultContent: "-", class: ""},
                     {data: 'item_sub_group', name: 'item_sub_group', defaultContent: "-", class: ""},
                     {data: 'name', name: 'name', defaultContent: "-", class: ""},
-                    {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
                     {data: 'minimun_qty', name: 'minimun_qty', defaultContent: "-", class: ""},
                     {data: 'stock_in_hand', name: 'stock_in_hand', defaultContent: "-", class: ""},
                     {data: 'to_re_order', name: 'to_re_order', defaultContent: "-", class: ""},

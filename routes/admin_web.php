@@ -1,5 +1,7 @@
 <?php
 
+Route::get('/get_item','Backend\Admin\BuyingItemController@getItem');
+
 Route::name('admin.')   
     ->prefix(config('app.prefix_admin_url') . '/admin')
     ->namespace('Backend\Admin')
