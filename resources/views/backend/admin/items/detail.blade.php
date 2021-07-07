@@ -18,7 +18,6 @@
                 <div class="tile">
                     <div class="wrapper">
                         <div class="banner-imgs col-md-6 offset-md-3 col-sm-12">
-                            <img src="{{$items->image_path()}}" alt="Image 1" width="50%" height="auto">
                         </div>
 
                         <div class="dates">
@@ -39,10 +38,7 @@
                                 <strong> @lang("message.name") </strong>  : {{$items->name}}
                             </div>
 <hr>
-                            <div>
-                                <strong>@lang("message.header.barcode")</strong>  : {{$items->barcode}}
-                            </div>
-                            <hr>
+                          <hr>
 
                          
                             <div>

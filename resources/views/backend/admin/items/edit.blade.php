@@ -18,17 +18,7 @@
                     @csrf
                     @method('PUT')
                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>@lang("message.header.barcode")</label>
-                                <input type="number" value="{{$items->barcode}}" id="barcode" name="barcode" class="form-control  @error('barcode') is-invalid @enderror" >
-                                @error('barcode')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-                        </div>
+                       
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>@lang("message.header.item_name") </label>
@@ -101,24 +91,7 @@
                             </div>
                         </div>
 
-                    <div class="col-md-12 mb-3">
-                        <label for="">@lang("message.header.image")</label>
-                        <p><strong>Recommedation :</strong> Image size should be (1000 x 400 ) and under 2 MB </p>
-                        <div class="input-group mb-1">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text" id="imageAddon"><i
-                                        class="fas fa-cloud-upload-alt"></i></span>
-                            </div>
-                            <div class="custom-file">
-                                <input type="file" name="image" class="custom-file-input" accept="image/*"
-                                    id="image" aria-describedby="imageAddon" required>
-                                <label class="custom-file-label" for="image">Choose file</label>
-                            </div>
-                        </div>
-                        <div class="image_preview2">
-                            <img src="{{$items->image_path()}}" width="200px">
-                        </div>                    
-                    </div>
+                 
                    </div>
                     <div class="row my-3">
                         <div class="col-md-12 text-center">

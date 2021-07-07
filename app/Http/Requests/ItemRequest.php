@@ -24,7 +24,6 @@ class ItemRequest extends FormRequest
     public function rules()
     {
         return [
-            'barcode' => 'required',
             'name' => 'required',
             'item_category_id' => 'required',
             'item_sub_category_id' => 'required',
@@ -39,7 +38,6 @@ class ItemRequest extends FormRequest
     public function messages()
     {
         return [
-            'barcode.required' => 'Item Barcode field is required.',
             'name.required' => 'Item Name field is required.',
             'item_category_id.required' => 'Item Category field is required',
             'item_sub_category_id.required' => 'Item Sub Category field is required',

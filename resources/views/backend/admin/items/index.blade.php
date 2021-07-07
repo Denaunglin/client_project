@@ -82,8 +82,6 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th class="no-sort">@lang("message.image")</th>
-                                <th>@lang("message.header.barcode")</th>
                                 <th>@lang("message.header.item_name")</th>
                                 <th>@lang("message.header.item_category")</th>
                                 <th>@lang("message.header.item_sub_category")</th>
@@ -215,8 +213,6 @@
                 },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'image', name: 'image', defaultContent: "-", class: ""},
-                    {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
                     {data: 'name', name: 'name', defaultContent: "-", class: ""},
                     {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
@@ -229,7 +225,7 @@
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
                     order: [
-                        [12, 'desc']
+                        [10, 'desc']
                     ],
                     responsive: {
                         details: {type: "column", target: 0}

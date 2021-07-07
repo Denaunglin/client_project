@@ -76,13 +76,11 @@ class ItemController extends Controller
                 ->addColumn('item_sub_category', function ($item) {
                     return $item->item_sub_category_id ? $item->item_sub_category->name : '-';
                 })
-                ->addColumn('image', function ($item) {
-                    return '<img  id="images" src="' . $item->image_path() . '" width="100px;"/>';
-                })
+             
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action','image'])
+                ->rawColumns(['action'])
                 ->make(true);
         }
         return view('backend.admin.items.index',compact('item','item_category','item_sub_category'));
@@ -105,26 +103,12 @@ class ItemController extends Controller
             abort(404);
         }
 
-        if ($request->hasFile('image')) {
-            $image_file = $request->file('image');
-            $image_name = time() . '_' . uniqid() . '.' . $image_file->getClientOriginalExtension();
-            Storage::put(
-                'uploads/gallery/' . $image_name,
-                file_get_contents($image_file->getRealPath())
-            );
-
-            $file_path = public_path('storage/uploads/gallery/' . $image_name);
-            $optimizerChain = OptimizerChainFactory::create();
-            $optimizerChain->setTimeout(10)->optimize($file_path);
-
-        }
+       
         
         $expire_date = $request->expire_status == 1 ? null : $request->expire_date ;
         
 
         $item = new Item();
-        $item->barcode = $request['barcode'];
-        $item->image = $image_name ?? null;
         $item->name = $request['name'];
         $item->item_category_id = $request['item_category_id'];
         $item->item_sub_category_id = $request['item_sub_category_id'];
@@ -169,26 +153,9 @@ class ItemController extends Controller
         }
         $item = Item::findOrFail($id);
 
-        if ($request->hasFile('image')) {
-            $image_file = $request->file('image');
-            $image_name = time() . '_' . uniqid() . '.' . $image_file->getClientOriginalExtension();
-            Storage::put(
-                'uploads/gallery/' . $image_name,
-                file_get_contents($image_file->getRealPath())
-            );
-
-            $file_path = public_path('storage/uploads/gallery/' . $image_name);
-            $optimizerChain = OptimizerChainFactory::create();
-            $optimizerChain->setTimeout(10)->optimize($file_path);
-
-        } else {
-            $image_name = $item->image;
-        }
+      
         $expire_date = $request->expire_status == 1 ? null : $request->expire_date ;
 
-        $item->image = $image_name ?? null;
-        $item->barcode = $request['barcode'];
-        $item->name = $request['name'];
         $item->item_category_id = $request['item_category_id'];
         $item->item_sub_category_id = $request['item_sub_category_id'];
         $item->minimun_qty = $request['minimun_qty'];
