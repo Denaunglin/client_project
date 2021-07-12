@@ -61,7 +61,6 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th>@lang("message.header.barcode")</th>
                                 <th>@lang("message.header.item_name")</th>
                                 <th>@lang("message.header.supplier")</th>
                                 <th>@lang("message.header.item_category")  <br></th>
@@ -78,7 +77,6 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.total")</th>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -206,7 +204,6 @@
                 },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
                     {data: 'item_id', name: 'name', defaultContent: "-", class: ""},
                     {data: 'supplier', name: 'supplier', defaultContent: "-", class: ""},
                     {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
@@ -218,7 +215,7 @@
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
                     order: [
-                        [10, 'desc']
+                        [9, 'desc']
                     ],
                     responsive: {
                         details: {type: "column", target: 0}
@@ -249,12 +246,12 @@
                 };
 
                 // Total
-                total6 = api.column(6).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
-                total8 = api.column(8).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total5 = api.column(5).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total7 = api.column(7).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
-                $(api.column(6).footer()).html(total6.toLocaleString());
-                $(api.column(8).footer()).html(total8.toLocaleString());
+                $(api.column(5).footer()).html(total5.toLocaleString());
+                $(api.column(7).footer()).html(total7.toLocaleString());
 
         }
             }); 

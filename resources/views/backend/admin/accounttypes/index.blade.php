@@ -35,7 +35,6 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.name")</th>
-                                <th>@lang("message.commission")</th>
                                 <th class="no-sort action">@lang("message.header.action")</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
@@ -84,12 +83,6 @@
                         defaultContent: "-",
                         class: ""
                     },
-                    {
-                        data: 'commission',
-                        name: 'commission',
-                        defaultContent: "-",
-                        class: ""
-                    },
 
                     {
                         data: 'action',
@@ -104,7 +97,7 @@
                     }
                 ],
                 order: [
-                    [4, 'desc']
+                    [3, 'desc']
                 ],
                 responsive: {
                     details: {

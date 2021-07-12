@@ -56,12 +56,12 @@
                                         <tbody>
                                             <tr id='addr0'>
                                                 <td>
-                                                1
+                                                1 <br> <span class="fa fa-search mt-3" id="show_search"></span>
                                                 </td>
                                                 <td>
                                                     <div class="row">
                                                     
-                                                        <div class="col-md-12 mb-3">
+                                                        <div class="col-md-12 mb-3"  id="hide_search">
                                                             <input type="search" id="search" autocomplete="off" name="search"  placeholder="search" class="form-control">
                                                         </div>
             
@@ -69,7 +69,7 @@
                                                             <select class="form-control custom-select" id="item_id" name="item_id[]"  required>
                                                                 <option value="">@lang("message.header.choose_item")</option>
                                                                 @forelse($item as $data)
-                                                                <option value="{{$data->id}}">{{$data->name }}</option>
+                                                                <option value="{{$data->id}}">{{$data->name }} </option>
                                                                 @empty<p>@lang("message.header.there_is_no_data")</p>
                                                                 @endforelse
                                                             </select>   
@@ -120,6 +120,8 @@
 {!! JsValidator::formRequest('App\Http\Requests\ItemRequest','#create') !!}
 <script>
      $(document).ready(function(){
+        $('#hide_search').hide();
+
       var items = {!! json_encode($item) !!};
       var i=1;
       var text = "";
@@ -128,7 +130,7 @@
     } 
 
      $("#add_row").click(function(){
-        $('#addr'+i).html("<td>"+ (i+1) +"</td><td><div class='row'><div class='col-md-12 mb-3'><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' name='discount"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' name='discount"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
       $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
 
     var a = i;
@@ -156,8 +158,16 @@
         $.get('/get_item?item=' + item, function(data) {
                 $('#aa'+a).empty();
         $('#aa'+a).val(data.buying_price);
+        $('#hide_search'+a).hide();
+
     });
 });
+
+    $('#hide_search'+a).hide();
+
+    $('#show_search'+a).on('click',function(e){
+    $('#hide_search'+a).show();
+})
 
       i++; 
   });
@@ -196,9 +206,13 @@ $('#item_id').on('change', function(e) {
             $.get('/get_item?item=' + item, function(data) {
                     $('#aa').empty();
             $('#aa').val(data.buying_price);
+            $('#hide_search').hide();
         });
     });
 
+$('#show_search').on('click',function(e){
+    $('#hide_search').show();
+})
 
 
 // $('#item_id').change(function(e){

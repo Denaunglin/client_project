@@ -301,7 +301,7 @@
         }); 
 
         $(document).on('change', '.item', function() {
-                 var booking_user_name = $('#booking_user_name').val();
+                var booking_user_name = $('#booking_user_name').val();
                 var item = $('.item').val();
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
                 app_table.ajax.url(`{{url('/admin/sell_items?item=`+item+`&trash=`+trash+`/')}}`).load();

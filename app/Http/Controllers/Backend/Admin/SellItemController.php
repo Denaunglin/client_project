@@ -114,7 +114,16 @@ class SellItemController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
         }
-        $item = Item::where('trash',0)->get();
+        // $item = Item::where('trash',0)->get();
+        $shop_storage = ShopStorage::where('trash',0)->get();
+        $item = [];
+        foreach($shop_storage as $data){
+            $option = Item::where('trash',0)->where('id', $data->item_id)->first();
+            if($option != null){
+                $item [] = $option;
+            }
+        }
+        
         $item_category = ItemCategory::where('trash', 0)->get();
         $customer = User::where('trash',0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
@@ -131,7 +140,12 @@ class SellItemController extends Controller
         $item = Item::findOrFail($request->item_id);
         $customer_id = $request->customer_id ? $request->customer_id : 0;
         $customer = User::where('id',$request->customer_id)->first();
-        
+        $shop_storage = ShopStorage::where('item_id',$request->item_id)->first();
+       
+        if($request->qty != $shop_storage->qty){
+            return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
+        }
+
         $item_count = count($item);
         if($item_count == 1){
             $item = $item->first();
@@ -275,6 +289,11 @@ class SellItemController extends Controller
         $sell_item = SellItems::findOrFail($id);
         $shop_storage = ShopStorage::where('item_id',$item->id)->first();
         $opening_qty = $shop_storage->qty ? $shop_storage->qty : 0 ;
+        if($request->qty > $sell_item->qty){
+            $adjust_out= $request->qty - $sell_item->qty;
+        }else{
+            $adjust_out= $sell_item->qty - $request->qty ;
+        }
 
         $qty1 = $sell_item->qty ;
         $qty2 = $request->qty;
@@ -307,14 +326,14 @@ class SellItemController extends Controller
         $cash_book->return_id = null;
         $cash_book->update();
 
-        $item_ledger=ItemLedger::where('item_id',$request->item_id)->first();
+        $item_ledger=ItemLedger::where('item_id',$item->item_id)->first();
         $item_ledger->item_id = $request->item_id;
         $item_ledger->opening_qty = $opening_qty;
         $item_ledger->buying_buy = $item_ledger->buying_buy;
         $item_ledger->buying_back = $item_ledger->buying_back;
         $item_ledger->selling_sell = $request->qty;
         $item_ledger->selling_back = $item_ledger->buying_back;
-        $item_ledger->adjust_out = $request->qty;
+        $item_ledger->adjust_out = $adjust_out;
         $item_ledger->adjust_in = $item_ledger->adjust_in;
         $item_ledger->closing_qty = $shop_storage->qty;
         $item_ledger->update();

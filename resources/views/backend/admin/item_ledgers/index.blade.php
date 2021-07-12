@@ -63,7 +63,7 @@
                             <tr >
                                 <th rowspan="2">@lang("message.header.barcode")</th>
                                 <th rowspan="2">@lang("message.header.item_name")</th>
-                                <th rowspan="2">@lang("message.header.unit")</th>
+                                {{-- <th rowspan="2">@lang("message.header.unit")</th> --}}
                                 <th rowspan="2">@lang("message.header.sub_group")</th>
                                 <th rowspan="2">@lang("message.header.opening_qty")</th>
                                 <th colspan="2" class="text-center bg-light">@lang("message.header.buying_list")</th>
@@ -87,7 +87,7 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.total")</th>
-                                <th></th>
+                                {{-- <th></th> --}}
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -240,7 +240,7 @@
                 columns: [
                     {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
                     {data: 'item_id', name: 'item_id', defaultContent: "-", class: ""},
-                    {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
+                    // {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
                     {data: 'opening_qty', name: 'opening_qty', defaultContent: "-", class: ""},
                     {data: 'buying_buy', name: 'buying_buy', defaultContent: "-", class: ""},
@@ -294,9 +294,10 @@
                 total9 = api.column(9).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
                 total10 = api.column(10).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
                 total11 = api.column(11).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
-                total12 = api.column(12).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total3 = api.column(3).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
+                $(api.column(3).footer()).html(total3.toLocaleString());
                 $(api.column(4).footer()).html(total4.toLocaleString());
                 $(api.column(5).footer()).html(total5.toLocaleString());
                 $(api.column(6).footer()).html(total6.toLocaleString());
@@ -305,7 +306,6 @@
                 $(api.column(9).footer()).html(total9.toLocaleString());
                 $(api.column(10).footer()).html(total10.toLocaleString());
                 $(api.column(11).footer()).html(total11.toLocaleString());
-                $(api.column(12).footer()).html(total12.toLocaleString());
 
         }
             }); 

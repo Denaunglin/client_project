@@ -52,7 +52,7 @@
 
                 <li class="app-sidebar__heading">@lang('message.header.main')</li>
                 <li>
-                    <a href="{{route('admin.index')}}"  class="menu-list-member  @yield('dashboard-active')">
+                    <a href="{{route('admin.sell_items.index')}}"  class="menu-list-member  @yield('dashboard-active')">
                         <i class="fa fa-home mr-3" style="font-size: 20px" ></i>
                         @lang('message.header.dashboard')
                     </a>

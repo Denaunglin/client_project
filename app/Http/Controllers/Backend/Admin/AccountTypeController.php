@@ -71,7 +71,6 @@ class AccountTypeController extends Controller
         }
         $accounttype = new AccountType();
         $accounttype->name = $request['name'];
-        $accounttype->commission = $request->commission;
         $accounttype->save();
 
         activity()
@@ -106,7 +105,6 @@ class AccountTypeController extends Controller
 
         $accounttype = AccountType::findOrFail($id);
         $accounttype->name = $request['name'];
-        $accounttype->commission = $request->commission;
         $accounttype->update();
 
         activity()

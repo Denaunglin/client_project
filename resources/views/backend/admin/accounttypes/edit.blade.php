@@ -25,18 +25,7 @@
                                     class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <div class="form-group">
-                                <label>@lang("message.header.commission_percentage") </label>
-                                <div class="input-group">
-                                    <input type="number" value="{{$accounttype->commission}}" step="any" id="commission"
-                                        name="commission" class="form-control">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">%</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      
                     </div>
                     <div class="row">
                         <div class="col-md-12 text-center">

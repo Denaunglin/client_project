@@ -126,7 +126,6 @@ class BuyingItemController extends Controller
         if($item_count == 1){
             $item = $item->first();
             $buying_item = new BuyingItem();
-            $buying_item->barcode = $item->barcode;
             $buying_item->item_id = $item->id;
             $buying_item->supplier_id = $supplier ? $supplier->id : null ;
             $buying_item->item_category_id = $item->item_category_id;
@@ -178,7 +177,6 @@ class BuyingItemController extends Controller
             for ($var = 0; $var < $item_count - 1;) {
             foreach ($item as $data) {
                 $buying_item = new BuyingItem();
-                $buying_item->barcode = $data->barcode;
                 $buying_item->supplier_id = $supplier ? $supplier->id : null;
                 $buying_item->item_id = $data->id;
                 $buying_item->item_category_id = $data->item_category_id;
@@ -281,7 +279,6 @@ class BuyingItemController extends Controller
             $shop_storage->update();
         }
 
-        $buying_item->barcode = $item->barcode;
         $buying_item->supplier_id = $supplier ? $supplier->id : null;
         $buying_item->item_id = $item->id;
         $buying_item->item_category_id = $item->item_category_id;
