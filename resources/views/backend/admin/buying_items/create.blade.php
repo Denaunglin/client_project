@@ -178,6 +178,8 @@
         $.get('/get_item?item=' + item, function(data) {
                 $('#aa'+a).empty();
         $('#aa'+a).val(data.buying_price);
+        $('#hide_search'+a).hide();
+
     });
 });
 
