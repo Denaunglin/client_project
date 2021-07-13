@@ -91,7 +91,7 @@ class SellItemController extends Controller
                 })
                 ->addColumn('item_id', function ($sell_item) {
 
-                    return $sell_item->item_id ? $sell_item->item->name : '-';
+                    return $sell_item->item ? $sell_item->item->name : '-';
                 })
                 ->addColumn('item_category', function ($sell_item) {
 
