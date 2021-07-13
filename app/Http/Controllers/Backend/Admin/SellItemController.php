@@ -98,7 +98,7 @@ class SellItemController extends Controller
                     return $sell_item->item_category ? $sell_item->item_category->name : '-';
                 })
                 ->addColumn('item_sub_category', function ($sell_item) {
-                    return $sell_item->item_sub_category_id ? $sell_item->item_sub_category->name : '-';
+                    return $sell_item->item_sub_category ? $sell_item->item_sub_category->name : '-';
                 })
                 ->addColumn('plus-icon', function () {
                     return null;
