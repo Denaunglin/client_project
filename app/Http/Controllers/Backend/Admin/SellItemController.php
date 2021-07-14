@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Backend\Admin;
 
+use PDF;
+use Carbon\Carbon;
 use App\Models\Tax;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Invoice;
 use App\Models\Cashbook;
 use App\Models\Supplier;
 use App\Models\Discounts;
@@ -13,6 +16,7 @@ use App\Models\ItemLedger;
 use App\Models\ShopStorage;
 use App\Models\ItemCategory;
 use Illuminate\Http\Request;
+use App\Models\Bussinessinfo;
 use App\Helper\ResponseHelper;
 use App\Models\ItemSubCategory;
 use Yajra\DataTables\DataTables;
@@ -20,7 +24,7 @@ use App\Http\Requests\ItemRequest;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
 use Illuminate\Support\Facades\Session;
-
+use Illuminate\Support\Facades\Storage;
 
 class SellItemController extends Controller
 {
@@ -136,7 +140,6 @@ class SellItemController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
         }
-        return $request; 
      
         $item = Item::findOrFail($request->item_id);
         $customer_id = $request->customer_id ? $request->customer_id : 0;
@@ -192,7 +195,7 @@ class SellItemController extends Controller
             $item_ledger->opening_qty = $open_qty;
             $item_ledger->buying_buy = '0';
             $item_ledger->buying_back = '0';
-            $item_ledger->selling_sell = $request->qty;
+            $item_ledger->selling_sell = $request['qty'][0];
             $item_ledger->selling_back = '0';
             $item_ledger->adjust_in = '0';
             $item_ledger->adjust_out = '0';
@@ -268,7 +271,7 @@ class SellItemController extends Controller
             $bussiness_info = Bussinessinfo::where('trash',0)->first();
             $invoice_pdf = new Invoice();
             $invoice_pdf->invoice_no = 0;
-            $invoice_pdf->item_id = serialize($sell_items->id);
+            $invoice_pdf->item_id = null;
             $invoice_pdf->service_id = null;
             $invoice_pdf->save();
     
@@ -289,21 +292,20 @@ class SellItemController extends Controller
             $total_price = [];
 
             foreach($sell_items as $data){
-                $item_name [] = $sell_items->item ? $sell_items->item->name : '-';
-                $item_category [] = $sell_items->item_category ? $sell_items->item_category->name : '-';
-                $item_sub_category [] = $sell_items->item_sub_category ? $sell_items->item_sub_category->name : '-';
-                $qty [] = $sell_items->qty;
-                $price [] = $sell_items->price;
-                $discount [] = $sell_items->discount;
-                $net_price [] = $sell_items->net_price;
-                $total_price [] +=  $sell_items->net_price;
+                $item_name [] = $data->item ? $data->item->name : '-';
+                $item_category [] = $data->item_category ? $data->item_category->name : '-';
+                $item_sub_category [] = $data->item_sub_category ? $data->item_sub_category->name : '-';
+                $qty [] = $data->qty;
+                $price [] = $data->price;
+                $discount [] = $data->discount;
+                $net_price [] = $data->net_price;
+                $total_price [] +=  $data->net_price;
             }
     
             $today = $date->toFormattedDateString();
             $invoice_number = str_pad($invoice_pdf->id, 6, '0', STR_PAD_LEFT);
             $data = [
 
-                'barcode' => $barcode,
                 'item_name' => $item_name,
                 'item_category' => $item_category,
                 'item_sub_category' => $item_sub_category,
@@ -322,16 +324,17 @@ class SellItemController extends Controller
                 'price' => $price,
                 'discount' => $discount,
                 'net_price' => $net_price,
+                'total_price' => $total_price,
             ];
     
             $pdf = PDF::loadView('backend.admin.invoices.pdf_view', $data);
-            $pdf_name = uniqid() . '_' . time() . '_' . $item_name . '.pdf';
+            $pdf_name = uniqid() . '_' . time() . '_' . '.pdf';
             $invoice_pdf->invoice_no = $invoice_number;
             $invoice_pdf->invoice_file = $pdf_name;
             $invoice_pdf->update();
     
             Storage::put('uploads/pdf/' . $pdf_name, $pdf->output());
-            $pdf->download('sell_invoices.pdf');
+            // $pdf->download('sell_invoices.pdf');
 
         return redirect()->route('admin.sell_items.index')->with('success', 'Successfully Created');
     }

@@ -147,7 +147,7 @@
 
     <div class="total_invoice ">
                 <h2 class="total_invoice ">
-                    <span class="total"> Invoice Total: </span>  {{$net_price}} MMK 
+                    <span class="total"> Invoice Total: </span>  {{$total_price}} MMK 
                 </h2>
 
         {{-- <h3> Address</h3> --}}
