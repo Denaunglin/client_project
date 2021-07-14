@@ -57,9 +57,7 @@
                 serverSide: true,
                 dom: 'Bfrtip',
                 buttons: [
-                    {
-                        extend: 'refresh'
-                    },
+                  
                     {
                         extend: 'pageLength'
                     }

@@ -192,9 +192,9 @@
                   doc.content[0].layout = objLayout;
               }
             },
-                    {
-                        extend: 'refresh'
-                    },
+                    // {
+                    //     extend: 'refresh'
+                    // },
                     {
                         extend: 'pageLength'
                     }
@@ -307,7 +307,6 @@
                 app_table.ajax.url(`{{url('/admin/sell_items?item=`+item+`&trash=`+trash+`/')}}`).load();
         });
 
-        
 
 </script>
 @include('backend.admin.layouts.assets.trash_script')

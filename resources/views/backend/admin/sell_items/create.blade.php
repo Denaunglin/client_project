@@ -20,7 +20,7 @@
                             <div class="row clearfix">
                                 <div class="col-md-4 mb-3">
                                     <label for="">@lang("message.header.customer")</label>
-                                    <select name="customer_id" class="form-control" id="">
+                                    <select name="customer_id" class="form-control" id="customer_id">
                                         <option value="0">Default Customer</option>
                                         @foreach($customer as $data) 
                                     <option value="{{$data->id}}">{{$data->name}}</option>
@@ -78,16 +78,16 @@
                                                     </div>                                        
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="numeric_value" name="qty" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
+                                                    <input type="number" id="numeric_value" name="qty[]" class="form-control  @error('qty') is-invalid @enderror" placeholder='Qty' >
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="aa" name="price" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
+                                                    <input type="number" id="aa" name="price[]" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="discount" name="discount" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
+                                                    <input type="number" id="discount" name="discount[]" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="net_price" name="net_price" class="form-control  @error('net_price') is-invalid @enderror" placeholder="Total Price" >
+                                                    <input type="number" id="net_price" name="net_price[]" class="form-control  @error('net_price') is-invalid @enderror" placeholder="Total Price" >
                                                 </td>
                                             </td>
                                             </tr>
@@ -130,7 +130,7 @@
     } 
 
      $("#add_row").click(function(){
-        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' name='discount"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty[]"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price[]"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' name='discount[]"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price[]"+i+"' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
       $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
 
     var a = i;
@@ -164,7 +164,6 @@
 });
 
     $('#hide_search'+a).hide();
-
     $('#show_search'+a).on('click',function(e){
     $('#hide_search'+a).show();
 })

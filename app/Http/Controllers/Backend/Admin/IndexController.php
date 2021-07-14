@@ -165,7 +165,6 @@ class IndexController extends Controller
 
     public function show(Request $request){
 
-
         $discount_percentage = 0 ;
         $discount_amount = 0 ;
         $total_discount_amount = 0;

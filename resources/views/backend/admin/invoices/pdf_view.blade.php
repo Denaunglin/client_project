@@ -115,11 +115,31 @@
             </thead>
             <tbody>
                 <tr>
-                    <td> {{$item_name}} </td>
-                    <td> {{$qty}}</td>
-                    <td> {{$price}}</td>
-                    <td> {{$discount}}</td>
-                    <td> {{$net_price}}</td>
+                    <td> 
+                        @foreach($item_name as $data)
+                            {{$data}}
+                        @endforeach
+                     </td>
+                    <td>
+                        @foreach($qty as $data)
+                        {{$data}}
+                        @endforeach
+                    </td>
+                    <td>
+                        @foreach($price as $data)
+                        {{$data}}
+                        @endforeach
+                    </td>
+                    <td>
+                        @foreach($discount as $data)
+                        {{$data}}
+                        @endforeach
+                    </td>
+                    <td> 
+                        @foreach($net_price as $data)
+                        {{$data}}
+                        @endforeach
+                    </td>
                 </tr>
             </tbody>
         </table>

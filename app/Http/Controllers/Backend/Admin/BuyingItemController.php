@@ -120,6 +120,7 @@ class BuyingItemController extends Controller
             abort(404);
         }
 
+
         $item = Item::findOrFail($request->item_id);
         $supplier = Supplier::where('id',$request->supplier)->first();
         $item_count = count($item);
@@ -181,9 +182,9 @@ class BuyingItemController extends Controller
                 $buying_item->item_id = $data->id;
                 $buying_item->item_category_id = $data->item_category_id;
                 $buying_item->item_sub_category_id = $data->item_sub_category_id;
-                $buying_item->qty = $request['qty'];
-                $buying_item->price = $request['price'];
-                $buying_item->net_price = $request['net_price'];
+                $buying_item->qty = $request['qty'][$var];
+                $buying_item->price = $request['price'][$var];
+                $buying_item->net_price = $request['net_price'][$var];
                 $buying_item->save();
 
                 $cash_book = new Cashbook();
@@ -214,7 +215,7 @@ class BuyingItemController extends Controller
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
                 $item_ledger->opening_qty = $open_qty;
-                $item_ledger->buying_buy = $request->qty;
+                $item_ledger->buying_buy = $request['qty'][$var];
                 $item_ledger->buying_back = '0';
                 $item_ledger->selling_sell = '0';
                 $item_ledger->selling_back = '0';
@@ -262,6 +263,7 @@ class BuyingItemController extends Controller
             abort(404);
         }
 
+        
         $supplier = Supplier::where('id',$request->supplier_id)->first();
 
         $item=Item::where('id',$request->item_id)->first();

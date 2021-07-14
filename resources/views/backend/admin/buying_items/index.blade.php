@@ -187,9 +187,7 @@
                         doc.content[0].layout = objLayout;
                     }
                  },
-                    {
-                        extend: 'refresh'
-                    },
+                   
                     {
                         extend: 'pageLength'
                     }

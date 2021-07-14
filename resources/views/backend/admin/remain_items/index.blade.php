@@ -49,7 +49,6 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th>@lang("message.header.barcode")</th>
                                 <th>@lang("message.header.item_name") </th>
                                 <th>@lang("message.header.item_category")  <br></th>
                                 <th>@lang("message.header.item_sub_category")  </th>
@@ -63,7 +62,6 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.header.remain_qty")</th>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -172,9 +170,7 @@
                   doc.content[0].layout = objLayout;
               }
             },
-                    {
-                        extend: 'refresh'
-                    },
+                 
                     {
                         extend: 'pageLength'
                     }
@@ -190,7 +186,6 @@
                 },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
                     {data: 'item_id', name: 'item_id', defaultContent: "-", class: ""},
                     {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
@@ -199,7 +194,7 @@
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
                     order: [
-                        [7, 'desc']
+                        [6, 'desc']
                    ],
                     responsive: {
                         details: {type: "column", target: 0}
@@ -230,12 +225,12 @@
                 };
 
                 // Total
-                total6 = api.column(6).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total4 = api.column(4).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 total5 = api.column(5).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
-                $(api.column(6).footer()).html(total6.toLocaleString());
+                $(api.column(4).footer()).html(total4.toLocaleString());
                 $(api.column(5).footer()).html(total5.toLocaleString());
 
 

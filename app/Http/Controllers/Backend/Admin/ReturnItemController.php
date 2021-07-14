@@ -128,10 +128,8 @@ class ReturnItemController extends Controller
         if($item_count == 1){
             $item = $item->first();
             $return_item = new ReturnItem();
-            $return_item->barcode = $item->barcode;
             $return_item->return_type = $return_type;
             $return_item->item_id = $item->id;
-            $return_item->unit = $item->unit;
             $return_item->item_category_id = $item->item_category_id;
             $return_item->item_sub_category_id = $item->item_sub_category_id;
             $return_item->qty = $request['qty'];
@@ -195,10 +193,8 @@ class ReturnItemController extends Controller
             for ($var = 0; $var < $item_count - 1;) {
             foreach ($item as $data) {
                 $return_item = new ReturnItem();
-                $return_item->barcode = $data->barcode;
                 $return_item->item_id = $data->id;
                 $return_item->return_type = $return_type;
-                $return_item->unit = $data->unit;
                 $return_item->item_category_id = $data->item_category_id;
                 $return_item->item_sub_category_id = $data->item_sub_category_id;
                 $return_item->qty = $request['qty'];
@@ -237,7 +233,6 @@ class ReturnItemController extends Controller
                     $shop_storage->qty = $return_item->qty;
                     $shop_storage->save();
                 }
-        
         
                 $item_ledger= new ItemLedger();
                 $item_ledger->item_id = $data->id;
@@ -312,10 +307,8 @@ class ReturnItemController extends Controller
             $shop_storage->update();
         }
 
-        $return_item->barcode = $item->barcode;
         $return_item->item_id = $item->id;
         $return_item->return_type = $return_type;
-        $return_item->unit = $item->unit;
         $return_item->item_category_id = $item->item_category_id;
         $return_item->item_sub_category_id = $item->item_sub_category_id;
         $return_item->qty = $request['qty'];

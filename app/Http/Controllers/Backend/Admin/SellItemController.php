@@ -106,6 +106,7 @@ class SellItemController extends Controller
                 ->rawColumns(['action','customer','item_id','item_category','item_sub_category'])
                 ->make(true);
         }
+        
         return view('backend.admin.sell_items.index',compact('item','item_category','item_sub_category','tax'));
     }
 
@@ -135,29 +136,30 @@ class SellItemController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
         }
-
+        return $request; 
      
         $item = Item::findOrFail($request->item_id);
         $customer_id = $request->customer_id ? $request->customer_id : 0;
         $customer = User::where('id',$request->customer_id)->first();
-        $shop_storage = ShopStorage::where('item_id',$request->item_id)->first();
-       
-        if($request->qty != $shop_storage->qty){
-            return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
-        }
 
         $item_count = count($item);
+
         if($item_count == 1){
+            $shop_storage = ShopStorage::where('item_id',$request->item_id)->first();
+            // if($request['qty'] != $shop_storage->qty){
+            //     return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
+            // }
+
             $item = $item->first();
             $sell_item = new SellItems();
             $sell_item->item_id = $item->id;
             $sell_item->customer_id = $customer_id ;
             $sell_item->item_category_id = $item->item_category_id;
             $sell_item->item_sub_category_id = $item->item_sub_category_id;
-            $sell_item->qty = $request['qty'];
-            $sell_item->price = $request['price'];
-            $sell_item->discount = $request['discount'];
-            $sell_item->net_price = $request['net_price'];
+            $sell_item->qty = $request['qty'][0];
+            $sell_item->price = $request['price'][0];
+            $sell_item->discount = $request['discount'][0];
+            $sell_item->net_price = $request['net_price'][0];
             $sell_item->save();
 
             $cash_book = new Cashbook();
@@ -170,7 +172,6 @@ class SellItemController extends Controller
             $cash_book->credit_id = null;
             $cash_book->return_id = null;
             $cash_book->save();
-
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
             $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
@@ -199,16 +200,21 @@ class SellItemController extends Controller
             $item_ledger->save();
         }else{
             for ($var = 0; $var < $item_count - 1;) {
+           
             foreach ($item as $data) {
+                $shop_storage = ShopStorage::where('item_id',$data->id)->first();
+                // if($request['qty'][$var] != $shop_storage->qty){
+                //     return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
+                // }
                 $sell_item = new SellItems();
                 $sell_item->item_id = $data->id;
                 $sell_item->customer_id = $customer_id ;
                 $sell_item->item_category_id = $data->item_category_id;
                 $sell_item->item_sub_category_id = $data->item_sub_category_id;
-                $sell_item->qty = $request['qty'];
-                $sell_item->price = $request['price'];
-                $sell_item->discount = $request['discount'];
-                $sell_item->net_price = $request['net_price'];
+                $sell_item->qty = $request['qty'][$var];
+                $sell_item->price = $request['price'][$var];
+                $sell_item->discount = $request['discount'][$var];
+                $sell_item->net_price = $request['net_price'][$var];
                 $sell_item->save();
 
                 $cash_book = new Cashbook();
@@ -241,7 +247,7 @@ class SellItemController extends Controller
                 $item_ledger->opening_qty = $open_qty;
                 $item_ledger->buying_buy = '0';
                 $item_ledger->buying_back = '0';
-                $item_ledger->selling_sell = $request->qty;
+                $item_ledger->selling_sell = $request['qty'][$var];
                 $item_ledger->selling_back = '0';
                 $item_ledger->adjust_in = '0';
                 $item_ledger->adjust_out = '0';
@@ -257,6 +263,75 @@ class SellItemController extends Controller
             ->causedBy(auth()->guard('admin')->user())
             ->withProperties(['source' => ' Sell Item   (Admin Panel'])
             ->log(' Sell Item  is created ');
+        
+            $sell_items = SellItems::where('created_at', $sell_item->created_at)->get();
+            $bussiness_info = Bussinessinfo::where('trash',0)->first();
+            $invoice_pdf = new Invoice();
+            $invoice_pdf->invoice_no = 0;
+            $invoice_pdf->item_id = serialize($sell_items->id);
+            $invoice_pdf->service_id = null;
+            $invoice_pdf->save();
+    
+            activity()
+                ->performedOn($invoice_pdf)
+                ->causedBy(auth()->guard('admin')->user())
+                ->withProperties(['source' => ' Invoice (Admin Panel)'])
+                ->log('New Invoice is created');
+    
+            $date = Carbon::now();
+            $item_name = [];
+            $item_category = [];
+            $item_sub_category = [];
+            $qty = [];
+            $price = [];
+            $discount = [];
+            $net_price = [];
+            $total_price = [];
+
+            foreach($sell_items as $data){
+                $item_name [] = $sell_items->item ? $sell_items->item->name : '-';
+                $item_category [] = $sell_items->item_category ? $sell_items->item_category->name : '-';
+                $item_sub_category [] = $sell_items->item_sub_category ? $sell_items->item_sub_category->name : '-';
+                $qty [] = $sell_items->qty;
+                $price [] = $sell_items->price;
+                $discount [] = $sell_items->discount;
+                $net_price [] = $sell_items->net_price;
+                $total_price [] +=  $sell_items->net_price;
+            }
+    
+            $today = $date->toFormattedDateString();
+            $invoice_number = str_pad($invoice_pdf->id, 6, '0', STR_PAD_LEFT);
+            $data = [
+
+                'barcode' => $barcode,
+                'item_name' => $item_name,
+                'item_category' => $item_category,
+                'item_sub_category' => $item_sub_category,
+                'shop_name' => $bussiness_info ? $bussiness_info->name : '-',
+                'shop_email' => $bussiness_info ? $bussiness_info->email : '-',
+                'shop_phone' => $bussiness_info ? $bussiness_info->phone : '-',
+                'shop_address' => $bussiness_info ? $bussiness_info->address : '-',
+                'today_date' => $today,
+                // 'client_name' => $booking->name,
+                // 'client_email' => $booking->email,
+                'invoice_no' => $invoice_number,
+                'title' => ' Invoice',
+                'heading1' => '',
+                'heading2' => 'Invoice',
+                'qty' => $qty,
+                'price' => $price,
+                'discount' => $discount,
+                'net_price' => $net_price,
+            ];
+    
+            $pdf = PDF::loadView('backend.admin.invoices.pdf_view', $data);
+            $pdf_name = uniqid() . '_' . time() . '_' . $item_name . '.pdf';
+            $invoice_pdf->invoice_no = $invoice_number;
+            $invoice_pdf->invoice_file = $pdf_name;
+            $invoice_pdf->update();
+    
+            Storage::put('uploads/pdf/' . $pdf_name, $pdf->output());
+            $pdf->download('sell_invoices.pdf');
 
         return redirect()->route('admin.sell_items.index')->with('success', 'Successfully Created');
     }
