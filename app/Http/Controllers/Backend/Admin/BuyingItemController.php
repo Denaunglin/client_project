@@ -369,7 +369,7 @@ class BuyingItemController extends Controller
     public function getItem(Request $request){
         if($request->search){
             $search = $request->search;
-            $products = Item::where('name','LIKE','%'.$request->search.'%')->orderBy('created_at','desc')->get();
+            $products = Item::where('name', 'LIKE', "%{$search}%")->orderBy('created_at','desc')->get();
         }
         if($request->item){
             $products = Item::where('id',$request->item)->first();

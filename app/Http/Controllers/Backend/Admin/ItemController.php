@@ -106,8 +106,7 @@ class ItemController extends Controller
        
         
         $expire_date = $request->expire_status == 1 ? null : $request->expire_date ;
-        
-
+    
         $item = new Item();
         $item->name = $request['name'];
         $item->item_category_id = $request['item_category_id'];
