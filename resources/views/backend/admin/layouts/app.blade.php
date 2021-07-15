@@ -105,7 +105,7 @@
               
                 $("#menu-search-result-list").html(result);
             } else {
-                $("#menu-search-result-msg").text('No Menu Found.');
+                $("#menu-search-result-msg").text('No Item Found.');
                 $("#menu-search-result-container").attr('hidden', false);
                 $("#menu-search-result-list").html('');
                 // $("#menu-search-result-msg").html('');
