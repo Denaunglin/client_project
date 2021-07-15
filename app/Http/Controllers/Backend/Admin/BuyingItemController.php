@@ -368,8 +368,13 @@ class BuyingItemController extends Controller
 
     public function getItem(Request $request){
         if($request->search){
-            $search = $request->search;
-            $products = Item::where('name', 'LIKE', "%{$search}%")->orderBy('created_at','desc')->get();
+            $search = explode(" ", $request->search);
+            // $products = Item::where('name', 'LIKE', "%{$search}%")->orderBy('created_at','desc')->get();
+            $products = Item::where(function($query) use ($search){
+                foreach($search as $data){
+                    $query->where('name', 'like', '%' . $data . '%');
+                }
+            })->get();
         }
         if($request->item){
             $products = Item::where('id',$request->item)->first();
