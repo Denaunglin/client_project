@@ -193,9 +193,6 @@
               }
             },
                     {
-                        extend: 'refresh'
-                    },
-                    {
                         extend: 'pageLength'
                     }
                 ],

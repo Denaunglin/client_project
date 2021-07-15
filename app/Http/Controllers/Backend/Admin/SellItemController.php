@@ -18,6 +18,7 @@ use App\Models\ItemCategory;
 use Illuminate\Http\Request;
 use App\Models\Bussinessinfo;
 use App\Helper\ResponseHelper;
+use App\Http\Requests\SellItem;
 use App\Models\ItemSubCategory;
 use Yajra\DataTables\DataTables;
 use App\Http\Requests\ItemRequest;
@@ -135,7 +136,7 @@ class SellItemController extends Controller
         return view('backend.admin.sell_items.create', compact('item_category','customer','item', 'item_sub_category'));
     }
 
-    public function store(Request $request)
+    public function store(SellItem $request)
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
@@ -282,33 +283,33 @@ class SellItemController extends Controller
                 ->log('New Invoice is created');
     
             $date = Carbon::now();
-            $item_name = [];
-            $item_category = [];
-            $item_sub_category = [];
-            $qty = [];
-            $price = [];
-            $discount = [];
-            $net_price = [];
-            $total_price = [];
+            $total_price = 0;
+            $item_data=[];
 
             foreach($sell_items as $data){
-                $item_name [] = $data->item ? $data->item->name : '-';
-                $item_category [] = $data->item_category ? $data->item_category->name : '-';
-                $item_sub_category [] = $data->item_sub_category ? $data->item_sub_category->name : '-';
-                $qty [] = $data->qty;
-                $price [] = $data->price;
-                $discount [] = $data->discount;
-                $net_price [] = $data->net_price;
-                $total_price [] +=  $data->net_price;
+                $item_name  = $data->item ? $data->item->name : '-';
+                $item_category  = $data->item_category ? $data->item_category->name : '-';
+                $item_sub_category  = $data->item_sub_category ? $data->item_sub_category->name : '-';
+                $qty  = $data->qty;
+                $price  = $data->price;
+                $discount  = $data->discount;
+                $net_price  = $data->net_price;
+                $total_price  +=  $data->net_price;
+                $item_data [] = [
+                    "item_name" => $item_name,
+                    "item_category" => $item_category,
+                    "item_sub_category" => $item_sub_category,
+                    "qty" => $qty,
+                    "price" => $price,
+                    "discount" => $discount,
+                    "net_price" => $net_price,
+
+                ];
             }
     
             $today = $date->toFormattedDateString();
             $invoice_number = str_pad($invoice_pdf->id, 6, '0', STR_PAD_LEFT);
             $data = [
-
-                'item_name' => $item_name,
-                'item_category' => $item_category,
-                'item_sub_category' => $item_sub_category,
                 'shop_name' => $bussiness_info ? $bussiness_info->name : '-',
                 'shop_email' => $bussiness_info ? $bussiness_info->email : '-',
                 'shop_phone' => $bussiness_info ? $bussiness_info->phone : '-',
@@ -320,12 +321,10 @@ class SellItemController extends Controller
                 'title' => ' Invoice',
                 'heading1' => '',
                 'heading2' => 'Invoice',
-                'qty' => $qty,
-                'price' => $price,
-                'discount' => $discount,
-                'net_price' => $net_price,
                 'total_price' => $total_price,
+                'item_data' => $item_data,
             ];
+            
     
             $pdf = PDF::loadView('backend.admin.invoices.pdf_view', $data);
             $pdf_name = uniqid() . '_' . time() . '_' . '.pdf';
@@ -358,7 +357,7 @@ class SellItemController extends Controller
         return view('backend.admin.sell_items.edit', compact('items','data_item', 'item_category', 'item_sub_category'));
     }
 
-    public function update(Request $request, $id)
+    public function update(SellItem $request, $id)
     {
         if (!$this->getCurrentAuthUser('admin')->can('edit_item')) {
             abort(404);

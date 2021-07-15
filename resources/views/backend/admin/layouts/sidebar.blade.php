@@ -96,6 +96,15 @@
                 </li>
                 @endcan
                 <hr>
+                @can('view_invoice')
+                <li>
+                    <a href="{{route('admin.invoices.index')}}"  class="menu-list-member  @yield('invoice-active')">
+                        <i class="fa fa-file-invoice mr-3" style="font-size: 20px" ></i>
+                        @lang('message.invoice')
+                    </a>
+                </li>
+                @endcan
+                <hr>
 
                 @can('view_room_plan')
                 <li class="app-sidebar__heading">@lang("message.header.merchandise")</li>
@@ -277,15 +286,7 @@
                     </a>
                 </li>
                 <hr>
-                @can('view_invoice')
-                <li>
-                    <a href="{{route('admin.invoices.index')}}"  class="menu-list-member  @yield('invoice-active')">
-                        <i class="fa fa-file-invoice mr-3" style="font-size: 20px" ></i>
-                        @lang('message.invoice')
-                    </a>
-                </li>
-                @endcan
-                <hr>
+              
                  @can('view_message')
                 <li class="app-sidebar__heading">@lang("message.header.activity_log")</li>
                 <li>

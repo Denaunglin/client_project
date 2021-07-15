@@ -1,3 +1,29 @@
+<style>
+    /* .modal-backdrop.show {
+    opacity: 0 !important;
+}
+    .modal{
+        position: fixed;
+        margin-top: 70px;
+        z-index:auto !important;
+    }
+
+    .fade {
+} */
+
+.modal-content {
+        margin-top:30px !important;
+        position: relative !important;
+    }
+    .modal{
+        margin-top: 30px;  
+    }
+    .modal-backdrop{
+        position: relative !important;
+
+    }
+    
+</style>
 <div class="app-header header-shadow bg-grow-early header-text-light">
     <div class="app-header__logo">
         <div class="text-white"><h4>Shop Panel</h4></div>
@@ -30,25 +56,45 @@
             </button>
         </span>
     </div>
+    <div class="app-header__menu">
+        @include('menu_search.menu_search_button')
+        <span>
+            <button type="button" class="btn-icon btn-icon-only btn btn-primary btn-sm mobile-toggle-header-nav">
+                <span class="btn-icon-wrapper">
+                    <i class="fa fa-ellipsis-v fa-w-6"></i>
+                </span>
+            </button>
+        </span>
+    </div>
+    <div class="app-header-left">
+        <ul class="header-megamenu nav">
+            <li class="btn-group nav-item">
+                @include('menu_search.menu_search_button')
+            </li>
+        </ul>
+    </div>
+
+@include('menu_search.menu_search_modal')
     <div class="app-header__content">
         <a href="#" class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false">
-                                @if(App()->isLocale('en'))
-                                <img src="{{asset('images/en.png')}}" width="10%"> English
-                                @elseif(App()->isLocale('mm_uni'))
-                                <img src="{{asset('images/mm.png')}}"  width="10%"> မြန်မာ (Unicode)
-                                @else
-                                <img src="{{asset('images/en.png')}}"  width="10%"> English
-                                @endif
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a href="{{url('locale/en')}}" id="en"
-                                    class="dropdown-item locale en @if(App()->isLocale('en')) active @endif" data-lang="en"><img
-                                        src="{{asset('images/en.png')}}"  width="5%"> English</a>
-                                <a href="{{url('locale/mm_uni')}}" id="mm_uni"
-                                    class="dropdown-item locale mm_uni @if(App()->isLocale('mm_uni')) active @endif"
-                                    data-lang="mm_uni"><img src="{{asset('images/mm.png')}}"  width="5%"> မြန်မာ (Unicode)</a>
-                            </div>
+        aria-haspopup="true" aria-expanded="false">
+        @if(App()->isLocale('en'))
+        <img src="{{asset('images/en.png')}}" width="10%"> English
+        @elseif(App()->isLocale('mm_uni'))
+        <img src="{{asset('images/mm.png')}}"  width="10%"> မြန်မာ (Unicode)
+        @else
+        <img src="{{asset('images/en.png')}}"  width="10%"> English
+        @endif
+    </a>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a href="{{url('locale/en')}}" id="en"
+            class="dropdown-item locale en @if(App()->isLocale('en')) active @endif" data-lang="en"><img
+                src="{{asset('images/en.png')}}"  width="5%"> English</a>
+        <a href="{{url('locale/mm_uni')}}" id="mm_uni"
+            class="dropdown-item locale mm_uni @if(App()->isLocale('mm_uni')) active @endif"
+            data-lang="mm_uni"><img src="{{asset('images/mm.png')}}"  width="5%"> မြန်မာ (Unicode)</a>
+    </div>
+                              
         <div class="app-header-left">
             {{-- <div class="search-wrapper">
                 <div class="input-holder">

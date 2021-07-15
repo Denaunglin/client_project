@@ -60,7 +60,6 @@
                                 <th>@lang("message.header.minimun_qty")<br></th>
                                 <th>@lang("message.header.stock_in_hand")</th>
                                 <th>@lang("message.header.to_reorder")</th>
-                                <th class="no-sort action">@lang("message.header.action")</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
@@ -187,7 +186,6 @@
                     {data: 'minimun_qty', name: 'minimun_qty', defaultContent: "-", class: ""},
                     {data: 'stock_in_hand', name: 'stock_in_hand', defaultContent: "-", class: ""},
                     {data: 'to_re_order', name: 'to_re_order', defaultContent: "-", class: ""},
-                    {data: 'action', name: 'action', orderable: false, searchable: false, class: "action"},
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
                     order: [

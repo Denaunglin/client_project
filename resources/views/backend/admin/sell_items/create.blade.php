@@ -84,7 +84,7 @@
                                                     <input type="number" id="aa" name="price[]" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
                                                 </td>
                                                 <td>
-                                                    <input type="number" id="discount" name="discount[]" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
+                                                    <input type="number" id="discount" name="discount[]" value="0" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
                                                 </td>
                                                 <td>
                                                     <input type="number" id="net_price" name="net_price[]" class="form-control  @error('net_price') is-invalid @enderror" placeholder="Total Price" >
@@ -117,7 +117,7 @@
 @section('script')
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-{!! JsValidator::formRequest('App\Http\Requests\ItemRequest','#create') !!}
+{!! JsValidator::formRequest('App\Http\Requests\SellItem','#create') !!}
 <script>
      $(document).ready(function(){
         $('#hide_search').hide();
@@ -130,17 +130,27 @@
     } 
 
      $("#add_row").click(function(){
-        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty[]"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price[]"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' name='discount[]"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price[]"+i+"' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty[]"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price[]"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' value='0' name='discount[]"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price[]"+i+"' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
       $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
 
     var a = i;
+
+    $('#numeric_value'+a).keyup(function() {
+    var price = $("#aa"+a).val();
+    var discount = $("#discount"+a).val();
+    var sum = 0;
+    sum = (Number($(this).val()) * price ) -discount ;
+    $('#net_price'+a).val(sum);
+    });
+
     $('#discount'+a).keyup(function() {
     var price = $("#aa"+a).val();
     var qty = $("#numeric_value"+a).val();
     var sum = 0;
-    sum = (qty * price ) - Number($(this).val()) ;
+    sum = (qty * price ) - Number($(this).val())  ;
+    
     $('#net_price'+a).val(sum);
-    });
+    }); 
 
     $('#search'+a).change(function(e) {
             let search = $(this).val();
@@ -180,11 +190,20 @@
 
 });
 
-$('#discount').keyup(function() {
+$('#numeric_value').keyup(function() {
+    var price = $("#aa").val();
+    var discount = $("#discount").val();
+    var sum = 0;
+    sum = (Number($(this).val()) * price ) - discount  ;
+    
+    $('#net_price').val(sum);
+    }); 
+
+    $('#discount').keyup(function() {
     var price = $("#aa").val();
     var qty = $("#numeric_value").val();
     var sum = 0;
-    sum = (qty * price ) - Number($(this).val()) ;
+    sum = (qty * price ) - Number($(this).val())  ;
     
     $('#net_price').val(sum);
     }); 
@@ -204,7 +223,7 @@ $('#item_id').on('change', function(e) {
             let item = $(this).val();
             $.get('/get_item?item=' + item, function(data) {
                     $('#aa').empty();
-            $('#aa').val(data.buying_price);
+            $('#aa').val(data.retail_price);
             $('#hide_search').hide();
         });
     });

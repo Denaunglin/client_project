@@ -212,7 +212,6 @@ $('#numeric_value').keyup(function() {
     $('#net_price').val(sum);
     });
 
-
     $('#search').change(function(e) {
             let search = $(this).val();
             $.get('/get_item?search=' + search, function(data) {

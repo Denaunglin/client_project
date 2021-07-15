@@ -39,7 +39,6 @@
                     <table class="align-middle table data-table">
                         <thead>
                             <th></th>
-                            <th>@lang("message.header.invoice_about")</th>
                             <th>@lang("message.header.invoice_no")</th>
                             <th>@lang("message.header.created_at")</th>
                             <th>@lang("message.header.updated_at")</th>
@@ -83,12 +82,7 @@
                     name: "plus-icon",
                     defaultContent: null
                 },
-                {
-                    data: 'invoice_about',
-                    name: 'invoice_about',
-                    defaultContent: "-",
-                    class: ""
-                },
+               
                 {
                     data: 'invoice_no',
                     name: 'invoice_no',

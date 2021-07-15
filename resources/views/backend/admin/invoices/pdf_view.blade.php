@@ -35,6 +35,8 @@
     }
 
     .total_invoice {
+        float: right;
+
         background-color: #f7f7f7;
     }
 
@@ -95,8 +97,7 @@
             <p style="font-family: Tharlon"> {{$shop_name}} , </p>
             <p> Email : {{$shop_email}}</p>
             <P>PH : {{$shop_phone}} ,</P>
-            <p>  Address : {{$shop_address}} </p>
-
+            <p>  Address : {{$shop_address}} </p>   
         </div>
     </div>
 
@@ -114,33 +115,26 @@
                 </tr>
             </thead>
             <tbody>
+                @foreach($item_data as $data)
                 <tr>
                     <td> 
-                        @foreach($item_name as $data)
-                            {{$data}}
-                        @endforeach
+                      {{$data['item_name']}}
                      </td>
                     <td>
-                        @foreach($qty as $data)
-                        {{$data}}
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach($price as $data)
-                        {{$data}}
-                        @endforeach
-                    </td>
-                    <td>
-                        @foreach($discount as $data)
-                        {{$data}}
-                        @endforeach
+                        {{$data['qty']}}
+
                     </td>
                     <td> 
-                        @foreach($net_price as $data)
-                        {{$data}}
-                        @endforeach
+                        {{number_format($data['price'])}}
+                    </td>
+                    <td> 
+                        {{$data['discount']}}
+                    </td>
+                    <td> 
+                        {{number_format($data['net_price'])}}
                     </td>
                 </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -149,7 +143,6 @@
                 <h2 class="total_invoice ">
                     <span class="total"> Invoice Total: </span>  {{$total_price}} MMK 
                 </h2>
-
         {{-- <h3> Address</h3> --}}
         {{-- <p>Nay Pyi Taw - H-34 & H-35, Yazathigaha Road, Dekkhina Thiri Township, Hotel Zone(1) </p> --}}
         {{-- <p>(Hotline) : +95-67-8106655, Tel: +95-977900971-2,067-419113-5</p> --}}

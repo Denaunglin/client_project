@@ -346,7 +346,7 @@ class ReturnItemController extends Controller
         }else{
             $item_ledger->buying_back = $item_ledger->buying_back;
         }
-        $item_ledger->selling_sell = $item_ledger->qty;
+        $item_ledger->selling_sell = $return_item->qty;
         if($return_type == 1){
             $item_ledger->selling_back = $request->qty;
         }else{
@@ -364,7 +364,7 @@ class ReturnItemController extends Controller
             $item_ledger->adjust_in = $item_ledger->adjust_in;
 
         }
-        $item_ledger->closing_qty = $shop_storage->closing_qty;
+        $item_ledger->closing_qty = $shop_storage->qty;
         $item_ledger->update();
 
         activity()

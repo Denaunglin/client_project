@@ -47,7 +47,7 @@ class ShopStorageController extends Controller
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
                 ->addColumn('item_id', function ($shop_storage) {
-                    return $shop_storage->item_id ? $shop_storage->item->name : '-';
+                    return $shop_storage->item ? $shop_storage->item->name : '-';
                 })
                 ->addColumn('plus-icon', function () {
                     return null;
@@ -72,10 +72,17 @@ class ShopStorageController extends Controller
         // if (!$this->getCurrentAuthUser('admin')->can('add_bed_type')) {
         //     abort(404);
         // }
-        $shop_storage = new ShopStorage();
-        $shop_storage->item_id = $request['item_id'];
-        $shop_storage->qty = $request['qty'];
-        $shop_storage->save();
+        $shop_storage =  ShopStorage::where('item_id',$request->item_id)->first();
+        if($shop_storage){
+            $qty = $request->qty + $shop_storage->qty;
+            $shop_storage->qty = $qty;
+            $shop_storage->update();
+        }else{
+            $shop_storage = new ShopStorage();
+            $shop_storage->item_id = $request['item_id'];
+            $shop_storage->qty = $request['qty'];
+            $shop_storage->save();
+        }
 
         activity()
             ->performedOn($shop_storage)

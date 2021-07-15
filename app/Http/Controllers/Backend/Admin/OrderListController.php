@@ -50,27 +50,27 @@ class OrderListController extends Controller
 
             return Datatables::of($order_list)
                 ->addColumn('action', function ($order_list) use ($request) {
-                    $detail_btn = '';
-                    $restore_btn = '';
-                    $edit_btn = ' ';
-                    $trash_or_delete_btn = ' ';
+                    // $detail_btn = '';
+                    // $restore_btn = '';
+                    // $edit_btn = ' ';
+                    // $trash_or_delete_btn = ' ';
 
-                    if ($this->getCurrentAuthUser('admin')->can('edit_item_category')) {
-                        $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.order_lists.edit', ['order_list' => $order_list->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
-                    }
+                    // if ($this->getCurrentAuthUser('admin')->can('edit_item_category')) {
+                    //     $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.order_lists.edit', ['order_list' => $order_list->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
+                    // }
 
-                    if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
+                    // if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
 
-                        if ($request->trash == 1) {
-                            $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $order_list->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
-                            $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $order_list->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
-                        } else {
-                            $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $order_list->id . '"><i class="fas fa-trash fa-lg"></i></a>';
-                        }
+                    //     if ($request->trash == 1) {
+                    //         $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $order_list->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
+                    //         $trash_or_delete_btn = '<a class="destroy text text-danger mr-2" href="#" data-id="' . $order_list->id . '"><i class="fa fa-minus-circle fa-lg"></i></a>';
+                    //     } else {
+                    //         $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $order_list->id . '"><i class="fas fa-trash fa-lg"></i></a>';
+                    //     }
 
-                    }
+                    // }
 
-                    return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
+                    // return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
                 ->addColumn('item_group', function ($order_list) {
 
