@@ -34,9 +34,7 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th>@lang("message.header.barcode")</th>
                                 <th>@lang("message.header.item_name")</th>
-                                <th>@lang("message.header.unit")</th>
                                 <th>@lang("message.header.item_category")  <br></th>
                                 <th>@lang("message.header.item_sub_category")</th>
                                 <th>@lang("message.header.qty")</th>
@@ -50,8 +48,6 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.header.total")</th>
-                                <th></th>
-                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -163,10 +159,10 @@
               }
             },
                   
-                    {
-                        extend: 'pageLength'
-                    }
-                ],
+                {
+                    extend: 'pageLength'
+                }
+            ],
                 lengthMenu: [
                     [10, 25, 50, 100, 500],
                     ['10 rows', '25 rows', '50 rows', '100 rows', '500 rows']
@@ -177,9 +173,7 @@
                 },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'barcode', name: 'barcode', defaultContent: "-", class: ""},
                     {data: 'item_id', name: 'item_id', defaultContent: "-", class: ""},
-                    {data: 'unit', name: 'unit', defaultContent: "-", class: ""},
                     {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
                     {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
                     {data: 'qty', name: 'qty', defaultContent: "-", class: ""},
@@ -188,7 +182,7 @@
                     {data: 'net_price', name: 'net_price', defaultContent: "-", class: ""}, 
                     ],
                     order: [
-                        [8, 'desc']
+                        [7, 'desc']
                     ],
                     responsive: {
                         details: {type: "column", target: 0}
@@ -222,13 +216,13 @@
                 total6 = api.column(6).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 total7 = api.column(7).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
-                total9 = api.column(9).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                // total9 = api.column(9).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
                 $(api.column(6).footer()).html(total6.toLocaleString());
                 $(api.column(7).footer()).html(total7.toLocaleString());
 
-                $(api.column(9).footer()).html(total9.toLocaleString());
+                // $(api.column(9).footer()).html(total9.toLocaleString());
 
         }
             }); 

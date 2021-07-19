@@ -9,6 +9,11 @@
 @section('content')
 @include('layouts.errors_alert')
 <div class="row">
+    <div class="col-md-12 mb-3">
+        @can('add_item')
+        <a  href="{{route('admin.credit_reports.create')}}" title="Add Credit Report" class="btn btn-primary float-right action-btn">@lang("message.header.add_credit_report")</a>
+        @endcan
+    </div>
     <div class="col-md-12">
         <div class="main-card mb-3 card">
             <div class="card-body">
@@ -26,6 +31,7 @@
                                     <option value="{{$data->id}}">{{$data->name}}</option>
                                         @endforeach
                                     </select>
+                                    <input type="hidden" name="sell_type" value="1">
                                 </div>
                                 
                                 <div class="col-md-12 column">
@@ -120,7 +126,7 @@
 {!! JsValidator::formRequest('App\Http\Requests\SellItem','#create') !!}
 <script>
      $(document).ready(function(){
-        $('#hide_search').hide();
+      $('#hide_search').hide();
 
       var items = {!! json_encode($item) !!};
       var i=1;
@@ -223,7 +229,7 @@ $('#item_id').on('change', function(e) {
             let item = $(this).val();
             $.get('/get_item?item=' + item, function(data) {
                     $('#aa').empty();
-            $('#aa').val(data.retail_price);
+            $('#aa').val(data.wholesale_price);
             $('#hide_search').hide();
         });
     });

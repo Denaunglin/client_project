@@ -54,6 +54,7 @@ return [
 
         "there_is_no_data" => "There is no data !",
         "add_row" => "Add Row",
+        "add_return_item" => "Add Return Item",
         "delete_row" => "Delete Row",
         "add_buying_item" => "Add Buying Item",
         "edit_buying_item" => "Edit Buying Item",

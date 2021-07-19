@@ -18,7 +18,10 @@
     </div>
 
     @can('add_item')
-    <a href="{{route('admin.sell_items.create')}}" title="Add Category" class="btn btn-primary action-btn">Add Commodity Sales Item</a>
+    <a href="{{route('admin.sell_items.create_retail')}}" title="Add Category" class="btn btn-primary action-btn">Add Retail Sales Item</a>
+    @endcan
+    @can('add_item')
+    <a href="{{route('admin.sell_items.create_wholesale')}}" title="Add Category" class="btn btn-primary ml-2 action-btn">Add Wholesale Sales Item</a>
     @endcan
 </div>
 @endsection

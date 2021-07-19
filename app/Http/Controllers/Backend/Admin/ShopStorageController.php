@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Admin;
 use App\Models\Item;
 use App\Models\ShopStorage;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
@@ -29,11 +30,11 @@ class ShopStorageController extends Controller
                     $edit_btn = ' ';
                     $trash_or_delete_btn = ' ';
 
-                    if ($this->getCurrentAuthUser('admin')->can('edit_bed_type')) {
+                    // if ($this->getCurrentAuthUser('admin')->can('edit_bed_type')) {
                         $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.shop_storages.edit', ['shop_storage' => $shop_storage->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
-                    }
+                    // }
 
-                    if ($this->getCurrentAuthUser('admin')->can('delete_bed_type')) {
+                    // if ($this->getCurrentAuthUser('admin')->can('delete_bed_type')) {
 
                         if ($request->trash == 1) {
                             $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $shop_storage->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
@@ -42,7 +43,7 @@ class ShopStorageController extends Controller
                             $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $shop_storage->id . '"><i class="fas fa-trash fa-lg"></i></a>';
                         }
 
-                    }
+                    // }
 
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
@@ -87,15 +88,15 @@ class ShopStorageController extends Controller
         activity()
             ->performedOn($shop_storage)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Bed Type (Admin Panel'])
-            ->log(' New Bed Type (' . $shop_storage->name . ') is created ');
+            ->withProperties(['source' => 'Shop Storage (Admin Panel'])
+            ->log(' New Shop Storage  is created ');
 
         return redirect()->route('admin.shop_storages.index')->with('success', 'Successfully Created');
     }
 
     public function show(ShopStorage $shop_storage)
     {
-        return view('backend.admin.shop_storages.show', compact('bedtype'));
+        return view('backend.admin.shop_storages.show', compact('shop_storage'));
     }
 
     public function edit($id)
@@ -103,9 +104,10 @@ class ShopStorageController extends Controller
         // if (!$this->getCurrentAuthUser('admin')->can('edit_bed_type')) {
         //     abort(404);
         // }
+        $item = Item::where('trash','0')->get();
 
         $shop_storage = ShopStorage::findOrFail($id);
-        return view('backend.admin.shop_storages.edit', compact('bedtype'));
+        return view('backend.admin.shop_storages.edit', compact('shop_storage','item'));
     }
 
     public function update(Request $request, $id)
@@ -122,8 +124,8 @@ class ShopStorageController extends Controller
         activity()
             ->performedOn($shop_storage)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Bed Type (Admin Panel'])
-            ->log('Bed Type is updated');
+            ->withProperties(['source' => 'Shop Storage (Admin Panel'])
+            ->log('Shop Storage is updated');
 
         return redirect()->route('admin.shop_storages.index')->with('success', 'Successfully Updated');
     }
@@ -138,8 +140,8 @@ class ShopStorageController extends Controller
         activity()
             ->performedOn($shop_storage)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Bed Type (Admin Panel'])
-            ->log(' Bed Type  is deleted ');
+            ->withProperties(['source' => 'Shop Storage (Admin Panel'])
+            ->log(' Shop Storage  is deleted ');
 
         return ResponseHelper::success();
     }
@@ -154,20 +156,20 @@ class ShopStorageController extends Controller
         activity()
             ->performedOn($shop_storage)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Bed Type (Admin Panel)'])
-            ->log(' Bed Type (' . $bedtype->name . ')  is moved to trash ');
+            ->withProperties(['source' => ' Shop Storage  (Admin Panel)'])
+            ->log('Shop Storage  is moved to trash ');
 
         return ResponseHelper::success();
     }
 
-    public function restore(ShopStorage $bshop_storageedtype)
+    public function restore(ShopStorage $shop_storage)
     {
         $shop_storage->restore();
         activity()
             ->performedOn($shop_storage)
             ->causedBy(auth()->guard('admin')->user())
-            ->withProperties(['source' => 'Bed Type (Admin Panel'])
-            ->log(' Bed Type  is restored from trash ');
+            ->withProperties(['source' => 'Shop Storage (Admin Panel'])
+            ->log('Shop Storage is restored from trash ');
 
         return ResponseHelper::success();
     }

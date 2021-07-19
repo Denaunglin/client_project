@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Backend\Admin;
 
 use App\Models\Item;
 use App\Models\Cashbook;
+use App\Models\SellItems;
 use Illuminate\Http\Request;
+use App\Http\Requests\SellItem;
 use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
@@ -18,11 +20,20 @@ class ProfitLostController extends Controller
         $date = date('Y-m-d');
         $cashbook_data=[];
         $cash_books = Cashbook::where('trash',0)->whereDate('created_at',$date)->get();
+        $sell_item = SellItems::where('trash',0)->whereDate('created_at',$date)->get();
         $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
         if ($daterange) {
             $cash_books = Cashbook::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1])->get();
+            $sell_item = SellItems::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1])->get();
         }   
         // $cash_books = Cashbook::where('trash',0)->get();
+        $total_selling_amount = 0;
+        $total_selling_profit = 0;
+
+        foreach($sell_item as $data){
+            $total_selling_amount += $data->net_price;
+        }
+
        
         $cashbook_income = 0;
         $cashbook_outgoing = 0;
@@ -70,13 +81,16 @@ class ProfitLostController extends Controller
             }
             $total_buy_origin_price = 0;
             $total_retail_price = 0;
+            $total_wholesale_price = 0;
 
             foreach($check_price as $data){
                 $total_buy_origin_price += $data['item_buying_price'];
                 $total_retail_price += $data['item_retail_price'] ;
+                $total_wholesale_price += $data['item_wholesale_price'] ;
+
             }
         
-        $total_selling_profit =  $total_retail_price - $total_buy_origin_price ;
+        $total_selling_profit =  ($total_selling_amount ) - $total_buy_origin_price ;
 
         $cashbook_total = $cashbook_income + $cashbook_outgoing;
         if($cashbook_income > $cashbook_outgoing){
@@ -123,11 +137,11 @@ class ProfitLostController extends Controller
                            
                                 <tbody>
                                     <tr class="bg-light">
-                                    <td> '.$cashbook_data['cashbook_income'].' </td>
-                                    <td> '.$cashbook_data['cashbook_outgoing'].' </td>
-                                    <td>  '.$cashbook_data['cashbook_total'].' </td>
-                                    <td>  '.$cashbook_data['profit'].' </td>
-                                    <td>  '.$cashbook_data['lost'].' </td>
+                                    <td> '.$cashbook_data['cashbook_income'].' MMK </td>
+                                    <td> '.$cashbook_data['cashbook_outgoing'].' MMK </td>
+                                    <td>  '.$cashbook_data['cashbook_total'].' MMK </td>
+                                    <td>  '.$cashbook_data['profit'].' MMK </td>
+                                    <td>  '.$cashbook_data['lost'].' MMK </td>
                                     </tr>
                                 </tfoot>
                             </tbody>
@@ -142,8 +156,8 @@ class ProfitLostController extends Controller
                            
                                 <tbody>
                                     <tr class="bg-light">
-                                    <td> '.$cashbook_data['total_sell_qty'].' </td>
-                                    <td> '.$cashbook_data['total_selling_profit'].' </td>
+                                    <td> '.$cashbook_data['total_sell_qty'].'  </td>
+                                    <td> '.$cashbook_data['total_selling_profit'].' MMK </td>
                                     </tr>
                                 </tfoot>
                             </tbody>

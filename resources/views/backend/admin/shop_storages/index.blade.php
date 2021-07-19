@@ -35,6 +35,7 @@
                                 <th></th>
                                 <th>@lang("message.header.item")</th>
                                 <th>@lang("message.header.qty")</th>
+                                <th>Action</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
                         </thead>
@@ -43,6 +44,7 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.total")</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -176,7 +178,12 @@
                         defaultContent: "-",
                         class: ""
                     },
-                  
+                    {
+                        data: 'action',
+                        name: 'action',
+                        defaultContent: "-",
+                        class: ""
+                    },
                     {
                         data: 'updated_at',
                         name: 'updated_at',
@@ -184,7 +191,7 @@
                     }
                 ],
                 order: [
-                    [3, 'desc']
+                    [4, 'desc']
                 ],
                 responsive: {
                     details: {
@@ -248,7 +255,7 @@
             } else {
                 var trash = 0;
             }
-            app_table.ajax.url(`{{url('/admin/shop_storages?trash=`+trash+`/')}}`).load();
+            table.ajax.url(`{{url('/admin/shop_storages?trash=`+trash+`/')}}`).load();
         });
 
         $(document).on('click', '.trash', function (e) {
@@ -262,7 +269,7 @@
                     if (willDelete) {
                         $.ajax({
                             url :`{{url('/admin/shop_storages/`+id+`/trash')}}`,
-                            type: 'GET',
+                            type: 'PUT',
                             success: function () {
                                 table.ajax.reload();
                             }
@@ -282,7 +289,7 @@
                     if (willDelete) {
                         $.ajax({
                             url :`{{url('/admin/shop_storages/`+id+`/restore')}}`,
-                            type: 'GET',
+                            type: 'PUT',
                             success: function () {
                                 table.ajax.reload();
                             }
@@ -301,7 +308,7 @@
                 .then((willDelete) => {
                     if (willDelete) {
                         $.ajax({
-                            url :`{{url('/admin/shop_storages/`+id+`/')}}`,
+                            url :`{{url('/admin/shop_storages/`+id+`/delete')}}`,
                             type: 'GET',
                             success: function () {
                                 table.ajax.reload();

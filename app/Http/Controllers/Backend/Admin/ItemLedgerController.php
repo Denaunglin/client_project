@@ -27,7 +27,7 @@ class ItemLedgerController extends Controller
         if ($request->ajax()) {
             $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
             
-            $item_ledgers = ItemLedger::anyTrash($request->trash);
+            $item_ledgers = ItemLedger::anyTrash($request->trash)->orderBy('id','desc');
             if ($daterange) {
                 $item_ledgers = ItemLedger::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }

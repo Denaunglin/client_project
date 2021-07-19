@@ -98,6 +98,13 @@ class SellItemController extends Controller
 
                     return $sell_item->item ? $sell_item->item->name : '-';
                 })
+                ->editColumn('price', function ($sell_item) {
+                        if($sell_item->sell_type == 0){
+                            return $sell_item->price .'<br>'. "(Retail)";
+                        }else{
+                            return $sell_item->price .'<br>'."(Wholesale)";
+                        }
+                })
                 ->addColumn('item_category', function ($sell_item) {
 
                     return $sell_item->item_category ? $sell_item->item_category->name : '-';
@@ -108,14 +115,14 @@ class SellItemController extends Controller
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action','customer','item_id','item_category','item_sub_category'])
+                ->rawColumns(['action','customer','price','item_id','item_category','item_sub_category'])
                 ->make(true);
         }
         
         return view('backend.admin.sell_items.index',compact('item','item_category','item_sub_category','tax'));
     }
 
-    public function create()
+    public function createRetail()
     {
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
@@ -133,7 +140,28 @@ class SellItemController extends Controller
         $item_category = ItemCategory::where('trash', 0)->get();
         $customer = User::where('trash',0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
-        return view('backend.admin.sell_items.create', compact('item_category','customer','item', 'item_sub_category'));
+        return view('backend.admin.sell_items.create_retail', compact('item_category','customer','item', 'item_sub_category'));
+    }
+
+    public function createWholesale()
+    {
+        if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
+            abort(404);
+        }
+        // $item = Item::where('trash',0)->get();
+        $shop_storage = ShopStorage::where('trash',0)->get();
+        $item = [];
+        foreach($shop_storage as $data){
+            $option = Item::where('trash',0)->where('id', $data->item_id)->first();
+            if($option != null){
+                $item [] = $option;
+            }
+        }
+        
+        $item_category = ItemCategory::where('trash', 0)->get();
+        $customer = User::where('trash',0)->get();
+        $item_sub_category = ItemSubCategory::where('trash', 0)->get();
+        return view('backend.admin.sell_items.create_wholesale', compact('item_category','customer','item', 'item_sub_category'));
     }
 
     public function store(SellItem $request)
@@ -164,6 +192,7 @@ class SellItemController extends Controller
             $sell_item->price = $request['price'][0];
             $sell_item->discount = $request['discount'][0];
             $sell_item->net_price = $request['net_price'][0];
+            $sell_item->sell_type = $request['sell_type'];
             $sell_item->save();
 
             $cash_book = new Cashbook();
@@ -219,6 +248,7 @@ class SellItemController extends Controller
                 $sell_item->price = $request['price'][$var];
                 $sell_item->discount = $request['discount'][$var];
                 $sell_item->net_price = $request['net_price'][$var];
+                $sell_item->sell_type = $request['sell_type'];
                 $sell_item->save();
 
                 $cash_book = new Cashbook();
@@ -236,7 +266,7 @@ class SellItemController extends Controller
                 $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
                 if($shop_storage){
-                    $qty = ($shop_storage->qty) + ($sell_item->qty);
+                    $qty = ($shop_storage->qty) - ($sell_item->qty);
                     $shop_storage->qty = $qty;
                     $shop_storage->update();
                 }else{

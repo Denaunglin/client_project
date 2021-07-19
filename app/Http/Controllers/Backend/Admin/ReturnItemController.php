@@ -87,7 +87,7 @@ class ReturnItemController extends Controller
                 })
                 ->addColumn('item_id', function ($return_item) {
 
-                    return $return_item->item_id ? $return_item->item->name : '-';
+                    return $return_item->item ? $return_item->item->name : '-';
                 })
                 ->addColumn('item_category', function ($return_item) {
 

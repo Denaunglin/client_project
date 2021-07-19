@@ -111,14 +111,14 @@ Route::name('admin.')
             Route::get('/return_items/{return_item}/restore', 'ReturnItemController@restore')->name('return_items.restore');
             Route::post('return_items/{return_item}/update', 'ReturnItemController@update')->name('return_items.update');
 
-
             Route::resource('sell_items', 'sellItemController');
             Route::put('/sell_items/{sell_item}/trash', 'sellItemController@trash')->name('sell_items.trash');
             Route::put('/sell_items/{sell_item}/restore', 'sellItemController@restore')->name('sell_items.restore');
             Route::get('/sell_items/{sell_item}/', 'sellItemController@destroy')->name('sell_items.destroy');
             Route::get('index/sell_items/','sellItemController@indexSell');
             Route::get('credit/sell_items/','sellItemController@creditSellView');
-
+            Route::get('sell_items/create/retail','sellItemController@createRetail')->name('sell_items.create_retail');
+            Route::get('sell_items/create/wholesale','sellItemController@createWholesale')->name('sell_items.create_wholesale');
 
             Route::resource('services', 'ServiceController');
             Route::put('/services/{service}/trash', 'ServiceController@trash')->name('services.trash');
@@ -204,6 +204,7 @@ Route::name('admin.')
             Route::resource('shop_storages', 'ShopStorageController');
             Route::put('/shop_storages/{shop_storage}/trash', 'ShopStorageController@trash')->name('shop_storages.trash');
             Route::put('/shop_storages/{shop_storage}/restore', 'ShopStorageController@restore')->name('shop_storages.restore');
+            Route::get('/shop_storages/{shop_storage}/delete', 'ShopStorageController@destroy')->name('shop_storages.delete');
             Route::get('/shop_storages/{shop_storage}/detail', 'ShopStorageController@detail')->name('shop_storages.detail');
             Route::post('shop_storages/{shop_storage}/update', 'ShopStorageController@update')->name('shop_storages.update');
 

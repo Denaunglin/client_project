@@ -175,7 +175,7 @@
                 </li>
                 @endcan
                 <hr>
-                @can('view_item')
+                {{-- @can('view_item')
                 <li>
                     <a href="{{route('admin.opening_items.index')}}"  class="menu-list-member  @yield('opening-item-active')">
                         <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
@@ -183,7 +183,7 @@
                     </a>
                 </li>
                 @endcan
-                <hr>
+                <hr> --}}
                 <li>
                     <a href="{{route('admin.return_items.index')}}"  class="menu-list-member  @yield('return-item-active')">
                         <i class="fa fa-archive mr-3" style="font-size: 20px" ></i>
