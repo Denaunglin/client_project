@@ -199,7 +199,7 @@ class SellItemController extends Controller
 
             if($request->credit_amount != 0){
                 $credit = new Credit();
-                $credit->item_id = $item->id;
+                $credit->item_id = serialize($item->id);
                 $credit->qty = $request['total_qty'];
                 $credit->customer_id = $customer_id;
                 $credit->origin_amount = $request['origin_amount'];
