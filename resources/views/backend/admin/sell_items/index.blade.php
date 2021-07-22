@@ -39,8 +39,10 @@
             </div>
         </div>  
         <div class="col-md-6 col-sm-12 col-xl-3">
+            @if($invoice)
             <a class="btn btn-block btn-theme" href="{{$invoice->pdf_path()}}">
                 <span class="fa fa-download"> Print Voucher</span> </a>
+            @endif
         </div>        
     </div>   
     </div>

@@ -7,6 +7,7 @@ use App\Models\Tax;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Rooms;
+use App\Models\Invoice;
 use App\Models\Discounts;
 use App\Models\AccountType;
 use Darryldecode\Cart\Cart;
