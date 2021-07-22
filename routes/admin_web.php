@@ -211,6 +211,8 @@ Route::name('admin.')
             Route::post('shop_storages/{shop_storage}/update', 'ShopStorageController@update')->name('shop_storages.update');
 
             Route::resource('cash_books', 'CashbookController');
+            Route::get('/cash_books/{cash_book}/delete', 'CashbookController@destroy')->name('cash_books.delete');
+
             Route::resource('profit_lost', 'ProfitLostController');
 
             Route::get('/', 'IndexController@index')->name('index');

@@ -4,9 +4,10 @@ namespace App\Http\Controllers\Backend\Admin;
 
 use App\Models\Cashbook;
 use Illuminate\Http\Request;
+use App\Helper\ResponseHelper;
+use Yajra\DataTables\DataTables;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
-use Yajra\DataTables\DataTables;
 
 
 class CashbookController extends Controller
@@ -30,11 +31,8 @@ class CashbookController extends Controller
                     $edit_btn = ' ';
                     $trash_or_delete_btn = ' ';
 
-                    if ($this->getCurrentAuthUser('admin')->can('edit_bed_type')) {
-                        $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.cash_books.edit', ['cashbook' => $cashbook->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
-                    }
-
-                    if ($this->getCurrentAuthUser('admin')->can('delete_bed_type')) {
+                        // $edit_btn = '<a class="edit text text-primary mr-2" href="' . route('admin.cash_books.edit', ['cashbook' => $cashbook->id]) . '"><i class="far fa-edit fa-lg"></i></a>';
+                    
 
                         if ($request->trash == 1) {
                             $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $cashbook->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
@@ -43,7 +41,7 @@ class CashbookController extends Controller
                             $trash_or_delete_btn = '<a class="trash text text-danger mr-2" href="#" data-id="' . $cashbook->id . '"><i class="fas fa-trash fa-lg"></i></a>';
                         }
 
-                    }
+                    
 
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
@@ -85,6 +83,12 @@ class CashbookController extends Controller
                 ->make(true);
         }
         return view('backend.admin.cash_books.index');
+    }
+
+    public function destroy(CashBook $cash_book){
+        $cash_book->delete();
+        return ResponseHelper::success();
+
     }
 
 }

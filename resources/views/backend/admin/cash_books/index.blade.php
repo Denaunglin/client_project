@@ -10,10 +10,10 @@
 
 @section('page_title_buttons')
 <div class="d-flex justify-content-end">
-    <div class="custom-control custom-switch p-2 mr-3">
+    {{-- <div class="custom-control custom-switch p-2 mr-3">
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
         <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
-    </div>
+    </div> --}}
 
 </div>
 @endsection
@@ -41,6 +41,7 @@
                                 <th>@lang("message.header.cashbook_income")</th>
                                 <th>@lang("message.header.cashbook_outgoing") </th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -48,6 +49,7 @@
                             <tr>
                                 <th></th>
                                 <th>@lang("message.total")</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -195,7 +197,9 @@
                         data: 'updated_at',
                         name: 'updated_at',
                         defaultContent: null
-                    }
+                    },
+                    {data: 'action', name: 'action', orderable: false, searchable: false},
+
                 ],
                 order: [
                     [4, 'desc']
@@ -304,6 +308,26 @@
                 var trash = 0;
             }
             app_table.ajax.url(`{{url('/admin/cash_books?trash=`+trash+`/')}}`).load();
+        });
+
+        $(document).on('click', '.trash', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            swal("Are you sure, you want to delete?", {
+                    className: "danger-bg",
+                    buttons: [true, "Yes"],
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url :`{{url('/admin/cash_books/`+id+`/delete')}}`,
+                            type: 'GET',
+                            success: function () {
+                                app_table.ajax.reload();
+                            }
+                        });
+                    }
+                });
         });
     });
 </script>
