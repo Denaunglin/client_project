@@ -83,6 +83,8 @@ class IndexController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('view_item')) {
             abort(404);
         }
+        $invoice = Invoice::latest()->first();
+
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
@@ -157,7 +159,7 @@ class IndexController extends Controller
                 ->rawColumns(['action','customer','item_id','item_category','item_sub_category'])
                 ->make(true);
         }
-        return view('backend.admin.index',compact('item','item_category','item_sub_category','tax'));
+        return view('backend.admin.index',compact('item','item_category','item_sub_category','tax','invoice'));
 
         // return view('backend.admin.index', compact('products','cart_data','data_total','customer','item_category','cart'));
     }
