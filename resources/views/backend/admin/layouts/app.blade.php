@@ -84,10 +84,12 @@
       
         $('#searchModal').on('click', function(e) {
             $('#input').val('');
+            $("#input").focus();
             $("#menu-search-result-list").html('');
             $("#menu-search-result-container").attr('hidden', true);
         });
         
+
          $('#input').change(function(e) {
             let search = $(this).val();
           console.log(search);

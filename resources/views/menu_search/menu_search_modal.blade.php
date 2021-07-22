@@ -13,7 +13,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">Search : </span>
                     </div>
-                    <input type="text" id="input" class="form-control menu-search-input" placeholder="Type Item Name ..." aria-label="Menu Search" aria-describedby="basic-addon1" autofocus>
+                    <input type="text" id="input" class="form-control menu-search-input" placeholder="Type Item Name ..." aria-label="Menu Search" aria-describedby="basic-addon1" autofocus >
                 </div>
 
                 <div id="menu-search-result-container" class="menu-search-result-container" hidden>
