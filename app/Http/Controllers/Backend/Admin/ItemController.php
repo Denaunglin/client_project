@@ -71,10 +71,10 @@ class ItemController extends Controller
                 })
                 ->addColumn('item_category', function ($item) {
 
-                    return $item->item_category ? $item->item_category->name : '-';
+                    // return $item->item_category ? $item->item_category->name : '-';
                 })
                 ->addColumn('item_sub_category', function ($item) {
-                    return $item->item_sub_category_id ? $item->item_sub_category->name : '-';
+                    // return $item->item_sub_category_id ? $item->item_sub_category->name : '-';
                 })
              
                 ->addColumn('plus-icon', function () {
@@ -103,8 +103,6 @@ class ItemController extends Controller
             abort(404);
         }
 
-       
-        
         $expire_date = $request->expire_status == 1 ? null : $request->expire_date ;
     
         $item = new Item();

@@ -34,10 +34,15 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label>@lang("message.header.item") </label>
-                                <select class="form-control select2" id="item_id" name="item_id" required>
+                                <select class="form-control select2" id="item_id" name="item_id" multiple required>
                                     <option value="">@lang("message.header.choose_item")</option>
                                     @forelse($item as $data)
-                                    <option  @if($credit->item_id == $data->id) selected @endif value="{{$data->id}}">{{$data->name }}</option>
+                                    @php 
+                                    $id = unserialize($credit->item_id);
+                                    @endphp
+                                    @foreach($id as $item_id)
+                                    <option  @if($item_id == $data->id) selected @endif value="{{$data->id}}">{{$data->name }}</option>
+                                    @endforeach
                                     @empty<p>@lang("message.header.there_is_no_data")</p>
                                     @endforelse
                                 </select>
@@ -98,6 +103,25 @@
                                     <strong>{{ $message }}</strong>
                                 </span>
                                 @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Fully Paid</label>
+                                    <div class="row ">
+                                        <div class="form-check ml-5">
+                                            <input class="form-check-input" @if($credit->paid_status == 0) checked @endif type="radio" name="paid_status" id="exampleRadios1" checked  value="0" >
+                                            <label class="form-check-label" for="exampleRadios1">
+                                                Paid
+                                            </label>
+                                        </div>
+                                        <div class="form-check ml-5">
+                                            <input class="form-check-input" @if($credit->paid_status == 1) checked @endif type="radio" name="paid_status" id="exampleRadios2"  value="1" >
+                                            <label class="form-check-label" for="exampleRadios2">
+                                               Unpaid 
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                     </div>
 

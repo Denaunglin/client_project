@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use App\Models\Tax;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Credit;
 use App\Models\Invoice;
 use App\Models\Cashbook;
 use App\Models\Supplier;
@@ -37,6 +38,7 @@ class SellItemController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('view_item')) {
             abort(404);
         }
+        $invoice = Invoice::latest()->first();
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
@@ -76,7 +78,7 @@ class SellItemController extends Controller
 
                     if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
                        
-                        $invoice_btn = '<a class="edit text text-primary" href="' . route('admin.sell_invoice', $sell_item->id) . '"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>';
+                        // $invoice_btn = '<a class="edit text text-primary" href="' . route('admin.sell_invoice', $sell_item->id) . '"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>';
 
                         if ($request->trash == 1) {
                             $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $sell_item->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
@@ -119,7 +121,7 @@ class SellItemController extends Controller
                 ->make(true);
         }
         
-        return view('backend.admin.sell_items.index',compact('item','item_category','item_sub_category','tax'));
+        return view('backend.admin.sell_items.index',compact('item','item_category','item_sub_category','tax','invoice'));
     }
 
     public function createRetail()
@@ -173,7 +175,7 @@ class SellItemController extends Controller
         $item = Item::findOrFail($request->item_id);
         $customer_id = $request->customer_id ? $request->customer_id : 0;
         $customer = User::where('id',$request->customer_id)->first();
-
+        $date = Carbon::now();
         $item_count = count($item);
 
         if($item_count == 1){
@@ -195,16 +197,46 @@ class SellItemController extends Controller
             $sell_item->sell_type = $request['sell_type'];
             $sell_item->save();
 
-            $cash_book = new Cashbook();
-            $cash_book->cashbook_income = $sell_item->net_price;
-            $cash_book->cashbook_outgoing = 0 ;
-            $cash_book->buying_id = null;
-            $cash_book->service_id = null;
-            $cash_book->selling_id = $sell_item->id;
-            $cash_book->expense_id = null;
-            $cash_book->credit_id = null;
-            $cash_book->return_id = null;
-            $cash_book->save();
+            if($request->credit_amount != 0){
+                $credit = new Credit();
+                $credit->item_id = $item->id;
+                $credit->qty = $request['total_qty'];
+                $credit->customer_id = $customer_id;
+                $credit->origin_amount = $request['origin_amount'];
+                $credit->paid_amount = $request['paid_amount'];
+                $credit->credit_amount = $request['credit_amount'];
+                $credit->paid_date = $date;
+                $credit->paid_times = 1;
+                $credit->late_id= 0;
+                $credit->paid_status = $request['paid_status'];
+                $credit->save();
+
+                if($request['paid_status'] == 0){
+                    $cash_book = new Cashbook();
+                    $cash_book->cashbook_income = $request->paid_amount;
+                    $cash_book->cashbook_outgoing = 0 ;
+                    $cash_book->buying_id = null;
+                    $cash_book->service_id = null;
+                    $cash_book->selling_id = null;
+                    $cash_book->expense_id = null;
+                    $cash_book->credit_id = $credit->id;
+                    $cash_book->return_id = null;
+                    $cash_book->save();
+                }
+
+            }else{
+                $cash_book = new Cashbook();
+                $cash_book->cashbook_income = $sell_item->net_price;
+                $cash_book->cashbook_outgoing = 0 ;
+                $cash_book->buying_id = null;
+                $cash_book->service_id = null;
+                $cash_book->selling_id = $sell_item->id;
+                $cash_book->expense_id = null;
+                $cash_book->credit_id = null;
+                $cash_book->return_id = null;
+                $cash_book->save();
+            }
+         
     
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
             $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
@@ -288,8 +320,39 @@ class SellItemController extends Controller
                 $item_ledger->closing_qty = $shop_storage->qty;
                 $item_ledger->save();
                 $var++;
+
+           
             }
         }
+        if($request->credit_amount != 0){
+            $credit = new Credit();
+            $credit->item_id = serialize($request->item_id);
+            $credit->qty = $request['total_qty'];
+            $credit->customer_id = $customer_id;
+            $credit->origin_amount = $request['origin_amount'];
+            $credit->paid_amount = $request['paid_amount'];
+            $credit->credit_amount = $request['credit_amount'];
+            $credit->paid_date = $date;
+            $credit->paid_times = 1;
+            $credit->late_id= 0;
+            $credit->paid_status = $request['paid_status'];
+            $credit->save();
+
+            if($request['paid_status'] == 0){
+                $cash_book = new Cashbook();
+                $cash_book->cashbook_income = $credit->paid_amount;
+                $cash_book->cashbook_outgoing = 0 ;
+                $cash_book->buying_id = null;
+                $cash_book->service_id = null;
+                $cash_book->selling_id = null;
+                $cash_book->expense_id = null;
+                $cash_book->credit_id = $credit->id;
+                $cash_book->return_id = null;
+                $cash_book->save();
+            }
+
+        }
+
         }
 
         activity()
@@ -333,8 +396,13 @@ class SellItemController extends Controller
                     "price" => $price,
                     "discount" => $discount,
                     "net_price" => $net_price,
-
                 ];
+            }
+
+            if($request->origin_amount != $request->paid_amount){
+                $credit = 1;
+            }else{
+                $credit = 0;
             }
     
             $today = $date->toFormattedDateString();
@@ -353,6 +421,12 @@ class SellItemController extends Controller
                 'heading2' => 'Invoice',
                 'total_price' => $total_price,
                 'item_data' => $item_data,
+                'total_qty' => $request['total_qty'],
+                'grand_total' => $request['origin_amount'],
+                'paid_amount' => $request['paid_amount'],
+                'credit_amount' => $request['credit_amount'],
+                'credit' => $credit,
+
             ];
             
     
@@ -711,7 +785,7 @@ class SellItemController extends Controller
     }
 }
     
-    public function creditSellView(){
+    public function addCredit(){
 
     }
 }

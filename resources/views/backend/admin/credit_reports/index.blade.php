@@ -86,6 +86,7 @@
                                 <th>@lang("message.header.credit_amount")</th>
                                 <th>@lang("message.header.paid_date")</th>
                                 <th>@lang("message.header.paid_times")</th>
+                                <th>Paid Status</th>
                                 <th>@lang("message.header.action")</th>
                                 <th>@lang("message.header.updated_at")</th>
                             </tr>
@@ -215,6 +216,7 @@
                     {data: 'credit_amount', name: 'credit_amount', defaultContent: "-", class: ""},
                     {data: 'paid_date', name: 'paid_date', defaultContent: "-", class: ""},
                     {data: 'paid_times', name: 'paid_times', defaultContent: "-", class: ""},
+                    {data: 'paid_status', name: 'paid_status', defaultContent: "-", class: ""},
                     {data: 'action', name: 'action', orderable: false, searchable: false, class: "action"},
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
@@ -294,6 +296,67 @@
                 app_table.ajax.url(`{{url('/admin/credit_reports?item=`+item+`&customer=`+customer+`&trash=`+trash+`/')}}`).load();
         });
 
+
+        $(document).on('click', '.trash', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            swal("Are you sure, you want to trash?", {
+                    className: "danger-bg",
+                    buttons: [true, "Yes"],
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url :`{{url('/admin/credit_reports/`+id+`/trash')}}`,
+                            type: 'GET',
+                            success: function () {
+                                app_table.ajax.reload();
+                            }
+                        });
+                    }
+                });
+        });
+
+        $(document).on('click', '.restore', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            swal("Are you sure, you want to restore?", {
+                    className: "danger-bg",
+                    buttons: [true, "Yes"],
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        $.ajax({
+                            url :`{{url('/admin/credit_reports/`+id+`/restore')}}`,
+                            type: 'GET',
+                            success: function () {
+                                app_table.ajax.reload();
+                            }
+                        });
+                    }
+                });
+        });
+
+        // $(document).on('click', '.destroy', function (e) {
+        //     e.preventDefault();
+        //     var id = $(this).data('id');
+        //     swal("Are you sure, you want to delete?", {
+        //             className: "danger-bg",
+        //             buttons: [true, "Yes"],
+        //         })
+        //         .then((willDelete) => {
+        //             if (willDelete) {
+        //                 $.ajax({
+        //                     url :`{{url('/admin/credit_reports/`+id+`/delete')}}`,
+        //                     type: 'GET',
+        //                     success: function () {
+        //                         app_table.ajax.reload();
+        //                     }
+        //                 });
+        //             }
+        //         });
+        // });
+        
 </script>
 @include('backend.admin.layouts.assets.trash_script')
 @endsection

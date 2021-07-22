@@ -29,22 +29,11 @@
 @section('content')
 <div class="pb-3">
     <div class="row">
-      
-        {{-- <div class="col-md-6 col-sm-12 col-xl-3">
-                    <div class="d-inline-block mb-2 " style="width:100%">
-                    <div class="input-group" >
-                        <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_name") : </span></div>
-                        <select class="custom-select item mr-1" >
-                            <option value="">@lang("message.header.all")</option>
-                            @forelse($item as $data)
-                            <option value="{{$data->id}}">{{$data->name}}</option>
-                            @empty
-                            <option value="">There is no Item Data !</option>
-                            @endforelse
-                        </select>
-                    </div>
-                </div>
-        </div>    --}}
+    
+        <div class="col-md-6 col-sm-12 col-xl-3">
+            <a class="btn btn-block btn-theme" href="{{$invoice->pdf_path()}}">
+                <span class="fa fa-download"> @lang("message.download_invoices")</span> </a>
+        </div>   
         <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2">
                 <div class="input-group">

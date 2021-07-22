@@ -10,9 +10,7 @@
 @include('layouts.errors_alert')
 <div class="row">
     <div class="col-md-12 mb-3">
-        @can('add_item')
-        <a  href="{{route('admin.credit_reports.create')}}" title="Add Credit Report" class="btn btn-primary float-right action-btn">@lang("message.header.add_credit_report")</a>
-        @endcan
+      
     </div>
     <div class="col-md-12">
         <div class="main-card mb-3 card">
@@ -31,7 +29,101 @@
                                     <option value="{{$data->id}}">{{$data->name}}</option>
                                         @endforeach
                                     </select>
-                                    <input type="hidden" name="sell_type" value="1">
+                                    <input type="hidden" name="sell_type" value="0">
+
+                                </div>
+                                <div class="col-md-8">
+                                    @can('add_item')
+                                    @endcan
+                                    <div class="modal fade mt-5" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="exampleModalLabel"> Pay
+                                            </h5>
+                                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                              </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('admin.sell_items.store') }}" method="post" id="create" enctype="multipart/form-data">
+                                                    @csrf
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="">Total Qty</label>
+                                                                <input type="number" id="total_qty" name="total_qty"  class="form-control @error('qty') is-invalid @enderror">
+                                                                @error('qty')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Total Amount </label>
+                                                                <input type="number" id="total_grand" name="origin_amount" class="form-control  @error('origin_amount') is-invalid @enderror" >
+                                                                @error('origin_amount')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>@lang("message.header.paid_amount")</label>
+                                                                <input type="number" id="paid_amount" value="0" name="paid_amount" class="form-control  @error('paid_amount') is-invalid @enderror" >
+                                                                @error('paid_amount')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>@lang("message.header.credit_amount") </label>
+                                                                <input type="number" id="credit_amount" value="0" name="credit_amount" class="form-control  @error('credit_amount') is-invalid @enderror" >
+                                                                @error('credit_amount')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>Fully Paid</label>
+                                                                <div class="row ">
+                                                                    <div class="form-check ml-5">
+                                                                        <input class="form-check-input" type="radio" name="paid_status" id="exampleRadios1" checked  value="0" >
+                                                                        <label class="form-check-label" for="exampleRadios1">
+                                                                            Paid
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="form-check ml-5">
+                                                                        <input class="form-check-input" type="radio" name="paid_status" id="exampleRadios2"  value="1" >
+                                                                        <label class="form-check-label" for="exampleRadios2">
+                                                                           Unpaid 
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                        <div class="row my-3">
+                                                        <div class="col-md-12 text-center">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
                                 </div>
                                 
                                 <div class="col-md-12 column">
@@ -105,13 +197,14 @@
                             <a id="add_row" class="btn btn-default pull-left">Add Row</a><a id='delete_row' class="pull-right btn btn-default">Delete Row</a>
                         </div>  
                         </div>
-                    <div class="row my-3">
-                        <div class="col-md-12 text-center">
-                            <a href="{{ route('admin.sell_items.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
-                            <input type="submit" value="@lang("message.confirm")" class="btn btn-success">
-                        </div>
-                       
-                    </div>
+                        <div class="row my-3">
+                            <div class="col-md-12 text-center">
+                                <a href="{{ route('admin.sell_items.index') }}" class="btn btn-danger mr-3">@lang("message.cancel")</a>
+                                {{-- <input type="submit" value="@lang("message.confirm")" class="btn btn-success"> --}}
+                                <a title="Add Credit Report"  data-toggle="modal" data-target="#exampleModal" class="btn btn-primary text-white action-btn">Pay</a>
+                            </div>
+                        </div> 
+                        
                 </form>
             </div>
         </div>
@@ -149,6 +242,27 @@
     $('#net_price'+a).val(sum);
     });
 
+    $('#numeric_value'+a).keyup(function() {  
+    var qty3 = $('#total_qty').val();
+    var qty2 = Number($(this).val());
+    var total_qty = parseInt(qty3) + parseInt(qty2) ; 
+    $('#total_qty').val(total_qty);
+
+    var net_price = $('#total_grand').val();
+    var net = $('#net_price'+a).val();
+    var total_net = parseInt(net) + parseInt(net_price) ; 
+    $('#total_grand').val(total_net);
+    $('#paid_amount').val(total_net);
+
+    });
+
+    $('#discount'+a).keyup(function() {  
+    var discount = $('#total_discount').val();
+    var dis = Number($(this).val());
+    var total_dis = parseInt(discount) + parseInt(dis) ; 
+    $('#total_discount').val(total_dis);
+    });
+
     $('#discount'+a).keyup(function() {
     var price = $("#aa"+a).val();
     var qty = $("#numeric_value"+a).val();
@@ -182,6 +296,7 @@
     $('#hide_search'+a).hide();
     $('#show_search'+a).on('click',function(e){
     $('#hide_search'+a).show();
+    
 })
 
       i++; 
@@ -190,13 +305,14 @@
      $("#delete_row").click(function(){
          if(i>1){
          $("#addr"+(i-1)).html('');
+
          i--;
          }
      });
 
 });
 
-$('#numeric_value').keyup(function() {
+$('#numeric_value').keyup(function() {  
     var price = $("#aa").val();
     var discount = $("#discount").val();
     var sum = 0;
@@ -239,6 +355,8 @@ $('#show_search').on('click',function(e){
 })
 
 
+
+
 // $('#item_id').change(function(e){
 //             var item_id =parseInt($('#item_id').val());
 //             var items = {!! json_encode($item) !!};
@@ -259,6 +377,31 @@ $('#show_search').on('click',function(e){
 //         });
 
 //     });
+
+$('#numeric_value').keyup(function() {  
+  var qty = $('#numeric_value').val();
+  $('#total_qty').val(qty);
+
+  var net_price = $('#net_price').val();
+  $('#total_grand').val(net_price);
+  $('#paid_amount').val(net_price);
+
+  var discount = $('#discount').val();
+  $('#total_discount').val(discount);
+});
+
+$('#discount').keyup(function() {  
+  var discount = $('#discount').val();
+  $('#total_discount').val(discount);
+});
+
+
+$('#paid_amount').keyup(function() {  
+  var paid = $('#paid_amount').val();
+  var origin = $('#total_grand').val();
+    var credit = parseInt(origin) - parseInt(paid);
+  $('#credit_amount').val(credit);
+});
 
 
 </script>

@@ -81,7 +81,8 @@ Route::name('admin.')
             Route::resource('credit_reports', 'CreditController');
             Route::get('/credit_reports/{credit_report}/trash', 'CreditController@trash')->name('credit_reports.trash');
             Route::get('/credit_reports/{credit_report}/restore', 'CreditController@restore')->name('credit_reports.restore');
-            Route::get('/credit_reports/{credit_report}/', 'CreditController@destroy')->name('credit_reports.destroy');
+            Route::get('/credit_reports/{credit_report}/delete', 'CreditController@destroy')->name('credit_reports.destroy');
+            Route::get('/credit_reports/{credit_report}/detail', 'CreditController@detail')->name('credit_reports.detail');
 
             Route::resource('order_lists', 'OrderListController');
             Route::get('/order_lists/{order_list}/trash', 'OrderListController@trash')->name('order_lists.trash');
@@ -112,6 +113,7 @@ Route::name('admin.')
             Route::post('return_items/{return_item}/update', 'ReturnItemController@update')->name('return_items.update');
 
             Route::resource('sell_items', 'sellItemController');
+            Route::post('/sell_items/add_credit','sellItemController@addCredit')->name('sell_items.add_credit');
             Route::put('/sell_items/{sell_item}/trash', 'sellItemController@trash')->name('sell_items.trash');
             Route::put('/sell_items/{sell_item}/restore', 'sellItemController@restore')->name('sell_items.restore');
             Route::get('/sell_items/{sell_item}/', 'sellItemController@destroy')->name('sell_items.destroy');

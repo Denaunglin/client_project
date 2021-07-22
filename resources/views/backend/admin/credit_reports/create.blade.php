@@ -106,7 +106,25 @@
                             </span>
                             @enderror
                         </div>
-
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Fully Paid</label>
+                                <div class="row ">
+                                    <div class="form-check ml-5">
+                                        <input class="form-check-input" type="radio" name="paid_status" id="exampleRadios1" checked  value="0" >
+                                        <label class="form-check-label" for="exampleRadios1">
+                                            Paid
+                                        </label>
+                                    </div>
+                                    <div class="form-check ml-5">
+                                        <input class="form-check-input" type="radio" name="paid_status" id="exampleRadios2"  value="1" >
+                                        <label class="form-check-label" for="exampleRadios2">
+                                           Unpaid 
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                         <div class="row my-3">
                         <div class="col-md-12 text-center">

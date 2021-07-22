@@ -16,7 +16,6 @@
         <input type="checkbox" class="custom-control-input trashswitch" id="trashswitch">
         <label class="custom-control-label" for="trashswitch"><strong>@lang("message.header.trash")</strong></label>
     </div>
-
     @can('add_item')
     <a href="{{route('admin.sell_items.create_retail')}}" title="Add Category" class="btn btn-primary action-btn">Add Retail Sales Item</a>
     @endcan
@@ -29,22 +28,6 @@
 @section('content')
 <div class="pb-3">
     <div class="row">
-      
-        {{-- <div class="col-md-6 col-sm-12 col-xl-3">
-                    <div class="d-inline-block mb-2 " style="width:100%">
-                    <div class="input-group" >
-                        <div class="input-group-prepend"><span class="input-group-text">@lang("message.header.item_name") : </span></div>
-                        <select class="custom-select item mr-1" >
-                            <option value="">@lang("message.header.all")</option>
-                            @forelse($item as $data)
-                            <option value="{{$data->id}}">{{$data->name}}</option>
-                            @empty
-                            <option value="">There is no Item Data !</option>
-                            @endforelse
-                        </select>
-                    </div>
-                </div>
-        </div>    --}}
         <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2">
                 <div class="input-group">
@@ -54,7 +37,11 @@
                     <input type="text" class="form-control datepicker" placeholder="All">
                 </div>
             </div>
-        </div>    
+        </div>  
+        <div class="col-md-6 col-sm-12 col-xl-3">
+            <a class="btn btn-block btn-theme" href="{{$invoice->pdf_path()}}">
+                <span class="fa fa-download"> Print Voucher</span> </a>
+        </div>        
     </div>   
     </div>
 <div class="row">

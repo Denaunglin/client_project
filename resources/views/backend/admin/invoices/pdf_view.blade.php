@@ -12,18 +12,18 @@
     body{ 
         font-family: 'Tharlon' !important;
     }
-    h1 {
+    /* h1 {
         color: #43b1f0;
-    }
+    } */
 
-    h1 span {
+    /* h1 span {
         color: #43b1f0 !important;
     }
 
     h3 {
         color: #43b1f0;
 
-    }
+    } */
 
     h2 {
         color: #0f212c;
@@ -55,22 +55,21 @@
 
     .table tr td {
         /* border:1px solid gray; */
-        font-size: 14px;
-        padding-right: 70px;
-        padding-left: 70px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        font-size: 12px;
+        padding-right: 30px;
+        padding-left: 30px;
+        padding-top: 5px;
+        padding-bottom: 5px;
     }
 
     .table tr th {
-        background-color: #43b1f0;
-        color: white;
+        color: black;   
         border: 1px solid black;
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .table tr td {
-        border: 1px solid black;
+        border: 1px solid gray;
     }
 
     p {
@@ -81,28 +80,6 @@
 </style>
 
 <body>
-    <div>
-
-        <h2 style="align:center" style="margin-left:40%"><span>Butterfly</span> </h2>
-        <h3>INVOICE </h3>
-    </div>
-   <div class="invoice-title">
-        <div class="title-left" style="width:70%;">
-            <p class="date"> Date issued : {{$today_date}}</p>
-            <p>Invoice no : #{{$invoice_no}} </p>
-            <p></p>
-            <p></p>
-        </div>
-        <div class="title-right" style="width:30%;"> 
-            <p style="font-family: Tharlon"> {{$shop_name}} , </p>
-            <p> Email : {{$shop_email}}</p>
-            <P>PH : {{$shop_phone}} ,</P>
-            <p>  Address : {{$shop_address}} </p>   
-        </div>
-    </div>
-
-    <hr>
-
     <div class="table-responsive">
         <table class="table table-bordered ">
             <thead>
@@ -136,18 +113,66 @@
                 </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5"></td>
+                </tr>
+                <tr class="text-left">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@lang("message.header.total_qty")</td>
+                    <td>{{$total_qty}}</td>
+                </tr>
+                {{-- <tr class="text-left">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>@lang("message.header.total_discount") </th>
+                    @if($total_discount_percentage != 0)
+                    <th>{{$total_discount_percentage}} %</th>
+                    @else 
+                    <th>{{$total_discount_amount}} MMK</th>
+                    @endif
+                </tr> --}} 
+           
+                <tr class="text-left">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>@lang("message.grand_total") </td>
+                    <td>{{$grand_total}} MMK</td>
+                </tr> 
+                @if($credit != 0)
+                <tr class="text-left">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Paid Amount </td>
+                    <td>{{$paid_amount}} MMK </td>
+                </tr>
+                <tr class="text-left">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>Credit Amount </td>
+                    <td>{{$credit_amount}} MMK </td>
+                </tr>
+                @endif
+            </tfoot>
         </table>
     </div>
 
-    <div class="total_invoice ">
+    {{-- <div class="total_invoice ">
                 <h2 class="total_invoice ">
                     <span class="total"> Invoice Total: </span>  {{$total_price}} MMK 
-                </h2>
+                </h2> --}}
         {{-- <h3> Address</h3> --}}
         {{-- <p>Nay Pyi Taw - H-34 & H-35, Yazathigaha Road, Dekkhina Thiri Township, Hotel Zone(1) </p> --}}
         {{-- <p>(Hotline) : +95-67-8106655, Tel: +95-977900971-2,067-419113-5</p> --}}
         {{-- <p>Website:https//www.apexhotelmyanmar.com</p> --}}
-    </div>
+    {{-- </div> --}}
 </body>
 
 </html>
