@@ -30,12 +30,7 @@
 <div class="pb-3">
     <div class="row">
     
-        <div class="col-md-6 col-sm-12 col-xl-3">
-            @if($invoice)
-            <a class="btn btn-block btn-theme" href="{{$invoice->pdf_path()}}">
-                <span class="fa fa-download"> Print Voucher</span> </a>
-            @endif
-        </div>   
+      
         <div class="col-md-6 col-sm-12 col-xl-3">
             <div class="d-inline-block mb-2">
                 <div class="input-group">
@@ -45,6 +40,12 @@
                     <input type="text" class="form-control datepicker" placeholder="All">
                 </div>
             </div>
+        </div>   
+        <div class="col-md-6 col-sm-12 col-xl-3">
+            @if($invoice)
+            <a class="btn btn-block btn-theme" href="{{$invoice->pdf_path()}}">
+                <span class="fa fa-download"> Print Voucher</span> </a>
+            @endif
         </div>    
     </div>   
     </div>
