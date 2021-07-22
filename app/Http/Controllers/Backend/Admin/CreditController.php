@@ -31,7 +31,7 @@ class CreditController extends Controller
         if ($request->ajax()) {
             $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
-            $credits = Credit::anyTrash($request->trash);
+            $credits = Credit::anyTrash($request->trash)->orderBy('id','desc');
             if ($daterange) {
                 $credits = Credit::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }
@@ -41,6 +41,8 @@ class CreditController extends Controller
             if ($request->customer != '') {
                 $credits = $credits->where('customer_id', $request->customer);
             }
+
+
 
             return Datatables::of($credits)
                 ->addColumn('action', function ($credit) use ($request) {
