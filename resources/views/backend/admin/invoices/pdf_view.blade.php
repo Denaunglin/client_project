@@ -56,8 +56,8 @@
     .table tr td {
         /* border:1px solid gray; */
         font-size: 12px;
-        padding-right: 30px;
-        padding-left: 30px;
+        padding-right: 50px;
+        padding-left: 70px;
         padding-top: 5px;
         padding-bottom: 5px;
     }
@@ -87,7 +87,6 @@
                     <th>Name</th>
                     <th>Qty</th>
                     <th>Rate Per Unit (MMK)</th>
-                    <th>Discount</th>
                     <th>Total(MMK) </th>
                 </tr>
             </thead>
@@ -98,14 +97,10 @@
                       {{$data['item_name']}}
                      </td>
                     <td>
-                        {{$data['qty']}}
-
+                        {{$data['item_qty']}}
                     </td>
                     <td> 
                         {{number_format($data['price'])}}
-                    </td>
-                    <td> 
-                        {{$data['discount']}}
                     </td>
                     <td> 
                         {{number_format($data['net_price'])}}
@@ -118,7 +113,6 @@
                     <td colspan="5"></td>
                 </tr>
                 <tr class="text-left">
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td>@lang("message.header.total_qty")</td>
@@ -136,24 +130,29 @@
                     <th>{{$total_discount_amount}} MMK</th>
                     @endif
                 </tr> --}} 
-           
+                @if($discount != 0)
                 <tr class="text-left">
                     <td></td>
+                    <td></td>
+                    <td>Total Discount </td>
+                    <td>{{$discount}} MMK </td>
+                </tr>
+               
+                @endif
+                <tr class="text-left">
                     <td></td>
                     <td></td>
                     <td>@lang("message.grand_total") </td>
-                    <td>{{$grand_total}} MMK</td>
+                    <td>{{$total_amount}} MMK</td>
                 </tr> 
-                @if($credit != 0)
+                @if($credit_amount != 0)
                 <tr class="text-left">
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td>Paid Amount </td>
                     <td>{{$paid_amount}} MMK </td>
                 </tr>
                 <tr class="text-left">
-                    <td></td>
                     <td></td>
                     <td></td>
                     <td>Credit Amount </td>

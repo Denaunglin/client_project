@@ -59,7 +59,6 @@
                                             <th class="text-center">
                                                 @lang("message.header.id")
                                             </th>
-                                          
                                             <th class="text-center">
                                                 @lang("message.header.item")
                                             </th>
@@ -140,8 +139,7 @@
 <script>
   
     $(document).ready(function(){
-        $('#hide_search').hide();
-
+    $('#hide_search').hide();
       var items = {!! json_encode($item) !!};
       var i=1;
       var text = "";

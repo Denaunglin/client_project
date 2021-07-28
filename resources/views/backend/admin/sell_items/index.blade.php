@@ -38,12 +38,7 @@
                 </div>
             </div>
         </div>  
-        <div class="col-md-6 col-sm-12 col-xl-3">
-            @if($invoice)
-            <a class="btn btn-block btn-theme" href="{{$invoice->pdf_path()}}">
-                <span class="fa fa-download"> Print Voucher</span> </a>
-            @endif
-        </div>        
+             
     </div>   
     </div>
 <div class="row">
@@ -55,14 +50,15 @@
                         <thead>
                             <tr>
                                 <th class="hidden"></th>
-                                <th>@lang("message.header.item_name")</th>
-                                <th>@lang("message.header.customer")</th>
-                                <th>@lang("message.header.item_category")<br></th>
-                                <th>@lang("message.header.item_sub_category")</th>
-                                <th>@lang("message.header.qty")</th>
-                                <th>@lang("message.header.price")</th>
-                                <th>@lang("message.header.discount")</th>
-                                <th>@lang("message.header.total_price") @if($tax)+(@lang("message.header.tax"){{$tax->amount}}%)@endif</th>
+                                <th>Total Item</th>
+                                <th>Customer</th>
+                                <th>Total Qty</th>
+                                <th>Total Amount</th>
+                                <th>Discount</th>
+                                <th>Paid Amount</th>
+                                <th>Credit Amount</th>
+                                <th>Paid Status</th>
+                                <th>Sell Type</th>
                                 <th class="no-sort action">@lang("message.header.action")</th>
                                 <th class="d-none hidden">@lang("message.header.updated_at")</th>
                             </tr>
@@ -70,8 +66,9 @@
                         <tbody></tbody>
                         <tfoot>
                             <tr>
-                                <th></th>
                                 <th>@lang("message.total")</th>
+                                <th></th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -201,14 +198,15 @@
                 },
                 columns: [
                     {data: 'plus-icon', name: 'plus-icon', defaultContent: "-", class: ""},
-                    {data: 'item_id', name: 'item_id', defaultContent: "-", class: ""},
+                    {data: 'total_item', name: 'item_id', defaultContent: "-", class: ""},
                     {data: 'customer', name: 'customer', defaultContent: "-", class: ""},
-                    {data: 'item_category', name: 'item_category', defaultContent: "-", class: ""},
-                    {data: 'item_sub_category', name: 'item_sub_category', defaultContent: "-", class: ""},
-                    {data: 'qty', name: 'qty', defaultContent: "-", class: ""},
-                    {data: 'price', name: 'price', defaultContent: "-", class: ""},
+                    {data: 'total_qty', name: 'item_category', defaultContent: "-", class: ""},
+                    {data: 'total_amount', name: 'item_sub_category', defaultContent: "-", class: ""},
                     {data: 'discount', name: 'discount', defaultContent: "-", class: ""},
-                    {data: 'net_price', name: 'net_price', defaultContent: "-", class: ""}, 
+                    {data: 'paid_amount', name: 'qty', defaultContent: "-", class: ""},
+                    {data: 'credit_amount', name: 'price', defaultContent: "-", class: ""},
+                    {data: 'paid_status', name: 'discount', defaultContent: "-", class: ""},
+                    {data: 'sell_type', name: 'sell_type', defaultContent: "-", class: ""},
                     {data: 'action', name: 'action', orderable: false, searchable: false, class: "action"},
                     {data: 'updated_at', name: 'updated_at', defaultContent: null}
                     ],
@@ -244,12 +242,22 @@
                 };
 
                 // Total
+                total1 = api.column(1).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total3 = api.column(3).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total4 = api.column(4).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
                 total5 = api.column(5).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
-                total8 = api.column(8).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total6 = api.column(6).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                total7 = api.column(7).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                // total8 = api.column(8).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
+                $(api.column(1).footer()).html(total1.toLocaleString());
+                $(api.column(3).footer()).html(total3.toLocaleString());
+                $(api.column(4).footer()).html(total4.toLocaleString());
                 $(api.column(5).footer()).html(total5.toLocaleString());
-                $(api.column(8).footer()).html(total8.toLocaleString());
+                $(api.column(6).footer()).html(total6.toLocaleString());
+                $(api.column(7).footer()).html(total7.toLocaleString());
+                // $(api.column(8).footer()).html(total8.toLocaleString());
 
         }
             }); 
@@ -298,7 +306,6 @@
                 var trash = $('.trashswitch').prop('checked') ? 1 : 0;
                 app_table.ajax.url(`{{url('/admin/sell_items?item=`+item+`&trash=`+trash+`/')}}`).load();
         });
-
 
 </script>
 @include('backend.admin.layouts.assets.trash_script')

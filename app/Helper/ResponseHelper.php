@@ -2,9 +2,10 @@
 
 namespace App\Helper;
 
+use Auth;
+use App\Models\Item;
 use App\Models\Booking;
 use App\Models\RoomLayout;
-use Auth;
 
 class ResponseHelper
 {
@@ -41,6 +42,18 @@ class ResponseHelper
             'message' => $message,
         ]);
     }
+
+    // public static function dataitem($id){
+    //     $data = Item::findMany($id);
+    //     $name = [];
+    //     foreach($data as $item){
+    //         $name []= '<li class="list-group-item">
+    //                         '.$item->name.'
+    //                     </li>' ;
+    //     }
+
+    //     return $name;
+    // }
 
   
    

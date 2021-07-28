@@ -7,6 +7,7 @@ use Storage;
 use Notification;
 use Carbon\Carbon;
 use App\Models\Tax;
+use App\Models\Item;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\Invoice;
@@ -157,7 +158,6 @@ class InvoiceController extends Controller
 
     public function printSalesInvoice($id)
     {
-
         $sell_items = SellItems::where('id', $id)->first();
         $bussiness_info = Bussinessinfo::where('trash',0)->first();
         $invoice_pdf = new Invoice();
@@ -173,44 +173,57 @@ class InvoiceController extends Controller
             ->log('New Invoice is created');
 
         $date = Carbon::now();
-        $barcode = $sell_items->barcode;
-        $item_name = $sell_items->item ? $sell_items->item->name : '-';
-        $item_category = $sell_items->item_category ? $sell_items->item_category->name : '-';
-        $item_sub_category = $sell_items->item_sub_category ? $sell_items->item_sub_category->name : '-';
-        $qty = $sell_items->qty;
-        $price = $sell_items->price;
-        $discount = $sell_items->discount;
-        $net_price = $sell_items->net_price;
-
         $today = $date->toFormattedDateString();
+        $data = unserialize($sell_items->item_data);
+        $id = [];
+        $qty = [];
 
+        $item_data = [];
+
+        foreach($data as $test){
+            $id = $test['item_id'];
+            $qty =  $test['qty'] ;
+
+            $data_item= Item::where('id',$id)->first();
+            $item_name = $data_item->name;
+
+            if($sell_items->sell_type == 0 ){
+                $price = $data_item->retail_price;
+            }else{
+                $price = $data_item->wholesale_price;
+            }
+
+            $item_qty = $qty;
+            $net_price = $item_qty * $price;
+
+            $item_data [] = [
+                    "item_name" => $item_name,
+                    "item_qty" => $item_qty,
+                    "price" => $price,
+                    "net_price" => $net_price,
+            ];
+        
+        }
+         
         $invoice_number = str_pad($invoice_pdf->id, 6, '0', STR_PAD_LEFT);
-        $data = [
+        // dd($item_data);
 
-            'barcode' => $barcode,
-            'item_name' => $item_name,
-            'item_category' => $item_category,
-            'item_sub_category' => $item_sub_category,
-            'shop_name' => $bussiness_info ? $bussiness_info->name : '-',
-            'shop_email' => $bussiness_info ? $bussiness_info->email : '-',
-            'shop_phone' => $bussiness_info ? $bussiness_info->phone : '-',
-            'shop_address' => $bussiness_info ? $bussiness_info->address : '-',
+        $data = [
             'today_date' => $today,
-            // 'client_name' => $booking->name,
-            // 'client_email' => $booking->email,
             'invoice_no' => $invoice_number,
             'title' => ' Invoice',
             'heading1' => '',
+            'item_data' => $item_data,
             'heading2' => 'Invoice',
-            'qty' => $qty,
-            'price' => $price,
-            'discount' => $discount,
-            'net_price' => $net_price,
+            'total_qty' => $sell_items->total_qty,
+            'total_amount' => $sell_items->total_amount,
+            'paid_amount' => $sell_items->paid_amount,
+            'credit_amount' => $sell_items->credit_amount,
+            'discount' => $sell_items->discount,
         ];
-
        
         $pdf = PDF::loadView('backend.admin.invoices.pdf_view', $data);
-        $pdf_name = uniqid() . '_' . time() . '_' . $item_name . '.pdf';
+        $pdf_name = uniqid() . '_' . time() . '_' . $invoice_number . '.pdf';
         $invoice_pdf->invoice_no = $invoice_number;
         $invoice_pdf->invoice_file = $pdf_name;
         $invoice_pdf->update();
@@ -223,7 +236,6 @@ class InvoiceController extends Controller
 
     public function printServiceInvoice($id)
     {
-
         $services = Service::where('id', $id)->first();
         $bussiness_info = Bussinessinfo::where('trash',0)->first();
         $invoice_pdf = new Invoice();

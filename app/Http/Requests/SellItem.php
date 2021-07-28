@@ -25,10 +25,9 @@ class SellItem extends FormRequest
     {
         return [
             'item_id' => 'required',
-            'qty' => 'required',
-            'price' => 'required',
-            'discount' => 'required',
-            'net_price' => 'required',
+            // 'price' => 'required',
+            // 'discount' => 'required',
+            // 'net_price' => 'required',
         ];
     }
 }

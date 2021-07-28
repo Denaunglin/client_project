@@ -27,6 +27,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\AuthorizePerson;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\saleItemResource;
 
 class SellItemController extends Controller
 {
@@ -42,8 +43,27 @@ class SellItemController extends Controller
         $item = Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
-        $tax = Tax::where('trash',0)->first();
+        $tax = Tax::where('trash',0)->first(); 
 
+        // $sell_item = SellItems::latest()->first();
+        // $data = unserialize($sell_item->item_data);
+        // $id = [];
+        // foreach($data as $test){
+        //     $id []= $test['item_id'];
+        // }
+        // $count = count($data);
+
+        // for ($var = 0; $var < $count - 1;) {
+        //     $item = Item::findMany($id);
+        //     $items = []; 
+        //     $qty = $data[$var]['qty'];
+
+        //     foreach($item as $data_item){
+        //         $items [] = '<li class="list-group-item">'.$data_item->name.' ('.$qty.')</li>';
+        //     }
+        //     $var++;
+        // }
+        
         if ($request->ajax()) {
             $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
@@ -61,7 +81,6 @@ class SellItemController extends Controller
 
             if ($request->item_sub_category != '') {
                 $sell_items = $sell_items->where('item_sub_category_id', $request->item_sub_category);
-
             }
 
             return Datatables::of($sell_items)
@@ -78,7 +97,7 @@ class SellItemController extends Controller
 
                     if ($this->getCurrentAuthUser('admin')->can('delete_item_category')) {
                        
-                        // $invoice_btn = '<a class="edit text text-primary" href="' . route('admin.sell_invoice', $sell_item->id) . '"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>';
+                        $invoice_btn = '<a class="edit text text-primary" href="' . route('admin.sell_invoice', $sell_item->id) . '"><i class="fas fa-file-invoice-dollar fa-lg"></i></a>';
 
                         if ($request->trash == 1) {
                             $restore_btn = '<a class="restore text text-warning mr-2" href="#" data-id="' . $sell_item->id . '"><i class="fa fa-trash-restore fa-lg"></i></a>';
@@ -91,33 +110,67 @@ class SellItemController extends Controller
 
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn} ${invoice_btn} ";
                 })
+                ->addColumn('total_item', function ($sell_item) {
+                    $data = unserialize($sell_item->item_data);
+                    $id = [];
+                    foreach($data as $test){
+                        $id []= $test['item_id'];
+                    }
+                    $count = count($data);
+                   
+                    for ($var = 0 ; $var <= $count -2;) {
+                        $item = Item::findMany($id);    
+                        $items = []; 
+                        foreach($item as $data_item){
+                            $items [] = '<li class="list-group-item">'.$data_item->name.' ('.$data[$var]['qty'].')</li>';
+                            $var++;
+                        }
+                    }
+
+                    $gg = collect($items)->implode(',');
+
+                    return '<ul class="list-group">'.$gg.'</ul>';
+                })
                 ->addColumn('customer', function ($sell_item) {
-                    $customer = $sell_item->customer ? $sell_item->customer->name.'</br>'.$sell_item->customer->phone.'</br>'.$sell_item->customer->address : 'Default Customer';
-                    return $customer;
+                    $customer = $sell_item->customerdata ? $sell_item->customerdata->name.'</br>'.$sell_item->customerdata->phone.'</br>'.$sell_item->customerdata->address : 'Default Customer';
+                    $customer_name =  $sell_item->customerdata ? $sell_item->customerdata->name : '-';
+                    $customer_phone =  $sell_item->customerdata ? $sell_item->customerdata->phone : '-';
+                    $customer_address =  $sell_item->customerdata ? $sell_item->customerdata->address : '-';
+                    if($sell_item->customerdata){
+                        return '<ul class="list-group">
+                        <li class="list-group-item">'.$customer_name.'</li>
+                        <li class="list-group-item">'.$customer_phone.'</li>
+                        <li class="list-group-item">'.$customer_address.'</li>
+                        </ul>';
+                    }
+                    else{
+                        return 'Default Customer';
+                    }
+                   
+                })
+               
+                ->addColumn('paid_status', function ($credit) {
+                if($credit->paid_status == 0){
+                    return '<span class="badge badge-success">Paided</span>';
+                }else{
+                    return '<span class="badge badge-warning">UnPaid</span>';
+                }
                     
                 })
-                ->addColumn('item_id', function ($sell_item) {
 
-                    return $sell_item->item ? $sell_item->item->name : '-';
+                ->addColumn('sell_type', function ($credit) {
+                if($credit->sell_type == 0){
+                    return '<span class="badge badge-warning">Retail</span>';
+                }else{
+                    return '<span class="badge badge-warning">Wholesale</span>';
+                }
+                    
                 })
-                ->editColumn('price', function ($sell_item) {
-                        if($sell_item->sell_type == 0){
-                            return $sell_item->price .'<br>'. "(Retail)";
-                        }else{
-                            return $sell_item->price .'<br>'."(Wholesale)";
-                        }
-                })
-                ->addColumn('item_category', function ($sell_item) {
-
-                    return $sell_item->item_category ? $sell_item->item_category->name : '-';
-                })
-                ->addColumn('item_sub_category', function ($sell_item) {
-                    return $sell_item->item_sub_category ? $sell_item->item_sub_category->name : '-';
-                })
+               
                 ->addColumn('plus-icon', function () {
                     return null;
                 })
-                ->rawColumns(['action','customer','price','item_id','item_category','item_sub_category'])
+                ->rawColumns(['action','customer', 'sell_type','total_item','item_id','paid_status'])
                 ->make(true);
         }
         
@@ -140,7 +193,7 @@ class SellItemController extends Controller
         }
         
         $item_category = ItemCategory::where('trash', 0)->get();
-        $customer = User::where('trash',0)->get();
+        $customer = User::where('trash',0)->where('account_type',1)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
         return view('backend.admin.sell_items.create_retail', compact('item_category','customer','item', 'item_sub_category'));
     }
@@ -161,7 +214,7 @@ class SellItemController extends Controller
         }
         
         $item_category = ItemCategory::where('trash', 0)->get();
-        $customer = User::where('trash',0)->get();
+        $customer = User::where('trash',0)->where('account_type',2)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
         return view('backend.admin.sell_items.create_wholesale', compact('item_category','customer','item', 'item_sub_category'));
     }
@@ -178,24 +231,32 @@ class SellItemController extends Controller
         $date = Carbon::now();
         $item_count = count($item);
 
+        $item_data = [];
+        for ($var = 0; $var < $item_count ;) {
+            foreach($item as $data){
+                $item_data []= ['item_id' => $request['item_id'][$var] , 'qty' => $request['qty'][$var] , 'net_price' => $request['net_price'][$var]];
+                $var++;
+            }   
+        }
+
+        $data_item = serialize($item_data);
+        $sell_item = new SellItems();
+        $sell_item->item_data = $data_item;
+        $sell_item->customer = $request->customer_id ?? 0;
+        $sell_item->total_qty = $request['total_qty'];
+        $sell_item->discount = $request['discount'];
+        $sell_item->total_amount = $request['origin_amount'];
+        $sell_item->paid_amount = $request['paid_amount'];
+        $sell_item->credit_amount = $request['credit_amount'];
+        $sell_item->paid_status = $request['paid_status'];
+        $sell_item->sell_type = $request->sell_type;
+        $sell_item->save();
+ 
         if($item_count == 1){
             $shop_storage = ShopStorage::where('item_id',$request->item_id)->first();
             // if($request['qty'] != $shop_storage->qty){
             //     return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
             // }
-
-            $item = $item->first();
-            $sell_item = new SellItems();
-            $sell_item->item_id = $item->id;
-            $sell_item->customer_id = $customer_id ;
-            $sell_item->item_category_id = $item->item_category_id;
-            $sell_item->item_sub_category_id = $item->item_sub_category_id;
-            $sell_item->qty = $request['qty'][0];
-            $sell_item->price = $request['price'][0];
-            $sell_item->discount = $request['discount'][0];
-            $sell_item->net_price = $request['net_price'][0];
-            $sell_item->sell_type = $request['sell_type'];
-            $sell_item->save();
 
             if($request->credit_amount != 0){
                 $credit = new Credit();
@@ -211,22 +272,22 @@ class SellItemController extends Controller
                 $credit->paid_status = $request['paid_status'];
                 $credit->save();
 
-                if($request['paid_status'] == 0){
-                    $cash_book = new Cashbook();
-                    $cash_book->cashbook_income = $request->paid_amount;
-                    $cash_book->cashbook_outgoing = 0 ;
-                    $cash_book->buying_id = null;
-                    $cash_book->service_id = null;
-                    $cash_book->selling_id = null;
-                    $cash_book->expense_id = null;
-                    $cash_book->credit_id = $credit->id;
-                    $cash_book->return_id = null;
-                    $cash_book->save();
-                }
+            if($request['paid_status'] == 0){
+                $cash_book = new Cashbook();
+                $cash_book->cashbook_income = $request->paid_amount;
+                $cash_book->cashbook_outgoing = 0 ;
+                $cash_book->buying_id = null;
+                $cash_book->service_id = null;
+                $cash_book->selling_id = null;
+                $cash_book->expense_id = null;
+                $cash_book->credit_id = $credit->id;
+                $cash_book->return_id = null;
+                $cash_book->save();
+            }
 
             }else{
                 $cash_book = new Cashbook();
-                $cash_book->cashbook_income = $sell_item->net_price;
+                $cash_book->cashbook_income = $sell_item->paid_amount;
                 $cash_book->cashbook_outgoing = 0 ;
                 $cash_book->buying_id = null;
                 $cash_book->service_id = null;
@@ -237,7 +298,6 @@ class SellItemController extends Controller
                 $cash_book->save();
             }
          
-    
             $shop_storage = ShopStorage::where('item_id',$item->id)->first();
             $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
@@ -263,37 +323,11 @@ class SellItemController extends Controller
             $item_ledger->adjust_out = '0';
             $item_ledger->closing_qty = $shop_storage->qty;
             $item_ledger->save();
+
         }else{
+
             for ($var = 0; $var < $item_count - 1;) {
-           
             foreach ($item as $data) {
-                $shop_storage = ShopStorage::where('item_id',$data->id)->first();
-                // if($request['qty'][$var] != $shop_storage->qty){
-                //     return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
-                // }
-                $sell_item = new SellItems();
-                $sell_item->item_id = $data->id;
-                $sell_item->customer_id = $customer_id ;
-                $sell_item->item_category_id = $data->item_category_id;
-                $sell_item->item_sub_category_id = $data->item_sub_category_id;
-                $sell_item->qty = $request['qty'][$var];
-                $sell_item->price = $request['price'][$var];
-                $sell_item->discount = $request['discount'][$var];
-                $sell_item->net_price = $request['net_price'][$var];
-                $sell_item->sell_type = $request['sell_type'];
-                $sell_item->save();
-
-                $cash_book = new Cashbook();
-                $cash_book->cashbook_income = $sell_item->net_price;
-                $cash_book->cashbook_outgoing = 0 ;
-                $cash_book->buying_id = null;
-                $cash_book->service_id = null;
-                $cash_book->selling_id = $sell_item->id;
-                $cash_book->expense_id = null;
-                $cash_book->credit_id = null;
-                $cash_book->return_id = null;
-                $cash_book->save();
-
                 $shop_storage = ShopStorage::where('item_id',$data->id)->first();
                 $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
@@ -320,8 +354,6 @@ class SellItemController extends Controller
                 $item_ledger->closing_qty = $shop_storage->qty;
                 $item_ledger->save();
                 $var++;
-
-           
             }
         }
         if($request->credit_amount != 0){
@@ -352,6 +384,18 @@ class SellItemController extends Controller
             }
 
         }
+        else{
+            $cash_book = new Cashbook();
+            $cash_book->cashbook_income = $sell_item->paid_amount;
+            $cash_book->cashbook_outgoing = 0 ;
+            $cash_book->buying_id = null;
+            $cash_book->service_id = null;
+            $cash_book->selling_id = $sell_item->id;
+            $cash_book->expense_id = null;
+            $cash_book->credit_id = null;
+            $cash_book->return_id = null;
+            $cash_book->save();
+        }
 
         }
 
@@ -361,82 +405,88 @@ class SellItemController extends Controller
             ->withProperties(['source' => ' Sell Item   (Admin Panel'])
             ->log(' Sell Item  is created ');
         
-            $sell_items = SellItems::where('created_at', $sell_item->created_at)->get();
-            $bussiness_info = Bussinessinfo::where('trash',0)->first();
-            $invoice_pdf = new Invoice();
-            $invoice_pdf->invoice_no = 0;
-            $invoice_pdf->item_id = null;
-            $invoice_pdf->service_id = null;
-            $invoice_pdf->save();
+            // $sell_items = SellItems::where('created_at', $sell_item->created_at)->get();
+            // $bussiness_info = Bussinessinfo::where('trash',0)->first();
+            // $invoice_pdf = new Invoice();
+            // $invoice_pdf->invoice_no = 0;
+            // $invoice_pdf->item_id = null;
+            // $invoice_pdf->service_id = null;
+            // $invoice_pdf->save();
     
-            activity()
-                ->performedOn($invoice_pdf)
-                ->causedBy(auth()->guard('admin')->user())
-                ->withProperties(['source' => ' Invoice (Admin Panel)'])
-                ->log('New Invoice is created');
+            // activity()
+            //     ->performedOn($invoice_pdf)
+            //     ->causedBy(auth()->guard('admin')->user())
+            //     ->withProperties(['source' => ' Invoice (Admin Panel)'])
+            //     ->log('New Invoice is created');
     
-            $date = Carbon::now();
-            $total_price = 0;
-            $item_data=[];
+            // $date = Carbon::now();
+            // $total_price = 0;
+            // $item_data=[];
 
-            foreach($sell_items as $data){
-                $item_name  = $data->item ? $data->item->name : '-';
-                $item_category  = $data->item_category ? $data->item_category->name : '-';
-                $item_sub_category  = $data->item_sub_category ? $data->item_sub_category->name : '-';
-                $qty  = $data->qty;
-                $price  = $data->price;
-                $discount  = $data->discount;
-                $net_price  = $data->net_price;
-                $total_price  +=  $data->net_price;
-                $item_data [] = [
-                    "item_name" => $item_name,
-                    "item_category" => $item_category,
-                    "item_sub_category" => $item_sub_category,
-                    "qty" => $qty,
-                    "price" => $price,
-                    "discount" => $discount,
-                    "net_price" => $net_price,
-                ];
-            }
+            // foreach($sell_items as $data){
+            //     $item_name  = $data->item ? $data->item->name : '-';
+            //     $item_category  = $data->item_category ? $data->item_category->name : '-';
+            //     $item_sub_category  = $data->item_sub_category ? $data->item_sub_category->name : '-';
+            //     $qty  = $data->qty;
+            //     $price  = $data->price;
+            //     $discount  = $data->discount;
+            //     $net_price  = $data->net_price;
+            //     $total_price  +=  $data->net_price;
+            //     $item_data [] = [
+            //         "item_name" => $item_name,
+            //         "item_category" => $item_category,
+            //         "item_sub_category" => $item_sub_category,
+            //         "qty" => $qty,
+            //         "price" => $price,
+            //         "discount" => $discount,
+            //         "net_price" => $net_price,
+            //     ];
+            // }
 
-            if($request->origin_amount != $request->paid_amount){
-                $credit = 1;
-            }else{
-                $credit = 0;
-            }
-    
-            $today = $date->toFormattedDateString();
-            $invoice_number = str_pad($invoice_pdf->id, 6, '0', STR_PAD_LEFT);
-            $data = [
-                'shop_name' => $bussiness_info ? $bussiness_info->name : '-',
-                'shop_email' => $bussiness_info ? $bussiness_info->email : '-',
-                'shop_phone' => $bussiness_info ? $bussiness_info->phone : '-',
-                'shop_address' => $bussiness_info ? $bussiness_info->address : '-',
-                'today_date' => $today,
-                // 'client_name' => $booking->name,
-                // 'client_email' => $booking->email,
-                'invoice_no' => $invoice_number,
-                'title' => ' Invoice',
-                'heading1' => '',
-                'heading2' => 'Invoice',
-                'total_price' => $total_price,
-                'item_data' => $item_data,
-                'total_qty' => $request['total_qty'],
-                'grand_total' => $request['origin_amount'],
-                'paid_amount' => $request['paid_amount'],
-                'credit_amount' => $request['credit_amount'],
-                'credit' => $credit,
+            // if($request->origin_amount != $request->paid_amount){
+            //     $credit = 1;
+            // }else{
+            //     $credit = 0;
+            // }
 
-            ];
-            
+            // if($request->total_discount != 0){
+            //     $discount = 1;
+            // }else{
+            //     $discount = 0;
+            // }
     
-            $pdf = PDF::loadView('backend.admin.invoices.pdf_view', $data);
-            $pdf_name = uniqid() . '_' . time() . '_' . '.pdf';
-            $invoice_pdf->invoice_no = $invoice_number;
-            $invoice_pdf->invoice_file = $pdf_name;
-            $invoice_pdf->update();
+            // $today = $date->toFormattedDateString();
+            // $invoice_number = str_pad($invoice_pdf->id, 6, '0', STR_PAD_LEFT);
+            // $data = [
+            //     'shop_name' => $bussiness_info ? $bussiness_info->name : '-',
+            //     'shop_email' => $bussiness_info ? $bussiness_info->email : '-',
+            //     'shop_phone' => $bussiness_info ? $bussiness_info->phone : '-',
+            //     'shop_address' => $bussiness_info ? $bussiness_info->address : '-',
+            //     'today_date' => $today,
+            //     // 'client_name' => $booking->name,
+            //     // 'client_email' => $booking->email,
+            //     'invoice_no' => $invoice_number,
+            //     'title' => ' Invoice',
+            //     'heading1' => '',
+            //     'heading2' => 'Invoice',
+            //     'total_price' => $total_price,
+            //     'item_data' => $item_data,
+            //     'total_qty' => $request['total_qty'],
+            //     'grand_total' => $request['origin_amount'],
+            //     'paid_amount' => $request['paid_amount'],
+            //     'credit_amount' => $request['credit_amount'],
+            //     'credit' => $credit,
+            //     'discount' => $discount,
+            //     'total_discount' =>  $request['total_discount'],
+            // ];
     
-            Storage::put('uploads/pdf/' . $pdf_name, $pdf->output());
+            // $pdf = PDF::loadView('backend.admin.invoices.pdf_view', $data);
+            // $pdf_name = uniqid() . '_' . time() . '_' . '.pdf';
+            // $invoice_pdf->invoice_no = $invoice_number;
+            // $invoice_pdf->invoice_file = $pdf_name;
+            // $invoice_pdf->update();
+    
+            // Storage::put('uploads/pdf/' . $pdf_name, $pdf->output());
             // $pdf->download('sell_invoices.pdf');
 
         return redirect()->route('admin.sell_items.index')->with('success', 'Successfully Created');
@@ -457,8 +507,16 @@ class SellItemController extends Controller
         $items =  Item::where('trash',0)->get();
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
+        $customer = User::where('trash',0)->get();
+        $data = unserialize($data_item->item_data);
+        $item_id = [];
+        foreach ( $data as $item ){
+            $item_id [] = $item['item_id'];
+        }
 
-        return view('backend.admin.sell_items.edit', compact('items','data_item', 'item_category', 'item_sub_category'));
+        // dd($item_id);
+
+        return view('backend.admin.sell_items.edit', compact('items','customer','data_item','item_id', 'item_category', 'item_sub_category'));
     }
 
     public function update(SellItem $request, $id)

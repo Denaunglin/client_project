@@ -29,9 +29,9 @@
                                     <option value="{{$data->id}}">{{$data->name}}</option>
                                         @endforeach
                                     </select>
-                                    <input type="hidden" name="sell_type" value="0">
+                                    <input type="hidden" name="sell_type" value="1">
 
-                                </div>
+                                </div>  
                                 <div class="col-md-8">
                                     @can('add_item')
                                     @endcan
@@ -60,6 +60,17 @@
                                                                 @enderror
                                                             </div>
                                                         </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label>@lang("message.header.discount") </label>
+                                                                <input type="number" id="discount" value="0" name="discount" class="form-control  @error('discount') is-invalid @enderror" >
+                                                                @error('discount')
+                                                                <span class="invalid-feedback" role="alert">
+                                                                    <strong>{{ $message }}</strong>
+                                                                </span>
+                                                                @enderror
+                                                            </div>
+                                                        </div>  
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label>Total Amount </label>
@@ -93,6 +104,7 @@
                                                                 @enderror
                                                             </div>
                                                         </div>
+                                                     
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label>Fully Paid</label>
@@ -142,9 +154,7 @@
                                                 <th class="text-center">
                                                     @lang("message.header.rate_per_unit")
                                                 </th>
-                                                <th class="text-center">
-                                                    @lang("message.header.discount")
-                                                </th>
+                                              
                                                 <th class="text-center">
                                                     @lang("message.header.total_price")
                                                 </th>
@@ -181,9 +191,9 @@
                                                 <td>
                                                     <input type="number" id="aa" name="price[]" class="form-control  @error('price') is-invalid @enderror" placeholder='Rate Per Unit' >
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     <input type="number" id="discount" name="discount[]" value="0" class="form-control  @error('discount') is-invalid @enderror" placeholder='Discount' >
-                                                </td>
+                                                </td> --}}
                                                 <td>
                                                     <input type="number" id="net_price" name="net_price[]" class="form-control  @error('net_price') is-invalid @enderror" placeholder="Total Price" >
                                                 </td>
@@ -229,16 +239,17 @@
     } 
 
      $("#add_row").click(function(){
-        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty[]"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price[]"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  id='discount"+i+"' value='0' name='discount[]"+i+"' autofocus='autofocus' type='number' placeholder='Discount'  class='form-control discount"+i+"  input-md'></td><td><input  name='net_price[]"+i+"' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
+        $('#addr'+i).html("<td>"+ (i+1) +" <br> <span class='fa fa-search mt-3' id='show_search"+i+"'></span> </td><td><div class='row'><div class='col-md-12 mb-3' id='hide_search"+i+"' ><input type='search' class='form-control' id='search"+i+"' autocomplete='off' name='search' placeholder='search' ></div><div class='col-md-12'><select class='custom-select' id='item_id"+i+"' name='item_id[]"+i+"' required><option value=''>Choose Item Category</option>"+text+"</select></td></div></div><td><input  name='qty[]"+i+"' type='number' id='numeric_value"+i+"' autofocus='autofocus' placeholder='Qty'  class='form-control input-md'></td><td><input  id='aa"+i+"' name='price[]"+i+"' autofocus='autofocus' type='number' placeholder='Rate Per Unit'  class='form-control numeric_value"+i+"  input-md'></td><td><input  name='net_price[]"+i+"' type='number' placeholder='Total Price' id='net_price"+i+"' class='form-control  input-md'></td>");
       $('#tab_logic').append('<tr id="addr'+(i+1)+'"></tr>');
 
     var a = i;
 
     $('#numeric_value'+a).keyup(function() {
     var price = $("#aa"+a).val();
-    var discount = $("#discount"+a).val();
+    // var discount = $("#discount"+a).val();
     var sum = 0;
-    sum = (Number($(this).val()) * price ) -discount ;
+    // sum = (Number($(this).val()) * price ) -discount ;
+    sum = (Number($(this).val()) * price );
     $('#net_price'+a).val(sum);
     });
 
@@ -248,7 +259,7 @@
     var total_qty = parseInt(qty3) + parseInt(qty2) ; 
     $('#total_qty').val(total_qty);
 
-    var net_price = $('#total_grand').val();
+    var net_price = $('#net_price').val();
     var net = $('#net_price'+a).val();
     var total_net = parseInt(net) + parseInt(net_price) ; 
     $('#total_grand').val(total_net);
@@ -256,11 +267,17 @@
 
     });
 
-    $('#discount'+a).keyup(function() {  
-    var discount = $('#total_discount').val();
-    var dis = Number($(this).val());
-    var total_dis = parseInt(discount) + parseInt(dis) ; 
+    $('#discount'+a).on('change',function() {  
+    var discount1 = $('#discount').val();
+    var discount2 = $('#discount'+a).val();
+    var total_dis = parseInt(discount1) + parseInt(discount2) ; 
     $('#total_discount').val(total_dis);
+
+    var origin = $('#net_price').val();
+    var net = $('#net_price'+a).val();
+    var total = origin + net ;
+    $('#total_grand').val(total);
+    $('#paid_amount').val(total);
     });
 
     $('#discount'+a).keyup(function() {
@@ -268,7 +285,6 @@
     var qty = $("#numeric_value"+a).val();
     var sum = 0;
     sum = (qty * price ) - Number($(this).val())  ;
-    
     $('#net_price'+a).val(sum);
     }); 
 
@@ -278,7 +294,7 @@
                     $('#item_id'+a).empty();
         $('#item_id'+a).append('<option disabled selected>'+ 'Choose Item' + '</option>');
                     $.each(data, function( key, value ) {
-                      $('#item_id'+a).append('<option value="'+value.id+'" >'+value.name+'</option>');
+                    $('#item_id'+a).append('<option value="'+value.id+'" >'+value.name+'</option>');
             });
         });
     });
@@ -314,21 +330,22 @@
 
 $('#numeric_value').keyup(function() {  
     var price = $("#aa").val();
-    var discount = $("#discount").val();
+    // var discount = $("#discount").val();
     var sum = 0;
-    sum = (Number($(this).val()) * price ) - discount  ;
-    
+    // sum = (Number($(this).val()) * price ) - discount  ;
+    sum = (Number($(this).val()) * price );
+
     $('#net_price').val(sum);
     }); 
 
-    $('#discount').keyup(function() {
-    var price = $("#aa").val();
-    var qty = $("#numeric_value").val();
-    var sum = 0;
-    sum = (qty * price ) - Number($(this).val())  ;
+    // $('#discount').keyup(function() {
+    // var price = $("#aa").val();
+    // var qty = $("#numeric_value").val();
+    // var sum = 0;
+    // sum = (qty * price ) - Number($(this).val())  ;
     
-    $('#net_price').val(sum);
-    }); 
+    // $('#net_price').val(sum);
+    // }); 
 
     $('#search').change(function(e) {
             let search = $(this).val();
@@ -344,7 +361,7 @@ $('#numeric_value').keyup(function() {
 $('#item_id').on('change', function(e) {
             let item = $(this).val();
             $.get('/get_item?item=' + item, function(data) {
-                    $('#aa').empty();
+            $('#aa').empty();
             $('#aa').val(data.wholesale_price);
             $('#hide_search').hide();
         });
@@ -352,31 +369,7 @@ $('#item_id').on('change', function(e) {
 
 $('#show_search').on('click',function(e){
     $('#hide_search').show();
-})
-
-
-
-
-// $('#item_id').change(function(e){
-//             var item_id =parseInt($('#item_id').val());
-//             var items = {!! json_encode($item) !!};
-//             var text ="";
-//             for (var l=0 ; l < items.length; l++) {
-//                 if(items[l] == item_id)
-//             text +=  '<option value='+items[l].id+'>'+items[l].name+'</option>';
-//             } 
-
-//             $i=0;
-//             if(extra_bed_qty !=0){
-//             $('#price').empty();
-//             var check = (room_qty ) * (parseInt(extra_bed_qty));
-//             for(i=0;i <= check;i++){
-//                 $('#extra_bed_qty').append(`<option value='${i}'>${i}</option>`);
-//                     }
-//             }
-//         });
-
-//     });
+})  
 
 $('#numeric_value').keyup(function() {  
   var qty = $('#numeric_value').val();
@@ -390,16 +383,18 @@ $('#numeric_value').keyup(function() {
   $('#total_discount').val(discount);
 });
 
-$('#discount').keyup(function() {  
+$('#discount').on('change',function() {  
   var discount = $('#discount').val();
-  $('#total_discount').val(discount);
+  var grand = $('#total_grand').val();
+  var total = grand - discount;
+  $('#total_grand').val(total);
+  $('#paid_amount').val(total);
 });
-
 
 $('#paid_amount').keyup(function() {  
   var paid = $('#paid_amount').val();
   var origin = $('#total_grand').val();
-    var credit = parseInt(origin) - parseInt(paid);
+  var credit = parseInt(origin) - parseInt(paid);
   $('#credit_amount').val(credit);
 });
 

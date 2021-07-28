@@ -45,6 +45,7 @@
                             <div>
                                 <strong class="text-dark">Credit Information </strong> <br>
                                 <ul class="list-group text-left">
+                                    
                                     <li class="list-group-item">Origin Amount - {{$credit->origin_amount }}</li>
                                     <li class="list-group-item">Paid Amount - {{$credit->paid_amount }}</li>
                                     <li class="list-group-item">Credit Amount - {{$credit->credit_amount}}</li>
@@ -58,7 +59,6 @@
                                 </ul>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
