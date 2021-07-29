@@ -82,13 +82,15 @@
     @include('backend.admin.layouts.assets.js')
     <script>
       
-        $('#searchModal').on('click', function(e) {
-            $('#input').val('');
-            $("#input").focus();
-            $("#menu-search-result-list").html('');
-            $("#menu-search-result-container").attr('hidden', true);
+        // $('#searchModal').on('click', function(e) {
+        //     $('#input').val('');
+        //     $("#menu-search-result-list").html('');
+        //     $("#menu-search-result-container").attr('hidden', true);
+        // });
+
+        $('#searchModal').on('show', function () {
+        $('input:text:visible:first').focus();
         });
-        
 
          $('#input').change(function(e) {
             let search = $(this).val();

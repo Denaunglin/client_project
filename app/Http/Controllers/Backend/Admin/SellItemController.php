@@ -118,7 +118,7 @@ class SellItemController extends Controller
                     }
                     $count = count($data);
                    
-                    for ($var = 0 ; $var <= $count -2;) {
+                    for ($var = 0 ; $var < $count ;) {
                         $item = Item::findMany($id);    
                         $items = []; 
                         foreach($item as $data_item){

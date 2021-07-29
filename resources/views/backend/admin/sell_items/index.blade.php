@@ -66,7 +66,7 @@
                         <tbody></tbody>
                         <tfoot>
                             <tr>
-                                <th>@lang("message.total")</th>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th></th>
@@ -242,7 +242,7 @@
                 };
 
                 // Total
-                total1 = api.column(1).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
+                // total1 = api.column(1).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
                 total3 = api.column(3).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
                 total4 = api.column(4).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
                 total5 = api.column(5).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
@@ -251,7 +251,7 @@
                 // total8 = api.column(8).data().reduce(function(a, b) { return intVal(a) + intVal(b); }, 0);
 
                 // Update footer
-                $(api.column(1).footer()).html(total1.toLocaleString());
+                // $(api.column(1).footer()).html(total1.toLocaleString());
                 $(api.column(3).footer()).html(total3.toLocaleString());
                 $(api.column(4).footer()).html(total4.toLocaleString());
                 $(api.column(5).footer()).html(total5.toLocaleString());
