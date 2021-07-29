@@ -257,6 +257,7 @@ class SellItemController extends Controller
             // if($request['qty'] != $shop_storage->qty){
             //     return redirect()->back()->with(["error"=> "Not Enouch Qty !"]);
             // }
+            $item = Item::findOrFail($request->item_id)->first();
 
             if($request->credit_amount != 0){
                 $credit = new Credit();
