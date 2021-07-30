@@ -44,30 +44,11 @@ class SellItemController extends Controller
         $item_category = ItemCategory::where('trash', 0)->get();
         $item_sub_category = ItemSubCategory::where('trash', 0)->get();
         $tax = Tax::where('trash',0)->first(); 
-
-        // $sell_item = SellItems::latest()->first();
-        // $data = unserialize($sell_item->item_data);
-        // $id = [];
-        // foreach($data as $test){
-        //     $id []= $test['item_id'];
-        // }
-        // $count = count($data);
-
-        // for ($var = 0; $var < $count - 1;) {
-        //     $item = Item::findMany($id);
-        //     $items = []; 
-        //     $qty = $data[$var]['qty'];
-
-        //     foreach($item as $data_item){
-        //         $items [] = '<li class="list-group-item">'.$data_item->name.' ('.$qty.')</li>';
-        //     }
-        //     $var++;
-        // }
         
         if ($request->ajax()) {
             $daterange = $request->daterange ? explode(' , ', $request->daterange) : null;
 
-            $sell_items = SellItems::anyTrash($request->trash);
+            $sell_items = SellItems::anyTrash($request->trash)->orderBy('id','desc');
             if ($daterange) {
                 $sell_items = SellItems::whereDate('created_at', '>=', $daterange[0])->whereDate('created_at', '<=', $daterange[1]);
             }
@@ -303,13 +284,13 @@ class SellItemController extends Controller
             $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
             if($shop_storage){
-                $qty = ($shop_storage->qty) - ($sell_item->qty);
+                $qty = ($shop_storage->qty) - ($request['qty'][0]);
                 $shop_storage->qty = $qty;
                 $shop_storage->update();
             }else{
                 $shop_storage = new ShopStorage();
                 $shop_storage->item_id = $item->id;
-                $shop_storage->qty = $sell_item->qty;
+                $shop_storage->qty = $request['qty'][0];
                 $shop_storage->save();
             }
 
@@ -333,13 +314,13 @@ class SellItemController extends Controller
                 $open_qty = $shop_storage ? $shop_storage->qty : 0 ;
 
                 if($shop_storage){
-                    $qty = ($shop_storage->qty) - ($sell_item->qty);
+                    $qty = ($shop_storage->qty) - ($request['qty'][$var]);
                     $shop_storage->qty = $qty;
                     $shop_storage->update();
                 }else{
                     $shop_storage = new ShopStorage();
                     $shop_storage->item_id = $data->id;
-                    $shop_storage->qty = $sell_item->qty;
+                    $shop_storage->qty = $request['qty'][$var];
                     $shop_storage->save();
                 }
         
