@@ -17,6 +17,13 @@
                 <form action="{{ route('admin.shop_storages.store') }}" method="post" id="create">
                     @csrf
                     <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <span class="fa fa-search mt-3" id="show_search"></span>
+                        </div>
+                        <div class="col-md-12 mb-3"  id="hide_search">
+                            <input type="search" id="search" autocomplete="off" name="search"  placeholder="search" class="form-control">
+                        </div>
+
                         <div class="col-md-12">
                             <div class="form-group">
                                 <label for="">@lang("message.header.item") </label>
@@ -52,5 +59,28 @@
 @endsection
 
 @section('script')
+<script>
+      $(document).ready(function(){
+      $('#hide_search').hide();
+    });
+
+    $('#show_search').on('click',function(e){
+         $('#hide_search').show();    
+    })
+
+
+    $('#search').change(function(e) {
+            let search = $(this).val();
+            $.get('/get_item?search=' + search, function(data) {
+                    $('#item_id').empty();
+        $('#item_id').append('<option disabled selected>'+ 'Choose Item' + '</option>');
+                    $.each(data, function( key, value ) {
+                      $('#item_id').append('<option value="'+value.id+'" >'+value.name+'</option>');
+        });
+    });
+});
+
+
+</script>
 {!! JsValidator::formRequest('App\Http\Requests\ItemCategoryRequest', '#create') !!}
 @endsection
