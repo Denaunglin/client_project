@@ -30,7 +30,7 @@
             <div class="card-body">
                 <table>
                     <tr>
-                        <td>Total Item</td>
+                        <td> Item</td>
                         <td><span class="badge badge-info mr-3">{{$total_item}}</span></td>
                     </tr>
                 </table>
@@ -42,7 +42,7 @@
             <div class="card-body">
                 <table>
                     <tr>
-                        <td>Total Qty</td>
+                        <td> Qty</td>
                         <td><span class="badge badge-info mr-3">{{$total_qty}}</span></td>
                     </tr>
                 </table>
@@ -54,7 +54,7 @@
             <div class="card-body">
                 <table>
                     <tr>
-                        <td>Total Buying Price</td>
+                        <td> Buying Price</td>
                         <td><span class="badge badge-info mr-3">{{number_format($total_buying)}}</span></td>
                     </tr>
                 </table>
@@ -66,7 +66,7 @@
             <div class="card-body">
                 <table>
                     <tr>
-                        <td>Total Sale (Retail) Price</td>
+                        <td> Sale (Retail) Price</td>
                         <td><span class="badge badge-info mr-3">{{number_format($total_retail)}}</span></td>
                     </tr>
                 </table>
