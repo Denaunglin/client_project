@@ -25,7 +25,7 @@
 @section('content')
 
 <div class="row mb-3">
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card shadow">
             <div class="card-body">
                 <table>
@@ -37,7 +37,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card shadow">
             <div class="card-body">
                 <table>
@@ -49,7 +49,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card shadow">
             <div class="card-body">
                 <table>
@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div class="card shadow">
             <div class="card-body">
                 <table>
