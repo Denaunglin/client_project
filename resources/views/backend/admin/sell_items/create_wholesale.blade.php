@@ -302,7 +302,7 @@
         });
     });
 
-    $('#item_id'+a).on('change', function(e) {
+    $('#item_id'+a).on('change', function(e) {  
         let item = $(this).val();
         $.get('/get_item?item=' + item, function(data) {
                 $('#aa'+a).empty();

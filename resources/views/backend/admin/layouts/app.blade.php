@@ -115,7 +115,12 @@
                 // $("#menu-search-result-msg").html('');
             }
                     $.each(data, function( key, value ) {
-                     $('#menu-search-result-list').append('<li class="list-item" style="list-style-type:none;" ><div class="card m-1 shadow"><h5 class="m-3"> <span class="text-muted">'+value.name+' <span> <br> <span class="text-primary">'+value.retail_price+' MMK (Retail) </span> <i class="badge badge-info">'+value.qty+'</i>  </h5></div></li>');
+                        if(value.qty == 0){
+                            $calss = "badge-danger";
+                        }else{
+                            $calss = "badge-info";
+                        }
+                     $('#menu-search-result-list').append('<li class="list-item" style="list-style-type:none;" ><div class="card m-1 shadow"><h5 class="m-3"> <span class="text-muted">'+value.name+' <span> <br> <span class="text-primary">'+value.retail_price+' MMK (Retail) </span> <i class="badge '+$calss+'">'+value.qty+'</i>  </h5></div></li>');
             });
         });
     });
