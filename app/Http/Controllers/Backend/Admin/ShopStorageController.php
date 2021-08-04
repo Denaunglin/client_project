@@ -26,12 +26,15 @@ class ShopStorageController extends Controller
         $total_retail = 0;
         $total_buying = 0;
         $total_wholesale = 0;
+
         foreach($shop_storages as $shop_data){
             $item = Item::where('id',$shop_data->id)->first();
-            $total_qty += $shop_data->qty;
-            $total_buying += $item->buying_price * $total_qty;
-            $total_retail +=$item->retail_price * $total_qty;
-            $total_wholesale += $item->wholesale_price * $total_qty;
+            if($item){
+                $total_qty += $shop_data->qty;
+                $total_buying += $item->buying_price * $total_qty;
+                $total_retail +=$item->retail_price * $total_qty;
+                $total_wholesale += $item->wholesale_price * $total_qty;
+            }
         }
 
         if ($request->ajax()) {
