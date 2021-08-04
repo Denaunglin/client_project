@@ -64,6 +64,11 @@ class ShopStorageController extends Controller
 
                     return "${detail_btn} ${edit_btn} ${restore_btn} ${trash_or_delete_btn}";
                 })
+                ->filterColumn('item_id', function ($query, $keyword) {
+                    $query->whereHas('item', function ($q1) use ($keyword) {
+                        $q1->where('name', 'LIKE', "%{$keyword}%");
+                    });
+                })
                 ->addColumn('item_id', function ($shop_storage) {
                     return $shop_storage->item ? $shop_storage->item->name : '-';
                 })
