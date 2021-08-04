@@ -20,6 +20,20 @@ class ShopStorageController extends Controller
             // if (!$this->getCurrentAuthUser('admin')->can('view_bed_type')) {
             //     abort(404);
             // }
+        $shop_storages = ShopStorage::with('item')->where('trash',0)->get();
+        $total_item = count($shop_storages);
+        $total_qty = 0;
+        $total_retail = 0;
+        $total_buying = 0;
+        $total_wholesale = 0;
+        foreach($shop_storages as $shop_data){
+            $item = Item::where('id',$shop_data->id)->first();
+            $total_qty += $shop_data->qty;
+            $total_buying += $item->buying_price * $total_qty;
+            $total_retail +=$item->retail_price * $total_qty;
+            $total_wholesale += $item->wholesale_price * $total_qty;
+        }
+
         if ($request->ajax()) {
 
             $shop_storages = ShopStorage::with('item')->anyTrash($request->trash);
@@ -56,7 +70,7 @@ class ShopStorageController extends Controller
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('backend.admin.shop_storages.index');
+        return view('backend.admin.shop_storages.index',compact('total_item','total_qty','total_buying','total_retail','total_wholesale'));
     }
 
     public function create()

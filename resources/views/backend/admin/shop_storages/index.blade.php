@@ -24,6 +24,56 @@
 
 @section('content')
 
+<div class="row mb-3">
+    <div class="col-md-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <table>
+                    <tr>
+                        <td>Total Item</td>
+                        <td><span class="badge badge-info mr-3">{{$total_item}}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <table>
+                    <tr>
+                        <td>Total Qty</td>
+                        <td><span class="badge badge-info mr-3">{{$total_qty}}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <table>
+                    <tr>
+                        <td>Total Buying Price</td>
+                        <td><span class="badge badge-info mr-3">{{number_format($total_buying)}}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <table>
+                    <tr>
+                        <td>Total Sale (Retail) Price</td>
+                        <td><span class="badge badge-info mr-3">{{number_format($total_retail)}}</span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="main-card mb-3 card">

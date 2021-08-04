@@ -68,7 +68,7 @@ class BuyingItemController extends Controller
                 })
                 ->addColumn('item_id', function ($buying_items) {
 
-                    return $buying_items->item_id ? $buying_items->item->name : '-';
+                    return $buying_items->item ? $buying_items->item->name : '-';
                 })
                 ->addColumn('supplier', function ($buying_items) {
 
@@ -91,7 +91,7 @@ class BuyingItemController extends Controller
                     return $buying_items->item_category ? $buying_items->item_category->name : '-';
                 })
                 ->addColumn('item_sub_category', function ($buying_items) {
-                    return $buying_items->item_sub_category_id ? $buying_items->item_sub_category->name : '-';
+                    return $buying_items->item_sub_category  ? $buying_items->item_sub_category->name : '-';
                 })
                 ->addColumn('plus-icon', function () {
                     return null;
@@ -119,7 +119,6 @@ class BuyingItemController extends Controller
         if (!$this->getCurrentAuthUser('admin')->can('add_item')) {
             abort(404);
         }
-
 
         $item = Item::findOrFail($request->item_id);
         $supplier = Supplier::where('id',$request->supplier)->first();
@@ -375,11 +374,37 @@ class BuyingItemController extends Controller
                     $query->where('name', 'like', '%' . $data . '%');
                 }
             })->get();
+
+            $data =[];
+            foreach($products as $product){
+                $shop = ShopStorage::where('item_id',$product->id)->first();
+                if($shop){
+                    $data []= [
+                        'qty' => $shop->qty,
+                        'name' => $product->name,
+                        'retail_price' => $product->retail_price,
+                    ];
+                }else{
+                    $data []= [
+                        'qty' => 0,
+                        'name' => $product->name,
+                        'retail_price' => $product->retail_price,
+                    ];
+                }
+            }
+    
         }
         if($request->item){
-            $products = Item::where('id',$request->item)->first();
+            $item = Item::findOrFail($request->item);
+            $shop = ShopStorage::where('item_id',$item->id)->first();
+            $data = [
+                'qty' => $shop->qty,
+                'name' => $item->name,
+                'retail_price' => $item->retail_price,
+            ];
         }
-        return $products;
+       
+        return $data;
     }
 
 }

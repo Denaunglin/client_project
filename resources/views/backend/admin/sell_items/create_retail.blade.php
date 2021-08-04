@@ -177,11 +177,13 @@
                                                             <select class="form-control custom-select" id="item_id" name="item_id[]"  required>
                                                                 <option value="">@lang("message.header.choose_item")</option>
                                                                 @forelse($item as $data)
-                                                                <option value="{{$data->id}}">{{$data->name }} </option>
+                                                                @php
+                                                                $shop = App\Models\ShopStorage::where('item_id',$data->id)->first();
+                                                                @endphp
+                                                                <option value="{{$data->id}}">{{$data->name }} / ({{$shop ? $shop->qty : 0}}) </option>
                                                                 @empty<p>@lang("message.header.there_is_no_data")</p>
                                                                 @endforelse
                                                             </select>   
-                                                           
                                                         </div>
                                                     </div>                                        
                                                 </td>
@@ -303,7 +305,7 @@
         let item = $(this).val();
         $.get('/get_item?item=' + item, function(data) {
                 $('#aa'+a).empty();
-        $('#aa'+a).val(data.buying_price);
+        $('#aa'+a).val(data.retail_price);
         $('#hide_search'+a).hide();
 
     });
@@ -353,7 +355,7 @@ $('#numeric_value').keyup(function() {
                     $('#item_id').empty();
         $('#item_id').append('<option disabled selected>'+ 'Choose Item' + '</option>');
                     $.each(data, function( key, value ) {
-                      $('#item_id').append('<option value="'+value.id+'" >'+value.name+'</option>');
+                          $('#item_id').append('<option value="'+value.id+'" >'+value.name+' / ('+value.qty+') </option>');
         });
     });
 });
@@ -361,6 +363,7 @@ $('#numeric_value').keyup(function() {
 $('#item_id').on('change', function(e) {
             let item = $(this).val();
             $.get('/get_item?item=' + item, function(data) {
+            console.log(data);
             $('#aa').empty();
             $('#aa').val(data.retail_price);
             $('#hide_search').hide();
