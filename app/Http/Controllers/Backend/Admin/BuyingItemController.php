@@ -384,13 +384,16 @@ class BuyingItemController extends Controller
                         'qty' => $shop->qty ?? 0,
                         'name' => $product->name,
                         'retail_price' => $product->retail_price,
-                    ];
+                        'wholesale_price' => $product->wholesale_price,
+                        'buying_price' => $product->buying_price,                    ];
                 }else{
                     $data []= [
                         'id' => $product->id,
                         'qty' => 0,
                         'name' => $product->name,
                         'retail_price' => $product->retail_price,
+                        'wholesale_price' => $product->wholesale_price,
+                        'buying_price' => $product->buying_price,
                     ];
                 }
             }
@@ -404,6 +407,9 @@ class BuyingItemController extends Controller
                 'qty' => $shop->qty ?? 0,
                 'name' => $item->name,
                 'retail_price' => $item->retail_price,
+                'wholesale_price' => $item->wholesale_price,
+                'buying_price' => $item->buying_price,
+
             ];
         }
        

@@ -29,7 +29,7 @@
                                     <option value="{{$data->id}}">{{$data->name}}</option>
                                         @endforeach
                                     </select>
-                                    <input type="hidden" name="sell_type" value="1">
+                                    <input type="hidden" name="sell_type" value="0">
 
                                 </div>  
                                 <div class="col-md-8">
@@ -184,7 +184,6 @@
                                                                 @empty<p>@lang("message.header.there_is_no_data")</p>
                                                                 @endforelse
                                                             </select>   
-                                                           
                                                         </div>
                                                     </div>                                        
                                                 </td>
@@ -297,15 +296,16 @@
                     $('#item_id'+a).empty();
         $('#item_id'+a).append('<option disabled selected>'+ 'Choose Item' + '</option>');
                     $.each(data, function( key, value ) {
-                      $('#item_id').append('<option value="'+value.id+'" >'+value.name+' / ('+value.qty+') </option>');
+                    $('#item_id'+a).append('<option value="'+value.id+'" >'+value.name+' / ('+value.qty+') </option>');
             });
         });
     });
 
-    $('#item_id'+a).on('change', function(e) {  
+    $('#item_id'+a).on('change', function(e) {
         let item = $(this).val();
         $.get('/get_item?item=' + item, function(data) {
-                $('#aa'+a).empty();
+    console.log(data);
+        $('#aa'+a).empty();
         $('#aa'+a).val(data.wholesale_price);
         $('#hide_search'+a).hide();
 
@@ -356,7 +356,7 @@ $('#numeric_value').keyup(function() {
                     $('#item_id').empty();
         $('#item_id').append('<option disabled selected>'+ 'Choose Item' + '</option>');
                     $.each(data, function( key, value ) {
-                      $('#item_id').append('<option value="'+value.id+'" >'+value.name+'</option>');
+                          $('#item_id').append('<option value="'+value.id+'" >'+value.name+' / ('+value.qty+') </option>');
         });
     });
 });
@@ -364,6 +364,7 @@ $('#numeric_value').keyup(function() {
 $('#item_id').on('change', function(e) {
             let item = $(this).val();
             $.get('/get_item?item=' + item, function(data) {
+            console.log(data);
             $('#aa').empty();
             $('#aa').val(data.wholesale_price);
             $('#hide_search').hide();
