@@ -380,12 +380,14 @@ class BuyingItemController extends Controller
                 $shop = ShopStorage::where('item_id',$product->id)->first();
                 if($shop){
                     $data []= [
-                        'qty' => $shop->qty,
+                        'id' => $product->id,
+                        'qty' => $shop->qty ?? 0,
                         'name' => $product->name,
                         'retail_price' => $product->retail_price,
                     ];
                 }else{
                     $data []= [
+                        'id' => $product->id,
                         'qty' => 0,
                         'name' => $product->name,
                         'retail_price' => $product->retail_price,
@@ -398,7 +400,8 @@ class BuyingItemController extends Controller
             $item = Item::findOrFail($request->item);
             $shop = ShopStorage::where('item_id',$item->id)->first();
             $data = [
-                'qty' => $shop->qty,
+                'id' => $item->id,
+                'qty' => $shop->qty ?? 0,
                 'name' => $item->name,
                 'retail_price' => $item->retail_price,
             ];

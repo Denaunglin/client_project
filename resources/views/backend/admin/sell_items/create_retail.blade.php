@@ -296,7 +296,7 @@
                     $('#item_id'+a).empty();
         $('#item_id'+a).append('<option disabled selected>'+ 'Choose Item' + '</option>');
                     $.each(data, function( key, value ) {
-                    $('#item_id'+a).append('<option value="'+value.id+'" >'+value.name+'</option>');
+                    $('#item_id'+a).append('<option value="'+value.id+'" >'+value.name+' / ('+value.qty+') </option>');
             });
         });
     });
@@ -304,7 +304,8 @@
     $('#item_id'+a).on('change', function(e) {
         let item = $(this).val();
         $.get('/get_item?item=' + item, function(data) {
-                $('#aa'+a).empty();
+    console.log(data);
+        $('#aa'+a).empty();
         $('#aa'+a).val(data.retail_price);
         $('#hide_search'+a).hide();
 
